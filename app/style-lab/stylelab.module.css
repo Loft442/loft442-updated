@@ -1,0 +1,194 @@
+@font-face {
+  font-family: "Google Sans Flex";
+  src: url("/Fonts/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf")
+       format("truetype");
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  src: url("/Fonts/Ubuntu-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.labRoot {
+  --lab-bg: #0b0f16;
+  --lab-text: #f8fafc;
+  --lab-panel: #111827;
+  --lab-border: rgba(248, 250, 252, 0.12);
+  --lab-accent: #f5b769;
+  --lab-muted: #9aa4b2;
+  --lab-radius: 16px;
+  --lab-shadow: 0 24px 60px rgba(8, 10, 16, 0.6);
+  --lab-glow: rgba(245, 183, 105, 0.35);
+  --font-body: "Ubuntu", system-ui, sans-serif;
+  --font-heading: "Google Sans Flex", system-ui, sans-serif;
+  background-color: var(--lab-bg);
+  color: var(--lab-text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  position: relative;
+}
+
+.labRoot h1,
+.labRoot h2,
+.labRoot h3,
+.labRoot h4 {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.overlay {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  width: min(320px, calc(100vw - 32px));
+  border-radius: 14px;
+  border: 1px solid var(--lab-border);
+  background: var(--lab-panel);
+  box-shadow: var(--lab-shadow);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.overlayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.backLink {
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--lab-accent);
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: var(--lab-text);
+}
+
+.overlayLabel {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--lab-muted);
+}
+
+.tabList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 6px;
+}
+
+.tab,
+.tabActive {
+  border-radius: 999px;
+  border: 1px solid var(--lab-border);
+  padding: 6px 10px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.tab {
+  background: transparent;
+  color: var(--lab-muted);
+}
+
+.tab:hover {
+  color: var(--lab-text);
+  border-color: var(--lab-text);
+}
+
+.tabActive {
+  background: var(--lab-accent);
+  color: #0b0f16;
+  border-color: transparent;
+}
+
+.themeDescription {
+  font-size: 0.75rem;
+  color: var(--lab-muted);
+}
+
+.labRoot :where(main, .ambient-surface) {
+  background-color: var(--lab-bg);
+  color: var(--lab-text);
+}
+
+.labRoot :where(.bg-black) {
+  background-color: var(--lab-bg);
+}
+
+.labRoot :where(.bg-black\\/60, .bg-black\\/70, .bg-black\\/80, .bg-black\\/90) {
+  background-color: var(--lab-panel);
+}
+
+.labRoot :where(.bg-white\\/5, .bg-white\\/10, .bg-white\\/20) {
+  background-color: var(--lab-panel);
+}
+
+.labRoot :where(.text-white) {
+  color: var(--lab-text);
+}
+
+.labRoot :where(.text-white\\/90, .text-white\\/85, .text-white\\/80) {
+  color: var(--lab-text);
+}
+
+.labRoot :where(.text-white\\/70, .text-white\\/65, .text-white\\/60, .text-white\\/50, .text-white\\/40, .text-white\\/30, .text-white\\/20) {
+  color: var(--lab-muted);
+}
+
+.labRoot :where(.border-white, .border-white\\/10, .border-white\\/15, .border-white\\/20, .border-white\\/30, .border-white\\/40, .border-white\\/50, .border-white\\/60) {
+  border-color: var(--lab-border);
+}
+
+.labRoot :where(.cta-button) {
+  border-color: var(--lab-accent);
+  color: var(--lab-text);
+  box-shadow: 0 0 12px var(--lab-glow);
+}
+
+.labRoot :where(a) {
+  color: var(--lab-accent);
+}
+
+.labRoot :where(a:hover) {
+  color: var(--lab-text);
+}
+
+.labRoot :where(img) {
+  filter: saturate(0.92) contrast(1.05);
+}
+
+.labRoot :where(.ambient-glow, .ambient-glow__layer) {
+  display: block;
+  background:
+    radial-gradient(circle at 20% 20%, var(--lab-glow), transparent 55%),
+    radial-gradient(circle at 80% 30%, var(--lab-glow), transparent 60%);
+  opacity: 0.75;
+}
+
+.labRoot :where(.divider-glow) {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--lab-border) 50%,
+    transparent 100%
+  );
+}

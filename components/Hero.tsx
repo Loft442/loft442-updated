@@ -1,12 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+import styles from "./Hero.module.css";
 
 export default function Hero() {
   return (
-    <section className="relative w-full min-h-[80vh] bg-black">
-      <div className="absolute inset-0">
+    <section
+      className="hero-no-glow relative w-full -mt-[76px] bg-black overflow-hidden"
+      style={{ aspectRatio: "640/367" }}
+    >
+      <div className="absolute inset-0 z-[1]">
         <Image
-          src="/images/banner-image.png"
+          src="/images/banner-image-up.png"
           alt="Loft 442 banner"
           fill
           priority
@@ -14,28 +18,18 @@ export default function Hero() {
           sizes="100vw"
           className="object-cover object-center hero-motion"
         />
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[60%] opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "radial-gradient(120% 80% at 10% 20%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 60%), radial-gradient(100% 70% at 20% 80%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 65%)",
-            backgroundRepeat: "no-repeat",
-            WebkitMaskImage:
-              "radial-gradient(circle at 25% 50%, transparent 0%, transparent 35%, black 70%), linear-gradient(to right, black 0%, black 70%, transparent 100%)",
-            maskImage:
-              "radial-gradient(circle at 25% 50%, transparent 0%, transparent 35%, black 70%), linear-gradient(to right, black 0%, black 70%, transparent 100%)",
-          }}
-        />
       </div>
-      <div className="relative z-20 mx-auto flex min-h-[10vh] max-w-7xl items-center px-6 pb-12 pt-24 md:pt-36">
+      <div className="relative z-20 translate-y-[76px] mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 md:pt-36">
         <div className="max-w-2xl">
           <div className="text-spotlight inline-block rounded-sm px-4 py-3">
             <div className="flex flex-col gap-8">
               <p className="pl-1 text-[0.75rem] uppercase tracking-[0.45em] text-white/60 [text-shadow:0_2px_8px_rgba(0,0,0,0.4)]">
                 Loft 442
               </p>
-              <h1 className="hero-stagger hero-stagger--1 text-4xl font-semibold tracking-[0.12em] text-white [text-shadow:1px_0_rgba(0,0,0,0.85),-1px_0_rgba(0,0,0,0.85),0_1px_rgba(0,0,0,0.85),0_-1px_rgba(0,0,0,0.85),0_8px_22px_rgba(0,0,0,0.55)] sm:text-5xl lg:text-6xl">
-                ELEGANT VENUE FOR UNFORGETTABLE EVENTS
+              <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.12em] text-white [text-shadow:1px_0_rgba(0,0,0,0.85),-1px_0_rgba(0,0,0,0.85),0_1px_rgba(0,0,0,0.85),0_-1px_rgba(0,0,0,0.85),0_8px_22px_rgba(0,0,0,0.55)] sm:text-4xl md:text-5xl lg:text-6xl">
+                ELEGANT{" "}
+                <span className={styles.venueUnderline}>VENUE</span> FOR
+                UNFORGETTABLE EVENTS
               </h1>
               <div className="hero-stagger hero-stagger--2 flex flex-col gap-2">
                 <div className="flex items-center gap-3">
@@ -52,7 +46,7 @@ export default function Hero() {
                   Proudly Serving Those Who Served
                 </p>
                 <div
-                  className="flex self-start items-center gap-2 text-white"
+                  className="flex self-start items-center gap-2 text-[#d4af37] [filter:drop-shadow(0_0_2px_rgba(212,175,55,0.55))_drop-shadow(0_0_6px_rgba(212,175,55,0.2))]"
                   role="img"
                   aria-label="5 star rating"
                 >
@@ -73,17 +67,17 @@ export default function Hero() {
                   </svg>
                 </div>
               </div>
-              <div className="hero-stagger hero-stagger--3 -mt-3 flex flex-wrap gap-4">
+              <div className="hero-stagger hero-stagger--3 -mt-3 flex flex-col items-start gap-4 sm:flex-row">
                 <Link
                   href="/gallery"
-                  className="relative isolate cta-button border border-white/60 px-6 py-3 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-white hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+                  className="relative isolate inline-flex h-11 items-center justify-center cta-button border border-white/60 px-6 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-white hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]"
                 >
                   <span className="absolute inset-0 -z-10 rounded-sm bg-white/10 backdrop-blur-xl" />
                   View Gallery
                 </Link>
                 <Link
                   href="/booking"
-                  className="cta-button cta-book px-6 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-black transition hover:opacity-90"
+                  className="cta-button cta-book inline-flex h-11 items-center justify-center px-6 text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-black transition hover:opacity-90"
                 >
                   Book a Tour
                 </Link>

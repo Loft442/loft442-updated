@@ -79,7 +79,7 @@ export default function BookingPage() {
       <section className="relative border-b border-white/10 bg-black">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.05),_transparent_45%)]" />
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-16 sm:py-20">
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 md:py-10">
           <div className="text-spotlight inline-block rounded-sm px-4 py-3">
             <div className="flex flex-col gap-4">
               <p className="text-xs uppercase tracking-[0.4em] text-white/60">
@@ -97,7 +97,7 @@ export default function BookingPage() {
       </section>
 
       <section className="bg-black">
-        <div className="mx-auto max-w-6xl px-6 pb-6 pt-4">
+        <div className="mx-auto max-w-6xl px-4 pb-6 pt-4 sm:px-6">
           <Reveal className="flex flex-col gap-3">
             <span className="text-[0.6rem] uppercase tracking-[0.35em] text-white/60">
               Step 1 of 2
@@ -112,9 +112,9 @@ export default function BookingPage() {
         </div>
       </section>
 
-      <section className="bg-black py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <Reveal className="text-spotlight grid gap-10 rounded-sm border border-white/10 bg-white/5 p-8 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur lg:grid-cols-[1.1fr_1fr]">
+      <section className="bg-black py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <Reveal className="text-spotlight grid gap-10 rounded-sm border border-white/10 bg-white/5 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-8 lg:grid-cols-[1.1fr_1fr]">
             <div className="flex flex-col gap-8">
               <div className="flex items-center justify-between">
                 <p className="text-xs uppercase tracking-[0.4em] text-white/60">

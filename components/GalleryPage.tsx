@@ -9,6 +9,7 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
 import Reveal from "@/components/Reveal";
 
@@ -130,6 +131,7 @@ export default function GalleryPage() {
   const [activeCategory, setActiveCategory] =
     useState<GalleryCategory>("All");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const touchStartX = useRef<number | null>(null);
 
@@ -146,6 +148,10 @@ export default function GalleryPage() {
   useEffect(() => {
     setActiveIndex(null);
   }, [activeCategory]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (activeIndex === null) {
@@ -269,7 +275,7 @@ export default function GalleryPage() {
       <section className="relative overflow-hidden border-b border-white/10 bg-black">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.05),_transparent_45%)]" />
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-6 py-16 sm:py-20">
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 sm:px-6 sm:py-10 md:py-12">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">
             Loft 442
           </p>
@@ -277,13 +283,13 @@ export default function GalleryPage() {
             GALLERY
           </h1>
           <p className="max-w-xl text-sm text-white/70">
-            "Explore LOFT 442 across events and setups."
+            Explore LOFT 442 across events and setups.
           </p>
         </div>
       </section>
 
       <section className="border-b border-white/10 bg-black">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-6 sm:px-6 sm:py-8">
           <div
             role="tablist"
             aria-label="Gallery categories"
@@ -307,7 +313,7 @@ export default function GalleryPage() {
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => setActiveCategory(category)}
                   onKeyDown={(event) => handleTabKeyDown(event, index)}
-                  className={`relative rounded-sm border border-white/10 bg-white/5 px-5 py-2 text-[0.65rem] uppercase tracking-[0.35em] text-white/60 transition duration-200 ease-out hover:border-white/30 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${
+                  className={`relative min-h-11 rounded-sm border border-white/10 bg-white/5 px-5 py-2 text-[0.65rem] uppercase tracking-[0.35em] text-white/60 transition duration-200 ease-out hover:border-white/30 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${
                     isActive
                       ? "border-white/40 text-white shadow-[0_0_25px_rgba(255,255,255,0.18)] after:opacity-100"
                       : ""
@@ -322,7 +328,7 @@ export default function GalleryPage() {
       </section>
 
       <section className="bg-black pb-20 pt-10">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div
             id="gallery-panel"
             role="tabpanel"
@@ -367,67 +373,69 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {activeItem ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-8 backdrop-blur-sm"
-          onClick={() => setActiveIndex(null)}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div
-            className="relative w-full max-w-5xl"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="relative h-[70vh] w-full overflow-hidden rounded-sm border border-white/10 bg-black shadow-[0_30px_90px_rgba(0,0,0,0.7)]">
-              <Image
-                src={activeItem.src}
-                alt={activeItem.alt}
-                fill
-                sizes="(max-width: 768px) 100vw, 80vw"
-                priority
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-            </div>
-            <button
-              type="button"
+      {activeItem && isMounted
+        ? createPortal(
+            <div
+              className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4 backdrop-blur-sm sm:p-6"
               onClick={() => setActiveIndex(null)}
-              aria-label="Close gallery"
-              className="absolute right-3 top-3 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
-              <X className="h-4 w-4" />
-            </button>
-            {filteredItems.length > 1 ? (
-              <>
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  aria-label="Previous image"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  aria-label="Next image"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </>
-            ) : null}
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
-              <span>{activeItem.category}</span>
-              <span>
-                {activeIndex !== null ? activeIndex + 1 : 1} /{" "}
-                {filteredItems.length}
-              </span>
-            </div>
-            <p className="mt-2 text-sm text-white/70">{activeItem.alt}</p>
-          </div>
-        </div>
-      ) : null}
+              <div
+                className="relative inline-flex w-fit max-w-[92vw] flex-col rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="relative">
+                  <img
+                    src={activeItem.src}
+                    alt={activeItem.alt}
+                    className="block h-auto max-h-[76vh] w-auto max-w-[92vw] object-contain"
+                  />
+                  <div className="absolute inset-0 rounded-sm bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  <button
+                    type="button"
+                    onClick={() => setActiveIndex(null)}
+                    aria-label="Close gallery"
+                    className="absolute right-3 top-3 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                  {filteredItems.length > 1 ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handlePrev}
+                        aria-label="Previous image"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleNext}
+                        aria-label="Next image"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                    </>
+                  ) : null}
+                </div>
+                <div className="mt-4 flex max-w-full flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
+                  <span>{activeItem.category}</span>
+                  <span>
+                    {activeIndex !== null ? activeIndex + 1 : 1} /{" "}
+                    {filteredItems.length}
+                  </span>
+                </div>
+                <p className="mt-2 max-w-full text-sm text-white/70">
+                  {activeItem.alt}
+                </p>
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

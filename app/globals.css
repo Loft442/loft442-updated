@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Ubuntu";
+  src: url("/Fonts/Ubuntu-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Google Sans Flex";
+  src: url("/Fonts/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf")
+       format("truetype");
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   --background: #070708;
@@ -7,6 +24,10 @@
   --muted: #b5b5b5;
   --border: #262626;
   --accent: #f2f2f2;
+  --font-body: "Ubuntu", system-ui, sans-serif;
+  --font-heading: "Google Sans Flex", system-ui, sans-serif;
+  --hero-no-glow-height: calc(100vw * 367 / 640);
+  --hero-no-glow-buffer: 0px;
   --mask-fade-horizontal: linear-gradient(
     to right,
     transparent 0%,
@@ -19,7 +40,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-body);
 }
 
 *,
@@ -31,12 +52,59 @@
 body {
   background: transparent;
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body);
   min-height: 100vh;
   position: relative;
-  z-index: 1;
+  overflow-x: hidden;
+  z-index: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+}
+
+.faq button > span {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  font-size: 1rem;
+}
+
+.faq [role="region"] {
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.03em;
+}
+
+h1,
+h2,
+h1[class*="font-"],
+h2[class*="font-"] {
+  font-weight: 300;
+}
+
+h3,
+h4,
+h5,
+h6,
+h3[class*="font-"],
+h4[class*="font-"],
+h5[class*="font-"],
+h6[class*="font-"] {
+  font-weight: 400;
+}
+
+header :where(.nav-underline, .cta-button) {
+  font-family: var(--font-heading);
 }
 
 ::selection {
@@ -51,6 +119,10 @@ body {
 html {
   background: var(--background);
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  position: relative;
 }
 
 html::before,
@@ -59,8 +131,28 @@ html::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
+  z-index: -1;
   background-repeat: repeat;
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,0) var(--hero-no-glow-height),
+      rgba(0,0,0,1) calc(var(--hero-no-glow-height) + var(--hero-no-glow-buffer)),
+      rgba(0,0,0,1) 100%
+    );
+  mask-image:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,0) var(--hero-no-glow-height),
+      rgba(0,0,0,1) calc(var(--hero-no-glow-height) + var(--hero-no-glow-buffer)),
+      rgba(0,0,0,1) 100%
+    );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
 html::before {
@@ -74,8 +166,8 @@ html::before {
     radial-gradient(1.25px 1.25px at 220px 360px, rgba(248, 223, 190, 0.24), transparent 70%),
     radial-gradient(1.5px 1.5px at 420px 320px, rgba(255, 255, 255, 0.24), transparent 70%);
   background-size: 520px 520px;
+  background-position: -40px -200px;
   opacity: 0.3;
-  animation: particleDrift 48s linear infinite;
 }
 
 html::after {
@@ -88,33 +180,27 @@ html::after {
     radial-gradient(1.5px 1.5px at 120px 360px, rgba(255, 255, 255, 0.22), transparent 70%),
     radial-gradient(1.75px 1.75px at 260px 420px, rgba(255, 255, 255, 0.24), transparent 70%);
   background-size: 640px 640px;
+  background-position: 30px -180px;
   opacity: 0.24;
-  animation: particleDriftSlow 72s linear infinite;
 }
 
-@keyframes particleDrift {
-  0% {
-    background-position: 0 0;
+@media (max-width: 640px) {
+  html::before,
+  html::after {
+    opacity: 0.12;
   }
-  50% {
-    background-position: -40px -200px;
+
+  .hero-motion {
+    animation: none;
+    transform: none;
   }
-  100% {
-    background-position: 0 -400px;
+
+  .spotlight::before {
+    filter: blur(12px);
+    opacity: 0.26;
   }
 }
 
-@keyframes particleDriftSlow {
-  0% {
-    background-position: 0 0;
-  }
-  50% {
-    background-position: 30px -180px;
-  }
-  100% {
-    background-position: 0 -360px;
-  }
-}
 
 .page-transition {
   opacity: 0;
@@ -178,23 +264,22 @@ html::after {
   background:
     radial-gradient(
       80% 80% at 50% 45%,
-      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.32),
       transparent 70%
     ),
     radial-gradient(
       55% 55% at 18% 55%,
-      rgba(239, 68, 68, 0.06),
+      rgba(239, 68, 68, 0.1),
       transparent 72%
     ),
     radial-gradient(
       55% 55% at 82% 55%,
-      rgba(59, 130, 246, 0.06),
+      rgba(59, 130, 246, 0.1),
       transparent 72%
     );
-  filter: blur(5px);
-  opacity: 0.3;
+  filter: blur(6px);
+  opacity: 0.45;
   transform: scale(5);
-  animation: spotlightBreath 8s ease-in-out infinite;
 }
 
 .text-spotlight > * {
@@ -202,17 +287,202 @@ html::after {
   z-index: 1;
 }
 
-@keyframes spotlightBreath {
-  0%,
-  100% {
-    opacity: 0.15;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.2;
-    transform: scale(1.03);
+.spotlight {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      120% 85% at 50% 35%,
+      rgba(255, 255, 255, 0.22),
+      transparent 70%
+    ),
+    radial-gradient(
+      90% 70% at 18% 60%,
+      rgba(239, 68, 68, 0.09),
+      transparent 72%
+    ),
+    radial-gradient(
+      90% 70% at 82% 60%,
+      rgba(59, 130, 246, 0.09),
+      transparent 72%
+    );
+  filter: blur(16px);
+  opacity: 0.42;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 20%,
+    black 80%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 20%,
+    black 80%,
+    transparent 100%
+  );
+}
+
+.spotlight > * {
+  position: relative;
+  z-index: 1;
+}
+
+.spotlight-bright {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.spotlight-bright::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 90% at 50% 45%,
+    rgba(255, 255, 255, 1),
+    transparent 72%
+  );
+  filter: blur(50px);
+  opacity: 0.4;
+}
+
+.spotlight-bright > * {
+  position: relative;
+  z-index: 1;
+}
+
+.body-spotlight {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.body-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 90% at 50% 40%,
+    rgba(255, 255, 255, 0.28),
+    transparent 72%
+  );
+  filter: blur(14px);
+  opacity: 0.45;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+}
+
+.body-spotlight > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Reusable section glow that cannot spill into the hero */
+.section-glow {
+  position: relative;
+  overflow: clip; /* best; use hidden as fallback if needed */
+  isolation: isolate;
+}
+
+/* Actual glow layer */
+.section-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  /* your glow */
+  background-image: radial-gradient(
+    circle at top,
+    rgba(255, 255, 255, 0.2),
+    transparent 60%
+  );
+  background-repeat: no-repeat;
+
+  /* feather the TOP so it fades in instead of starting hard */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0px,
+    black 110px,
+    black calc(100% - 120px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0px,
+    black 110px,
+    black calc(100% - 120px),
+    transparent 100%
+  );
+}
+
+/* Ensure content is above the glow */
+.section-glow > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pricing-glow::before {
+  filter: blur(22px);
+  opacity: 0.6;
+}
+
+/* Mobile: slightly reduce intensity */
+@media (max-width: 640px) {
+  .section-glow::before {
+    background-image: radial-gradient(
+      circle at top,
+      rgba(255, 255, 255, 0.14),
+      transparent 60%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 90px,
+      black calc(100% - 90px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 90px,
+      black calc(100% - 90px),
+      transparent 100%
+    );
   }
 }
+
 
 .ambient-surface {
   position: relative;
@@ -294,9 +564,8 @@ html::after {
 }
 
 .hero-motion {
-  transform: scale(1.02) translate3d(0, 0, 0);
+  transform: none;
   transform-origin: center;
-  animation: heroCinematic 12s ease-in-out infinite;
   will-change: transform;
 }
 
@@ -332,7 +601,6 @@ html::after {
   bottom: -0.25rem;
   height: 2px;
   background: linear-gradient(90deg, #ef4444 0%, #ffffff 50%, #3b82f6 100%);
-  animation: underlineBreath 3.6s ease-in-out infinite;
   filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45)); /* single shadow */
   z-index: 1;
   pointer-events: none;
@@ -353,7 +621,6 @@ html::after {
   );
   opacity: 0;
   transform: translateX(0);
-  animation: underlineShimmer 8s ease-in-out infinite;
   pointer-events: none;
   z-index: 2;
 }
@@ -375,9 +642,6 @@ html::after {
 }
 
 .nav-underline::after {
-  animation:
-    underlineBreathSoft 3.6s ease-in-out infinite,
-    navUnderlineShimmer 8s ease-in-out infinite;
   background-image:
     linear-gradient(to right, transparent, rgba(255, 255, 255, 0.95), transparent),
     linear-gradient(
@@ -392,54 +656,11 @@ html::after {
   filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5));
 }
 
-@keyframes underlineBreath {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.35));
-  }
-  50% {
-    filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.6));
-  }
-}
-
-@keyframes underlineBreathSoft {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.35));
-  }
-  50% {
-    filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.55));
-  }
-}
-
-@keyframes underlineShimmer {
-  0% {
-    opacity: 0;
-    transform: translateX(0);
-  }
-  10% {
-    opacity: 0.35;
-  }
-  90% {
-    opacity: 0.35;
-    transform: translateX(220%);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(220%);
-  }
-}
-
-@keyframes navUnderlineShimmer {
-  0% {
-    background-position: 0 0, -150% 0;
-  }
-  100% {
-    background-position: 0 0, 150% 0;
-  }
-}
-
 .cta-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
   transform: translateY(0);
   transition-duration: 180ms;
   transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -489,9 +710,9 @@ html::after {
   left: 0;
   background: radial-gradient(
     circle at left center,
-    rgba(255, 255, 255, 0.45) 0%,
-    rgba(59, 130, 246, 0.1) 35%,
-    rgba(239, 68, 68, 0.08) 55%,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(59, 130, 246, 0.16) 35%,
+    rgba(239, 68, 68, 0.12) 55%,
     transparent 72%
   );
 }
@@ -500,9 +721,9 @@ html::after {
   right: 0;
   background: radial-gradient(
     circle at right center,
-    rgba(255, 255, 255, 0.45) 0%,
-    rgba(59, 130, 246, 0.1) 35%,
-    rgba(239, 68, 68, 0.08) 55%,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(59, 130, 246, 0.16) 35%,
+    rgba(239, 68, 68, 0.12) 55%,
     transparent 72%
   );
 }
@@ -527,9 +748,9 @@ html::after {
   left: 0;
   background: radial-gradient(
     circle at left center,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(59, 130, 246, 0.1) 35%,
-    rgba(239, 68, 68, 0.08) 55%,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(59, 130, 246, 0.16) 35%,
+    rgba(239, 68, 68, 0.12) 55%,
     transparent 70%
   );
 }
@@ -538,11 +759,54 @@ html::after {
   right: 0;
   background: radial-gradient(
     circle at right center,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(59, 130, 246, 0.1) 35%,
-    rgba(239, 68, 68, 0.08) 55%,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(59, 130, 246, 0.16) 35%,
+    rgba(239, 68, 68, 0.12) 55%,
     transparent 70%
   );
+}
+
+.about-card-outline {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1))
+      padding-box,
+    linear-gradient(
+      135deg,
+      rgba(212, 175, 55, 0.7),
+      rgba(255, 248, 220, 0.6) 40%,
+      rgba(212, 175, 55, 0.35) 70%,
+      rgba(212, 175, 55, 0.65)
+    )
+      border-box;
+}
+
+.about-card-outline::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 0;
+  height: 2px;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 40%,
+    rgba(255, 255, 255, 0.2) 60%,
+    transparent 100%
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  filter: blur(0.6px);
+  transform: translateX(-6%);
+  transition: opacity 180ms ease, transform 300ms ease;
+}
+
+.about-card-outline:hover::after,
+.about-card-outline:focus-visible::after {
+  opacity: 0.55;
+  transform: translateX(6%);
 }
 
 .hours-glow {
@@ -557,12 +821,60 @@ html::after {
 .cta-book {
   position: relative;
   z-index: 2;
-  background-color: #b8962e;
-  background-image: linear-gradient(135deg, #f5e6a8 0%, #d4af37 55%, #b8962e 100%);
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, #f5e6a8 0%, #d4af37 55%, #b8962e 100%);
   color: #0c0c0c;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.35),
     0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.cta-book::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.7),
+    rgba(255, 248, 220, 0.6) 40%,
+    rgba(212, 175, 55, 0.35) 70%,
+    rgba(212, 175, 55, 0.65)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.cta-book::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 0;
+  height: 2px;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.7) 40%,
+    rgba(255, 255, 255, 0.25) 60%,
+    transparent 100%
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  filter: blur(0.6px);
+  transform: translateX(-6%);
+  transition: opacity 180ms ease, transform 300ms ease;
+}
+
+.cta-book:hover::after,
+.cta-book:focus-visible::after {
+  opacity: 0.55;
+  transform: translateX(6%);
 }
 
 .cta-book:hover {
@@ -617,9 +929,7 @@ html::after {
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition,
-  .hero-stagger,
-  .hero-underline::after,
-  .nav-underline::after {
+  .hero-stagger {
     animation: none;
   }
 
@@ -627,11 +937,6 @@ html::after {
   .hero-stagger {
     opacity: 1;
     transform: none;
-  }
-
-  .hero-underline::before {
-    animation: none;
-    opacity: 0; /* keeps underline shimmer off */
   }
 
   .gallery-shine {
@@ -653,10 +958,6 @@ html::after {
     transform: none;
   }
 
-  .text-spotlight::before {
-    animation: none;
-    transform: none;
-  }
 }
 
 @media (max-width: 768px), (prefers-reduced-transparency: reduce) {
@@ -669,4 +970,48 @@ html::after {
   .text-spotlight::before {
     animation: none;
   }
+
+  .spotlight::before {
+    opacity: 0.22;
+  }
 }
+
+/* Hero no-glow zone: block global ambient glow from appearing over hero */
+.hero-no-glow {
+  position: relative;
+  isolation: isolate;
+  background: var(--background); /* solid black */
+}
+
+/* This creates a local blocker layer above ambient glow but below hero content */
+.hero-no-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--background);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ensure hero content stays above the blocker */
+.hero-no-glow .text-spotlight::before {
+  display: none !important;
+}
+
+.hero-no-glow .spotlight::before {
+  display: none !important;
+}
+
+.hero-no-glow .hero-glow-overlay {
+  background-image: none !important;
+  filter: none !important;
+  opacity: 0 !important;
+}
+
+/* HERO: disable underline glow/shadows */
+.hero-no-glow .hero-underline::after,
+.hero-no-glow .nav-underline::after {
+  filter: none !important;
+}
+
+

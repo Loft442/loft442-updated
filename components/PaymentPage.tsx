@@ -154,7 +154,7 @@ export default function PaymentPage() {
       <section className="relative overflow-hidden border-b border-white/10 bg-black">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.05),_transparent_45%)]" />
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-6 py-16 sm:py-20">
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6 sm:py-16 md:py-20">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">
             Loft 442
           </p>
@@ -168,7 +168,7 @@ export default function PaymentPage() {
       </section>
 
       <section className="bg-black">
-        <div className="mx-auto max-w-6xl px-6 pb-6 pt-4">
+        <div className="mx-auto max-w-6xl px-4 pb-6 pt-4 sm:px-6">
           <div className="flex flex-col gap-3">
             <span className="text-[0.6rem] uppercase tracking-[0.35em] text-white/60">
               Step 2 of 2
@@ -183,10 +183,10 @@ export default function PaymentPage() {
         </div>
       </section>
 
-      <section className="bg-black py-20">
-        <div className="mx-auto max-w-6xl px-6">
+      <section className="bg-black py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <Reveal className="text-spotlight rounded-sm border border-white/10 bg-white/5 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur">
+            <Reveal className="text-spotlight rounded-sm border border-white/10 bg-white/5 p-5 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-6">
               <p className="text-xs uppercase tracking-[0.4em] text-white/60">
                 BOOKING SUMMARY
               </p>
@@ -227,7 +227,7 @@ export default function PaymentPage() {
             <Reveal delayMs={80}>
               <form
               onSubmit={handleSubmit}
-              className="text-spotlight rounded-sm border border-white/10 bg-white/5 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur"
+              className="text-spotlight rounded-sm border border-white/10 bg-white/5 p-5 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-6"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-xs uppercase tracking-[0.4em] text-white/60">
@@ -494,7 +494,7 @@ export default function PaymentPage() {
                   <button
                     type="submit"
                     disabled={!isFormValid}
-                    className="cta-button bg-white px-6 py-3 text-[0.65rem] uppercase tracking-[0.35em] text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="cta-button inline-flex h-11 items-center justify-center bg-white px-6 text-[0.65rem] uppercase tracking-[0.35em] text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     CONFIRM & PAY
                   </button>

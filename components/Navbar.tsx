@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -13,6 +14,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const update = () => {
@@ -24,6 +26,17 @@ export default function Navbar() {
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -38,7 +51,7 @@ export default function Navbar() {
     >
       <div
         className={[
-          "mx-auto flex max-w-7xl items-center justify-between px-6",
+          "mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6",
           "transition-all duration-300 ease-out motion-reduce:transition-none",
           isScrolled ? "py-1.5" : "py-2",
         ].join(" ")}
@@ -70,12 +83,46 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <Link
-          href="/booking"
-          className="cta-button cta-book rounded-sm border border-white/60 px-5 py-2 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-white hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]"
-        >
-          Book Now
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/booking"
+            className="cta-button cta-book inline-flex h-11 items-center justify-center rounded-sm border border-[#d4af37] px-4 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-[#f5e6a8] hover:text-white hover:shadow-[0_0_20px_rgba(212,175,55,0.18)] sm:px-5"
+          >
+            Book Now
+          </Link>
+          <button
+            type="button"
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-sm border border-white/20 text-white/80 transition hover:border-white/40 hover:text-white md:hidden"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="mobile-nav"
+        className={`md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
+          menuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="border-t border-white/10 bg-black/90 px-4 pb-4 pt-3 backdrop-blur sm:px-6">
+          <div className="flex flex-col gap-3 text-xs uppercase tracking-[0.3em] text-white/70">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="py-2 transition hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </header>
   );

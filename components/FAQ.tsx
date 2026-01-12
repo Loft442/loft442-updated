@@ -29,11 +29,11 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="section-divider border-t border-white/10 py-20">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-10 max-w-2xl">
+    <section className="faq section-glow section-divider border-t border-white/10 py-16 sm:py-20">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="spotlight mb-10 max-w-2xl">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">FAQ</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-[0.12em] text-white">
+          <h2 className="mt-3 text-2xl font-semibold tracking-[0.12em] text-white sm:text-3xl md:text-4xl">
             Frequently Asked Questions
           </h2>
           <p className="mt-4 text-base leading-relaxed text-white/70">
@@ -49,7 +49,7 @@ export default function FAQ() {
             return (
               <div
                 key={`${faq.question}-${index}`}
-                className="group rounded-sm border border-white/10 bg-white/5 transition-colors hover:border-white/20 hover:bg-white/10"
+                className="spotlight group rounded-sm border border-white/10 bg-white/5 transition-colors hover:border-white/20 hover:bg-white/10"
               >
                 <button
                   type="button"

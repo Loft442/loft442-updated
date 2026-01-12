@@ -1,0 +1,40 @@
+.venueUnderline {
+  position: relative;
+  display: inline-block;
+}
+
+.venueUnderline::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.05em;
+  width: 85%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245, 230, 168, 0.6) 18%,
+    rgba(212, 175, 55, 0.95) 50%,
+    rgba(184, 150, 46, 0.6) 82%,
+    transparent 100%
+  );
+  opacity: 1;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  animation: venueUnderlineReveal 340ms cubic-bezier(0.22, 0.61, 0.36, 1)
+    forwards;
+}
+
+@keyframes venueUnderlineReveal {
+  to {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venueUnderline::after {
+    animation: none;
+    transform: translateX(-50%) scaleX(1);
+  }
+}

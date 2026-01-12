@@ -155,8 +155,11 @@ export default function EventTypes() {
   }, [openKey, renderKey]);
 
   return (
-    <section id="about" className="section-divider border-t border-white/10 py-20">
-      <div className="mx-auto max-w-7xl px-6">
+    <section
+      id="about"
+      className="section-glow section-divider -mt-[clamp(76px,12vh,180px)] py-16 sm:py-20 pt-[calc(4rem+clamp(76px,12vh,180px))] sm:pt-[calc(5rem+clamp(76px,12vh,180px))]"
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {eventTypes.map((event) => {
             const Icon = event.icon;
@@ -177,18 +180,16 @@ export default function EventTypes() {
                     panelKey ? (prev === panelKey ? null : panelKey) : null
                   )
                 }
-                className="group relative flex min-w-0 items-center justify-between gap-3 rounded-sm border border-white/10 bg-white/5 p-3 text-left shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition hover:border-white/20"
+                className="about-card-outline group relative flex min-w-0 min-h-12 items-center justify-between gap-3 rounded-sm p-4 text-left shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-sm border border-white/20 bg-white/5">
                   <Icon
-                    className={`h-4 w-4 ${
+                    className={`h-6 w-6 ${
                       iconStyles[event.title]?.color ?? "text-white/80"
                     } ${iconStyles[event.title]?.glow ?? ""} ${
                       iconStyles[event.title]?.glowActive ?? ""
                     }`}
                   />
-                  </div>
                   <h3 className="truncate text-sm font-semibold tracking-[0.14em] text-white whitespace-nowrap">
                     {event.title}
                   </h3>
