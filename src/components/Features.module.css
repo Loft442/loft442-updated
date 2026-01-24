@@ -1,0 +1,136 @@
+.aboutColumn {
+  padding-left: 1.75rem;
+}
+
+.aboutLine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    #f5e6a8 0%,
+    #d4af37 55%,
+    #b8962e 100%
+  );
+  opacity: 0.85;
+  clip-path: polygon(
+    50% 0%,
+    80% 10%,
+    100% 20%,
+    100% 80%,
+    80% 90%,
+    50% 100%,
+    20% 90%,
+    0 80%,
+    0 20%,
+    20% 10%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.qualityColumn {
+  padding-right: 1.75rem;
+}
+
+.qualityColumnLeft {
+  padding-left: 1.75rem;
+}
+
+.qualityLine {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    #f5e6a8 0%,
+    #d4af37 55%,
+    #b8962e 100%
+  );
+  opacity: 0.85;
+  clip-path: polygon(
+    50% 0%,
+    80% 10%,
+    100% 20%,
+    100% 80%,
+    80% 90%,
+    50% 100%,
+    20% 90%,
+    0 80%,
+    0 20%,
+    20% 10%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.qualityLineLeft {
+  left: 0;
+  right: auto;
+}
+
+@media (max-width: 767px) {
+  .aboutColumn {
+    padding-left: 0;
+  }
+
+  .aboutLine {
+    display: none;
+  }
+
+  .qualityColumn {
+    padding-right: 0;
+  }
+
+  .qualityColumnLeft {
+    padding-left: 0;
+  }
+
+  .qualityLine {
+    display: none;
+  }
+
+  .qualityLineLeft {
+    display: none;
+  }
+}

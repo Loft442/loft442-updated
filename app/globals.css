@@ -56,6 +56,7 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  overflow-y: hidden;
   z-index: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -120,9 +121,11 @@ html {
   background: var(--background);
   scroll-behavior: smooth;
   overflow-x: hidden;
+  overflow-y: auto;
   margin: 0;
   padding: 0;
   position: relative;
+  height: 100%;
 }
 
 html::before,
@@ -218,7 +221,7 @@ html::after {
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -245,7 +248,7 @@ html::after {
 @keyframes heroStagger {
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -285,6 +288,10 @@ html::after {
 .text-spotlight > * {
   position: relative;
   z-index: 1;
+}
+
+.schedule-title::before {
+  opacity: 0.28;
 }
 
 .spotlight {
@@ -372,20 +379,19 @@ html::after {
   overflow: visible;
 }
 
-.body-spotlight::before {
-  content: "";
-  position: absolute;
-  inset: -8px;
-  z-index: 0;
+  .body-spotlight::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    z-index: 0;
   pointer-events: none;
   border-radius: inherit;
   background: radial-gradient(
-    120% 90% at 50% 40%,
-    rgba(255, 255, 255, 0.28),
-    transparent 72%
-  );
-  filter: blur(14px);
-  opacity: 0.45;
+      120% 90% at 50% 40%,
+      rgba(255, 255, 255, 0.28),
+      transparent 72%
+    );
+    opacity: 0.45;
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -447,6 +453,24 @@ html::after {
   );
 }
 
+.contact-glow::before {
+  opacity: 0.32;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0px,
+    black 160px,
+    black calc(100% - 180px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0px,
+    black 160px,
+    black calc(100% - 180px),
+    transparent 100%
+  );
+}
+
 /* Ensure content is above the glow */
 .section-glow > * {
   position: relative;
@@ -478,6 +502,24 @@ html::after {
       transparent 0px,
       black 90px,
       black calc(100% - 90px),
+      transparent 100%
+    );
+  }
+
+  .contact-glow::before {
+    opacity: 0.24;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 120px,
+      black calc(100% - 120px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0px,
+      black 120px,
+      black calc(100% - 120px),
       transparent 100%
     );
   }
@@ -531,11 +573,19 @@ html::after {
     transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
   transition-delay: var(--reveal-delay, 0ms);
   will-change: opacity, transform;
+  -webkit-font-smoothing: antialiased;
+}
+
+.reveal.reveal--text {
+  transform: none !important;
+  transition: opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: auto;
 }
 
 .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
+  will-change: auto;
 }
 
 .reveal.reveal-image {
@@ -547,6 +597,16 @@ html::after {
 
 .reveal.reveal-image.is-visible {
   transform: scale(1) translateY(0);
+}
+
+.reveal.reveal-done {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+.crisp-layer {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -905,6 +965,98 @@ html::after {
   will-change: opacity;
 }
 
+.video-rail {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.video-rail--left {
+  justify-content: flex-start;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 22%,
+    black 78%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 22%,
+    black 78%,
+    transparent 100%
+  );
+}
+
+.video-rail--right {
+  justify-content: flex-start;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 78%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 78%,
+    transparent 100%
+  );
+}
+
+.video-rail--scale-left {
+  transform: scale(0.6);
+  transform-origin: right center;
+}
+
+.video-rail--scale-right {
+  transform: scale(0.6);
+  transform-origin: left center;
+}
+
+.video-rail__track {
+  animation-name: loft-rail-left;
+  animation-duration: var(--rail-duration, 12s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.video-rail--reverse .video-rail__track {
+  animation-name: loft-rail-right;
+}
+
+@keyframes loft-rail-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes loft-rail-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-rail__track {
+    animation: none;
+    transform: translateX(0);
+  }
+}
+
 .gallery-shine {
   pointer-events: none;
   position: absolute;
@@ -920,6 +1072,12 @@ html::after {
   transition:
     transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1),
     opacity 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (max-width: 640px) {
+  .scheduling-page .section-glow::before {
+    opacity: 0.2;
+  }
 }
 
 .gallery-card:hover .gallery-shine {

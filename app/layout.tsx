@@ -1,14 +1,20 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import PageTransition from "@/components/PageTransition";
-import Navbar from "@/components/Navbar";
+import NavbarVisibility from "@/components/NavbarVisibility";
 import RevealOnScroll from "@/components/RevealOnScroll";
+import InstagramFloatingButton from "@/components/InstagramFloatingButton";
 import { inter, playfair } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Loft 442 | Luxury Event Venue",
   description:
     "Loft 442 is a veteran-owned event venue designed for elegant weddings, corporate events, and private celebrations.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -31,9 +37,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <Navbar />
+        <NavbarVisibility />
         <RevealOnScroll />
         <PageTransition>{children}</PageTransition>
+        <InstagramFloatingButton />
       </body>
     </html>
   );
