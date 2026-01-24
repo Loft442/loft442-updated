@@ -288,14 +288,14 @@ export default function GalleryPage() {
                   onClick={() => setActiveIndex(index)}
                   className="gallery-card group relative w-full overflow-hidden rounded-sm border border-white/10 bg-white/5 text-left shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition hover:border-white/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
                 >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-black">
+                  <div className="relative w-full overflow-hidden bg-black sm:aspect-[4/3]">
                     <Image
                       src={item.src}
                       alt={item.alt}
                       width={1200}
                       height={900}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="gallery-image h-full w-full object-contain transition duration-200 ease-out group-hover:scale-[1.03]"
+                      className="gallery-image h-auto w-full object-contain transition duration-200 ease-out group-hover:scale-[1.03] sm:h-full sm:w-full"
                     />
                     <div className="gallery-overlay absolute inset-0 bg-black/0 transition duration-200 ease-out group-hover:bg-black/40" />
                     <span className="gallery-shine" aria-hidden="true" />
@@ -325,21 +325,21 @@ export default function GalleryPage() {
                 className="relative inline-flex w-fit max-w-[92vw] flex-col rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
                 onClick={(event) => event.stopPropagation()}
               >
-                <div className="relative aspect-[4/3] w-[min(92vw,calc(76vh*4/3))] overflow-hidden rounded-sm bg-black">
-                  <Image
-                    src={activeItem.src}
-                    alt={activeItem.alt}
-                    width={1200}
-                    height={900}
-                    sizes="92vw"
-                    className="block h-full w-full object-contain"
-                  />
-                  <div className="absolute inset-0 rounded-sm bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="relative w-[92vw] max-w-[900px] h-[62vh] overflow-hidden rounded-2xl bg-black/40 sm:h-[70vh]">
+                  <div className="absolute inset-0 grid place-items-center p-3 sm:p-4">
+                    <img
+                      src={activeItem.src}
+                      alt={activeItem.alt ?? ""}
+                      className="block max-h-full max-w-full h-auto w-auto object-contain object-center"
+                      draggable={false}
+                    />
+                  </div>
+                  <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   <button
                     type="button"
                     onClick={() => setActiveIndex(null)}
                     aria-label="Close gallery"
-                    className="absolute right-3 top-3 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                    className="absolute right-3 top-3 z-20 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -349,7 +349,7 @@ export default function GalleryPage() {
                         type="button"
                         onClick={handlePrev}
                         aria-label="Previous image"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
+                        className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
                       >
                         <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
                       </button>
@@ -357,7 +357,7 @@ export default function GalleryPage() {
                         type="button"
                         onClick={handleNext}
                         aria-label="Next image"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
+                        className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
                       >
                         <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
                       </button>
