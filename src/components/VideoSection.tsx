@@ -186,6 +186,7 @@ export default function VideoSection() {
                     className="h-full w-full object-cover"
                     src="/loft-video.mp4"
                     poster={poster}
+                    preload="metadata"
                     loop
                     muted={isMuted}
                     playsInline

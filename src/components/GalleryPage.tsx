@@ -322,11 +322,11 @@ export default function GalleryPage() {
               onTouchEnd={handleTouchEnd}
             >
               <div
-                className="relative flex w-[92vw] max-w-[900px] max-h-[90vh] flex-col min-h-0 rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
+                className="relative flex w-[92vw] max-w-[900px] h-[calc(100svh-3rem)] max-h-[calc(100svh-3rem)] flex-col min-h-0 rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
                 onClick={(event) => event.stopPropagation()}
               >
                 <div className="relative flex-1 min-h-0 overflow-hidden rounded-2xl bg-black/40">
-                  <div className="absolute inset-0 p-3 sm:p-4">
+                  <div className="absolute inset-0 p-0 sm:p-4">
                     <div className="relative h-full w-full">
                       <Image
                         src={activeItem.src}

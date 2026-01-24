@@ -299,7 +299,7 @@ export default function SchedulePage() {
                     </span>
                   ) : null}
                 </div>
-                <div className="grid grid-cols-7 gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/40 sm:gap-3 sm:text-[0.65rem]">
+                <div className="grid w-full grid-cols-7 gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/40 sm:gap-3 sm:text-[0.65rem]">
                   {weekdays.map((day) => (
                     <div key={day} className="text-center">
                       {day}
@@ -309,14 +309,14 @@ export default function SchedulePage() {
                 <div
                   role="grid"
                   aria-label="Choose a scheduling date"
-                  className="mt-4 grid grid-cols-7 gap-2 sm:gap-3"
+                  className="mt-4 grid w-full grid-cols-7 gap-2 sm:gap-3"
                 >
                   {days.map((date, index) => {
                     if (!date) {
                       return (
                         <div
                           key={`empty-${index}`}
-                          className="h-12 w-12 sm:h-14 sm:w-14"
+                          className="aspect-square w-full sm:h-14 sm:w-14"
                         />
                       );
                     }
@@ -333,7 +333,7 @@ export default function SchedulePage() {
                       ? "border-white/10 bg-black/70 text-white/25 opacity-70 cursor-not-allowed"
                       : isSelected
                       ? "border-white/60 bg-white/12 text-white shadow-[0_0_18px_rgba(255,255,255,0.2)]"
-                      : "border-white/10 text-white/70 hover:border-white/40 hover:text-white";
+                      : "border-white/10 text-white/70 md:hover:border-white/40 md:hover:text-white";
 
                     return (
                       <button
@@ -344,7 +344,7 @@ export default function SchedulePage() {
                         aria-selected={isSelected}
                         disabled={disabled}
                         onClick={disabled ? undefined : () => setSelectedDate(date)}
-                        className={`flex h-12 w-12 flex-col items-center justify-center gap-0.5 rounded-sm border text-[0.7rem] uppercase tracking-[0.3em] leading-none transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:h-14 sm:w-14 sm:text-sm ${stateClass} ${
+                        className={`flex w-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-sm border text-[0.7rem] uppercase tracking-[0.3em] leading-none transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 aspect-square sm:aspect-auto sm:h-14 sm:w-14 sm:text-sm ${stateClass} ${
                           !disabled && isToday ? "border-white/30 text-white/90" : ""
                         }`}
                       >

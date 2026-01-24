@@ -11,10 +11,10 @@ export default function Hero() {
         <picture className="block h-full w-full">
           <source
             media="(max-width: 640px)"
-            srcSet="/images/banner-image-mobile.png"
+            srcSet="/images/banner-image-mobile-f.png"
           />
           <img
-            src="/images/banner-image-up.webp"
+            src="/images/banner-opt.webp"
             alt="Loft 442 banner"
             fetchPriority="high"
             loading="eager"

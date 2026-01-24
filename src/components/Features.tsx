@@ -34,7 +34,7 @@ export default function Features() {
                 </div>
               </div>
             </div>
-            <div className="relative order-1 h-[358px] w-[543px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] lg:order-2">
+            <div className="relative order-1 h-[358px] w-full max-w-[543px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] lg:order-2">
               <Image
                 src="/images/Ribbon-ex2.png"
                 alt="Loft 442 event venue interior"
@@ -52,7 +52,7 @@ export default function Features() {
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal className="grid items-center gap-6 sm:gap-8 lg:gap-12 lg:grid-cols-2">
-            <div className="relative order-1 h-[358px] w-[543px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)]">
+            <div className="relative order-1 h-[358px] w-full max-w-[543px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)]">
               <Image
                 src="/images/military-ex.png"
                 alt="Military tribute"
