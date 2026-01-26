@@ -149,17 +149,15 @@ export default function PartyTypeSelect({
           aria-describedby={error ? errorId : undefined}
           onClick={() => setOpen((prev) => !prev)}
           onKeyDown={handleKeyDown}
-          className={`${baseInputClass} ${
-            error ? errorInputClass : ""
-          } flex items-center justify-between gap-3`}
+          className={`${baseInputClass} ${error ? errorInputClass : ""
+            } flex items-center justify-between gap-3`}
         >
           <span className={showPlaceholder ? "text-white/50" : "text-white/80"}>
             {showPlaceholder ? placeholder : value}
           </span>
           <ChevronDown
-            className={`h-4 w-4 text-white/70 transition ${
-              open ? "rotate-180" : ""
-            }`}
+            className={`h-4 w-4 text-white/70 transition ${open ? "rotate-180" : ""
+              }`}
             aria-hidden="true"
           />
         </button>
@@ -167,11 +165,10 @@ export default function PartyTypeSelect({
           role="listbox"
           id={listboxId}
           aria-labelledby={buttonId}
-          className={`absolute left-0 top-full z-50 mt-2 w-full rounded-sm border border-white/10 bg-[#070708]/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)] backdrop-blur transition duration-150 ${
-            open
+          className={`absolute left-0 top-full z-50 mt-2 w-full rounded-sm border border-white/10 bg-[#070708]/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)] backdrop-blur transition duration-150 ${open
               ? "pointer-events-auto translate-y-0 opacity-100"
               : "pointer-events-none translate-y-1 opacity-0"
-          } motion-reduce:transition-none`}
+            } motion-reduce:transition-none`}
         >
           {options.map((option, index) => {
             const isSelected = option === value;
@@ -185,11 +182,10 @@ export default function PartyTypeSelect({
                 aria-selected={isSelected}
                 onMouseEnter={() => setActiveIndex(index)}
                 onClick={() => handleSelect(option)}
-                className={`flex w-full items-center rounded-sm px-3 py-2 text-left text-xs uppercase tracking-[0.2em] transition ${
-                  isSelected
+                className={`flex w-full items-center rounded-sm px-3 py-2 text-left text-xs uppercase tracking-[0.2em] transition ${isSelected
                     ? "bg-white/12 text-white/90 shadow-[0_0_12px_rgba(255,255,255,0.12)]"
                     : "text-white/70 hover:bg-white/8 hover:text-white/90"
-                } ${isActive ? "bg-white/8 text-white/90" : ""}`}
+                  } ${isActive ? "bg-white/8 text-white/90" : ""}`}
               >
                 {option}
               </button>

@@ -7,7 +7,16 @@ export default function Hero() {
     <section
       className="hero-no-glow relative w-full -mt-19 min-h-[calc(100svh-76px)] overflow-hidden bg-black aspect-9/16 sm:min-h-0 sm:aspect-640/367 md:min-h-[85vh] lg:min-h-[90vh]"
     >
-      <div className="absolute inset-0 z-1">
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/banner-image-mobile-2.webp"
+          alt="Loft 442 elegant event venue interior"
+          fill
+          priority
+          quality={85}
+          sizes="100vw"
+          className="object-cover object-center hero-motion sm:hidden"
+        />
         <Image
           src="/images/banner-opt.webp"
           alt="Loft 442 elegant event venue interior"
@@ -15,17 +24,17 @@ export default function Hero() {
           priority
           quality={85}
           sizes="100vw"
-          className="object-cover object-center hero-motion"
+          className="object-cover object-center hero-motion hidden sm:block"
         />
       </div>
-      <div className="relative z-20 translate-y-19 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 md:px-10 md:pb-16 md:pt-28 lg:px-12 lg:pb-20 lg:pt-32">
+      <div className="relative z-10 translate-y-19 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 md:px-10 md:pb-16 md:pt-28 lg:px-12 lg:pb-20 lg:pt-32">
         <div className="max-w-2xl md:max-w-3xl">
           <div className="text-spotlight inline-block rounded-sm px-4 py-3">
             <div className="flex flex-col gap-6 sm:gap-8 md:gap-7 lg:gap-8">
-              <p className="pl-1 text-[0.75rem] uppercase tracking-[0.45em] text-white/60 [text-shadow:0_2px_8px_rgba(0,0,0,0.4)]">
+              <p className="pl-1 text-[0.75rem] uppercase tracking-[0.45em] text-white/60 [text-shadow:0_1px_6px_rgba(0,0,0,0.25)] md:[text-shadow:0_3px_12px_rgba(0,0,0,0.6)]">
                 Loft 442
               </p>
-              <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.12em] text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.8)] sm:text-4xl md:text-4xl lg:text-6xl leading-tight md:leading-snug">
+              <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.12em] text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.5)] md:[text-shadow:0_4px_20px_rgba(0,0,0,0.9)] sm:text-4xl md:text-4xl lg:text-6xl leading-tight md:leading-snug">
                 ELEGANT{" "}
                 <span className={styles.venueUnderline}>VENUE</span> FOR
                 UNFORGETTABLE EVENTS
@@ -40,11 +49,11 @@ export default function Hero() {
                     sizes="28px"
                     className="h-9 w-7 [filter:drop-shadow(0_2px_6px_rgba(0,0,0,0.7))]"
                   />
-                  <p className="hero-underline relative inline-block overflow-visible text-base sm:text-lg md:text-base font-medium text-white/90 [text-shadow:0_2px_10px_rgba(0,0,0,0.7)]">
+                  <p className="hero-underline relative inline-block overflow-visible text-base sm:text-lg md:text-base font-medium text-white/90 [text-shadow:0_2px_8px_rgba(0,0,0,0.4)] md:[text-shadow:0_3px_14px_rgba(0,0,0,0.8)]">
                     VETERAN OWNED & OPERATED
                   </p>
                 </div>
-                <p className="text-xs sm:text-sm md:text-sm uppercase tracking-[0.35em] text-white/70 [text-shadow:0_2px_8px_rgba(0,0,0,0.4)]">
+                <p className="text-xs sm:text-sm md:text-sm uppercase tracking-[0.35em] text-white/70 [text-shadow:0_1px_4px_rgba(0,0,0,0.1)] md:[text-shadow:0_2px_8px_rgba(0,0,0,0.15)]">
                   Proudly Serving Those Who Served
                 </p>
                 <div

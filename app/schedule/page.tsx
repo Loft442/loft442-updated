@@ -508,7 +508,7 @@ export default function SchedulePage() {
                       updateField("message", event.target.value)
                     }
                     onBlur={() => markTouched("message")}
-                    className={baseInputClass}
+                    className={`${baseInputClass} min-h-[180px] sm:min-h-[120px]`}
                   />
                   <span className={`${errorTextClass} opacity-0`} />
                 </label>

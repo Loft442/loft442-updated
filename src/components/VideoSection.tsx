@@ -15,7 +15,7 @@ const buildRailImages = (offset: number, count = 5) =>
     return railImages[(index + offset) % railImages.length];
   });
 
-const unifiedRail = { id: "unified-rail", offset: 0, duration: "100s" };
+const unifiedRail = { id: "unified-rail", offset: 0 };
 
 export default function VideoSection() {
 
@@ -32,7 +32,7 @@ export default function VideoSection() {
         </div>
         <div className="overflow-hidden">
           {(() => {
-            const mobileImages = buildRailImages(unifiedRail.offset, 3);
+            const mobileImages = buildRailImages(unifiedRail.offset, railImages.length);
             const desktopImages = buildRailImages(unifiedRail.offset, railImages.length);
             const mobileLoop = [...mobileImages, ...mobileImages];
             const desktopLoop = [...desktopImages, ...desktopImages];
@@ -44,7 +44,6 @@ export default function VideoSection() {
                   <div className="video-rail video-rail--mobile relative w-full overflow-hidden">
                     <div
                       className="video-rail__track flex w-max items-center gap-3"
-                      style={{ "--rail-duration": unifiedRail.duration } as CSSProperties}
                     >
                       {mobileLoop.map((image, index) => (
                         <div
@@ -71,7 +70,6 @@ export default function VideoSection() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-10 sm:w-14 bg-gradient-to-r from-[#070708] to-transparent" />
                     <div
                       className="video-rail__track flex h-full w-max items-center gap-2"
-                      style={{ "--rail-duration": unifiedRail.duration } as CSSProperties}
                     >
                       {desktopLoop.map((image, index) => (
                         <div
