@@ -10,8 +10,8 @@ export default function Features() {
         className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider border-t border-white/10 py-12 sm:py-16"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="grid items-center gap-6 sm:gap-8 lg:gap-12 lg:grid-cols-2">
-            <div className={`relative order-2 h-full ${styles.aboutColumn} lg:order-1`}>
+          <Reveal className="grid items-center gap-6 sm:gap-8 md:grid-cols-2 md:gap-10 lg:gap-12">
+            <div className={`relative order-2 h-full md:order-1 ${styles.aboutColumn}`}>
               <span className={styles.aboutLine} aria-hidden="true" />
               <div className="inline-block rounded-sm px-4 py-3">
                 <div className="flex flex-col gap-6">
@@ -34,9 +34,9 @@ export default function Features() {
                 </div>
               </div>
             </div>
-            <div className="relative order-1 h-[358px] w-full max-w-[543px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] lg:order-2">
+            <div className="relative order-1 h-[358px] w-full max-w-[543px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] md:order-2">
               <Image
-                src="/images/Ribbon-ex2.png"
+                src="/images/ribbon2.png"
                 alt="Loft 442 event venue interior"
                 fill
                 sizes="(max-width: 768px) 100vw, 45vw"
@@ -51,7 +51,7 @@ export default function Features() {
         className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider border-t border-white/10 py-12 sm:py-16"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="grid items-center gap-6 sm:gap-8 lg:gap-12 lg:grid-cols-2">
+          <Reveal className="grid items-center gap-6 sm:gap-8 md:grid-cols-2 md:gap-10 lg:gap-12">
             <div className="relative order-1 h-[358px] w-full max-w-[543px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)]">
               <Image
                 src="/images/military-ex.png"

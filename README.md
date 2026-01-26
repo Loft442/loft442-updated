@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Loft 442 - Event Venue Website
 
-## Getting Started
+A modern, high-performance Next.js website for Loft 442 event venue featuring:
+- WebP optimized image gallery
+- Real-time availability calendar with Sanity CMS
+- Booking form with email notifications via Resend
+- Responsive design with smooth animations
 
-First, run the development server:
+## Quick Start
 
+### 1. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Set Up Environment Variables
+Copy `.env.example` to `.env.local` and fill in your values:
+```bash
+cp .env.example .env.local
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Required environment variables:
+- `NEXT_PUBLIC_SANITY_PROJECT_ID` - Your Sanity project ID
+- `NEXT_PUBLIC_SANITY_DATASET` - Usually "production"
+- `RESEND_API_KEY` - Your Resend API key
+- `LEADS_TO_EMAIL` - Email to receive booking requests
+- `SMTP_FROM` - From email address
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Set Up Sanity CMS
+Initialize Sanity (if you haven't already):
+```bash
+npx sanity@latest init
+```
+
+Deploy the schema:
+```bash
+npx sanity@latest schema deploy
+```
+
+### 4. Run Development Server
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the site.
+
+Access Sanity Studio at [http://localhost:3000/studio](http://localhost:3000/studio)
+
+## Project Structure
+
+- `/app` - Next.js 16 app directory with pages and API routes
+- `/src/components` - React components
+- `/public/images` - WebP optimized gallery images
+- `/sanity` - Sanity CMS configuration and schemas
+- `/src/lib` - Utility functions and client configurations
+
+## Key Features
+
+### WebP Image Optimization
+All gallery images have been converted to WebP format for optimal performance:
+- 85% quality setting
+- ~25-35% file size reduction
+- EXIF orientation properly applied
+
+### Availability Calendar
+- Powered by Sanity CMS
+- Real-time booked date management
+- Past dates automatically blocked
+- Integrates with booking form
+
+### Booking Form
+- Email notifications via Resend
+- Rate limiting (5 requests per 10 minutes per IP)
+- Form validation and error handling
+
+### Smooth Animations
+- Gallery reveal animations (0.2s)
+- Page transitions
+- Responsive interactions
+
+## Production Deployment
+
+See [PRODUCTION_DEPLOYMENT.md](./PRODUCTION_DEPLOYMENT.md) for detailed deployment instructions.
+
+### Quick Deploy to Vercel
+```bash
+npm install -g vercel
+vercel
+```
+
+Don't forget to set your environment variables in Vercel's project settings!
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Sanity Documentation](https://www.sanity.io/docs)
+- [Resend Documentation](https://resend.com/docs)

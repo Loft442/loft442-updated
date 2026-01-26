@@ -1,13 +1,11 @@
 import Link from "next/link";
 import AvailabilityCalendar from "./AvailabilityCalendar";
 import Footer from "@/components/Footer";
-import { getBookedDates } from "@/lib/getBookedDates";
 
 const contactNumber = "555-123-4420";
 const contactEmail = "events@loft442.com";
 
-export default async function AvailabilityPage() {
-  const bookedDates = await getBookedDates();
+export default function AvailabilityPage() {
 
   return (
     <main className="relative min-h-screen bg-black text-white">
@@ -23,13 +21,13 @@ export default async function AvailabilityPage() {
             Availability
           </h1>
           <p className="max-w-2xl text-sm text-white/70">
-            Booked dates are unavailable. Request a tour for open dates.
+            Request a tour for any date.
           </p>
           <div className="h-px w-full bg-gradient-to-r from-transparent via-amber-200/50 to-transparent" />
         </section>
 
         <section className="reveal">
-          <AvailabilityCalendar bookedDates={bookedDates} />
+          <AvailabilityCalendar />
         </section>
 
         <section className="reveal">

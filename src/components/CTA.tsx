@@ -13,13 +13,13 @@ export default function CTA() {
               Ready to celebrate
             </p>
             <h2 className="spotlight-bright text-2xl font-semibold tracking-[0.12em] text-white sm:text-3xl md:text-4xl">
-              READY TO BOOK YOUR EVENT?
+              READY TO PLAN YOUR EVENT?
             </h2>
             <Link
               href="/schedule"
               className="cta-button cta-book inline-flex h-12 items-center justify-center rounded-sm px-10 text-[0.7rem] uppercase tracking-[0.4em] text-black transition hover:opacity-90"
             >
-              Book Now
+              Start planning
             </Link>
           </div>
         </div>

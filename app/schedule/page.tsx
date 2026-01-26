@@ -4,11 +4,9 @@ import { useMemo, useState, type FormEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import Footer from "@/components/Footer";
-import { useBookedDays } from "@/lib/useBookedDays";
 import PartyTypeSelect from "@/components/ui/PartyTypeSelect";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const allowedWeekdays = new Set([1, 3, 5]);
 
 const partyTypes = [
   "Wedding/Anniversary",
@@ -54,15 +52,10 @@ const formatSelectedDate = (date: Date) =>
 
 export default function SchedulePage() {
   const today = useMemo(() => new Date(), []);
-  const startOfToday = useMemo(
-    () => new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-    [today]
-  );
   const [monthAnchor, setMonthAnchor] = useState(
     new Date(today.getFullYear(), today.getMonth(), 1)
   );
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const bookedDays = useBookedDays(monthAnchor);
 
   const monthLabel = useMemo(() => {
     return monthAnchor.toLocaleDateString("en-US", {
@@ -120,14 +113,14 @@ export default function SchedulePage() {
     const emailError = !emailValue
       ? "Required"
       : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)
-      ? ""
-      : "Enter a valid email";
+        ? ""
+        : "Enter a valid email";
 
     const phoneError = !form.phone.trim()
       ? "Required"
       : phoneDigits.length >= 10
-      ? ""
-      : "Enter a valid phone";
+        ? ""
+        : "Enter a valid phone";
 
     return {
       firstName: form.firstName.trim() ? "" : "Required",
@@ -236,10 +229,10 @@ export default function SchedulePage() {
               Loft 442
             </p>
             <h1 className="text-spotlight schedule-title inline-block text-3xl font-semibold tracking-[0.35em] text-white sm:text-4xl md:text-5xl">
-              SCHEDULING
+              PLAN YOUR EVENT
             </h1>
             <p className="max-w-xl text-sm text-white/70">
-              Choose an available date and send your request.
+              Select your preferred date and tell us about your event. Our team will follow up to confirm availability.
             </p>
           </Reveal>
 
@@ -250,7 +243,7 @@ export default function SchedulePage() {
             >
               <div className="flex items-center justify-between">
                 <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                  Select Date
+                  Select Preferred Date
                 </p>
                 <div className="flex items-center gap-2">
                   <button
@@ -308,7 +301,7 @@ export default function SchedulePage() {
                 </div>
                 <div
                   role="grid"
-                  aria-label="Choose a scheduling date"
+                  aria-label="Choose a date to plan your event"
                   className="mt-4 grid w-full grid-cols-7 gap-2 sm:gap-3"
                 >
                   {days.map((date, index) => {
@@ -322,18 +315,16 @@ export default function SchedulePage() {
                     }
 
                     const dateKey = toYMD(date);
-                    const booked = bookedDays.has(dateKey);
-                    const isPast = date < startOfToday;
-                    const isAllowedDay = allowedWeekdays.has(date.getDay());
-                    const disabled = booked || isPast || !isAllowedDay;
+                    const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                    const disabled = isPast;
                     const isSelected =
                       !disabled && !!selectedDate && isSameDay(selectedDate, date);
                     const isToday = isSameDay(today, date);
                     const stateClass = disabled
                       ? "border-white/10 bg-black/70 text-white/25 opacity-70 cursor-not-allowed"
                       : isSelected
-                      ? "border-white/60 bg-white/12 text-white shadow-[0_0_18px_rgba(255,255,255,0.2)]"
-                      : "border-white/10 text-white/70 md:hover:border-white/40 md:hover:text-white";
+                        ? "border-white/60 bg-white/12 text-white shadow-[0_0_18px_rgba(255,255,255,0.2)]"
+                        : "border-white/10 text-white/70 md:hover:border-white/40 md:hover:text-white";
 
                     return (
                       <button
@@ -344,16 +335,10 @@ export default function SchedulePage() {
                         aria-selected={isSelected}
                         disabled={disabled}
                         onClick={disabled ? undefined : () => setSelectedDate(date)}
-                        className={`flex w-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-sm border text-[0.7rem] uppercase tracking-[0.3em] leading-none transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 aspect-square sm:aspect-auto sm:h-14 sm:w-14 sm:text-sm ${stateClass} ${
-                          !disabled && isToday ? "border-white/30 text-white/90" : ""
-                        }`}
+                        className={`flex w-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-sm border text-[0.7rem] uppercase tracking-[0.3em] leading-none transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 aspect-square sm:aspect-auto sm:h-14 sm:w-14 sm:text-sm ${stateClass} ${!disabled && isToday ? "border-white/30 text-white/90" : ""
+                          }`}
                       >
                         <span className="leading-none">{date.getDate()}</span>
-                        {booked ? (
-                          <span className="mt-0.5 text-[0.45rem] uppercase tracking-[0.35em] text-white/35">
-                            Booked
-                          </span>
-                        ) : null}
                       </button>
                     );
                   })}
@@ -412,16 +397,14 @@ export default function SchedulePage() {
                       onBlur={() => markTouched("firstName")}
                       aria-invalid={Boolean(fieldError("firstName"))}
                       aria-describedby="firstName-error"
-                      className={`${baseInputClass} ${
-                        fieldError("firstName") ? errorInputClass : ""
-                      }`}
+                      className={`${baseInputClass} ${fieldError("firstName") ? errorInputClass : ""
+                        }`}
                     />
                     <span
                       id="firstName-error"
                       aria-live="polite"
-                      className={`${errorTextClass} ${
-                        fieldError("firstName") ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`${errorTextClass} ${fieldError("firstName") ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       {fieldError("firstName")}
                     </span>
@@ -438,16 +421,14 @@ export default function SchedulePage() {
                       onBlur={() => markTouched("lastName")}
                       aria-invalid={Boolean(fieldError("lastName"))}
                       aria-describedby="lastName-error"
-                      className={`${baseInputClass} ${
-                        fieldError("lastName") ? errorInputClass : ""
-                      }`}
+                      className={`${baseInputClass} ${fieldError("lastName") ? errorInputClass : ""
+                        }`}
                     />
                     <span
                       id="lastName-error"
                       aria-live="polite"
-                      className={`${errorTextClass} ${
-                        fieldError("lastName") ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`${errorTextClass} ${fieldError("lastName") ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       {fieldError("lastName")}
                     </span>
@@ -479,16 +460,14 @@ export default function SchedulePage() {
                       onBlur={() => markTouched("phone")}
                       aria-invalid={Boolean(fieldError("phone"))}
                       aria-describedby="phone-error"
-                      className={`${baseInputClass} ${
-                        fieldError("phone") ? errorInputClass : ""
-                      }`}
+                      className={`${baseInputClass} ${fieldError("phone") ? errorInputClass : ""
+                        }`}
                     />
                     <span
                       id="phone-error"
                       aria-live="polite"
-                      className={`${errorTextClass} ${
-                        fieldError("phone") ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`${errorTextClass} ${fieldError("phone") ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       {fieldError("phone")}
                     </span>
@@ -505,16 +484,14 @@ export default function SchedulePage() {
                       onBlur={() => markTouched("email")}
                       aria-invalid={Boolean(fieldError("email"))}
                       aria-describedby="email-error"
-                      className={`${baseInputClass} ${
-                        fieldError("email") ? errorInputClass : ""
-                      }`}
+                      className={`${baseInputClass} ${fieldError("email") ? errorInputClass : ""
+                        }`}
                     />
                     <span
                       id="email-error"
                       aria-live="polite"
-                      className={`${errorTextClass} ${
-                        fieldError("email") ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`${errorTextClass} ${fieldError("email") ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       {fieldError("email")}
                     </span>
@@ -525,6 +502,7 @@ export default function SchedulePage() {
                   Message (optional)
                   <textarea
                     rows={4}
+                    placeholder="Tell us about your event guest count, preferred time, special requests, or anything you'd like us to know."
                     value={form.message}
                     onChange={(event) =>
                       updateField("message", event.target.value)

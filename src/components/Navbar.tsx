@@ -88,7 +88,6 @@ export default function Navbar() {
             alt="Loft 442 logo"
             width={480}
             height={88}
-            priority
             sizes="(max-width: 640px) 220px, (max-width: 1024px) 260px, 320px"
             className={[
               "w-auto",
@@ -116,7 +115,7 @@ export default function Navbar() {
             href="/schedule"
             className="cta-button cta-book inline-flex h-11 items-center justify-center rounded-sm border border-[#d4af37] px-4 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-[#f5e6a8] hover:text-white hover:shadow-[0_0_20px_rgba(212,175,55,0.18)] sm:px-5"
           >
-            Book Now
+            Start planning
           </Link>
           <button
             type="button"
@@ -133,9 +132,8 @@ export default function Navbar() {
 
       <div
         id="mobile-nav"
-        className={`md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
-          menuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${menuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <div className="border-t border-white/10 bg-black/90 px-4 pb-4 pt-3 backdrop-blur sm:px-6">
           <div className="flex flex-col gap-3 text-xs uppercase tracking-[0.3em] text-white/70">

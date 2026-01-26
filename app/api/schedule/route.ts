@@ -57,16 +57,6 @@ export async function POST(request: Request) {
     );
   }
 
-  console.log("Schedule request", {
-    date,
-    firstName,
-    lastName,
-    partyType,
-    phone,
-    email,
-    message,
-  });
-
   // TODO: Send email confirmation to venue.
   // TODO: Push request to CRM or Google Sheets.
   // TODO: Store schedule request in Sanity or database.

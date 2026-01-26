@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 
 const calendarClassNames = {
@@ -25,20 +25,7 @@ const calendarClassNames = {
   day_disabled: "cursor-not-allowed text-white/30 opacity-50",
 };
 
-type AvailabilityCalendarProps = {
-  bookedDates: string[];
-};
-
-export default function AvailabilityCalendar({
-  bookedDates,
-}: AvailabilityCalendarProps) {
-  const booked = useMemo(
-    () =>
-      bookedDates
-        .filter(Boolean)
-        .map((date) => new Date(`${date}T00:00:00`)),
-    [bookedDates]
-  );
+export default function AvailabilityCalendar() {
   const [selected, setSelected] = useState<Date | undefined>();
 
   return (
@@ -59,10 +46,6 @@ export default function AvailabilityCalendar({
                 <span className="h-2 w-2 rounded-full bg-emerald-300/80 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
                 Available
               </span>
-              <span className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1">
-                <span className="h-2 w-2 rounded-full bg-amber-300/80 shadow-[0_0_8px_rgba(200,162,74,0.6)]" />
-                Booked
-              </span>
             </div>
           </div>
 
@@ -73,40 +56,15 @@ export default function AvailabilityCalendar({
               onSelect={setSelected}
               showOutsideDays
               fixedWeeks
-              disabled={booked}
-              modifiers={{ booked }}
-              modifiersClassNames={{ booked: "availability-booked" }}
               classNames={calendarClassNames}
             />
           </div>
 
           <p className="text-xs text-white/50">
-            Dates are shown in your local time. Booked dates are unavailable.
+            Dates are shown in your local time.
           </p>
         </div>
       </div>
-
-      <style jsx global>{`
-        .availability-calendar :global(.availability-booked) {
-          position: relative;
-          text-decoration: line-through;
-          color: rgba(255, 255, 255, 0.35);
-          opacity: 0.6;
-        }
-
-        .availability-calendar :global(.availability-booked::after) {
-          content: "";
-          position: absolute;
-          left: 50%;
-          bottom: 6px;
-          transform: translateX(-50%);
-          width: 6px;
-          height: 6px;
-          border-radius: 9999px;
-          background: rgba(200, 162, 74, 0.85);
-          box-shadow: 0 0 8px rgba(200, 162, 74, 0.6);
-        }
-      `}</style>
     </div>
   );
 }

@@ -39,7 +39,8 @@ const categories: GalleryItemCategory[] = [
 ];
 const filterCategories: GalleryCategory[] = ["All", ...categories];
 
-const galleryItems: GalleryItem[] = [
+export const galleryItems: GalleryItem[] = [
+  // Weddings
   {
     id: 1,
     src: "/images/wedding1.webp",
@@ -63,6 +64,177 @@ const galleryItems: GalleryItem[] = [
     src: "/images/wedding4.webp",
     alt: "Wedding dance floor with uplighting",
     category: "Weddings",
+  },
+  {
+    id: 5,
+    src: "/images/wedding5.webp",
+    alt: "Wedding celebration at Loft 442",
+    category: "Weddings",
+  },
+  {
+    id: 6,
+    src: "/images/wedding6.webp",
+    alt: "Wedding venue setup at Loft 442",
+    category: "Weddings",
+  },
+  {
+    id: 7,
+    src: "/images/wedding7.webp",
+    alt: "Wedding reception decor at Loft 442",
+    category: "Weddings",
+  },
+  {
+    id: 8,
+    src: "/images/wedding8.webp",
+    alt: "Wedding event at Loft 442",
+    category: "Weddings",
+  },
+  {
+    id: 9,
+    src: "/images/wedding9.webp",
+    alt: "Wedding gathering at Loft 442",
+    category: "Weddings",
+  },
+  // Private Events
+  {
+    id: 10,
+    src: "/images/private-event1.webp",
+    alt: "Private event at Loft 442",
+    category: "Private Events",
+  },
+  {
+    id: 11,
+    src: "/images/private-event2.webp",
+    alt: "Corporate gathering at Loft 442",
+    category: "Private Events",
+  },
+  {
+    id: 12,
+    src: "/images/private-event3.webp",
+    alt: "Private celebration at Loft 442",
+    category: "Private Events",
+  },
+  {
+    id: 13,
+    src: "/images/private-event4.webp",
+    alt: "Special event at Loft 442",
+    category: "Private Events",
+  },
+  // Birthdays
+  {
+    id: 14,
+    src: "/images/birthday1.webp",
+    alt: "Birthday party at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 15,
+    src: "/images/birthday2.webp",
+    alt: "Birthday celebration setup",
+    category: "Birthdays",
+  },
+  {
+    id: 16,
+    src: "/images/birthday3.webp",
+    alt: "Birthday party decor at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 17,
+    src: "/images/birthday4.webp",
+    alt: "Birthday event at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 18,
+    src: "/images/birthday5.webp",
+    alt: "Birthday gathering at Loft 442",
+    category: "Birthdays",
+  },
+  // Baby Shower
+  {
+    id: 19,
+    src: "/images/babyshower1.webp",
+    alt: "Baby shower at Loft 442",
+    category: "Baby Shower",
+  },
+  {
+    id: 20,
+    src: "/images/babyshower2.webp",
+    alt: "Baby shower celebration",
+    category: "Baby Shower",
+  },
+  {
+    id: 21,
+    src: "/images/babyshower3.webp",
+    alt: "Baby shower decor at Loft 442",
+    category: "Baby Shower",
+  },
+  {
+    id: 22,
+    src: "/images/babyshower4.webp",
+    alt: "Baby shower setup",
+    category: "Baby Shower",
+  },
+  {
+    id: 23,
+    src: "/images/babyshower5.webp",
+    alt: "Baby shower event at Loft 442",
+    category: "Baby Shower",
+  },
+  {
+    id: 24,
+    src: "/images/babyshower6.webp",
+    alt: "Baby shower gathering",
+    category: "Baby Shower",
+  },
+  {
+    id: 25,
+    src: "/images/babyshower7.webp",
+    alt: "Baby shower party at Loft 442",
+    category: "Baby Shower",
+  },
+  {
+    id: 26,
+    src: "/images/babyshower8.webp",
+    alt: "Baby shower celebration at Loft 442",
+    category: "Baby Shower",
+  },
+  {
+    id: 27,
+    src: "/images/babyshower9.webp",
+    alt: "Baby shower venue setup",
+    category: "Baby Shower",
+  },
+  {
+    id: 28,
+    src: "/images/babyshower10.webp",
+    alt: "Baby shower decor details",
+    category: "Baby Shower",
+  },
+  {
+    id: 29,
+    src: "/images/babyshower11.webp",
+    alt: "Baby shower event setup",
+    category: "Baby Shower",
+  },
+  {
+    id: 30,
+    src: "/images/babyshower12.webp",
+    alt: "Baby shower party setup",
+    category: "Baby Shower",
+  },
+  {
+    id: 31,
+    src: "/images/babyshower13.webp",
+    alt: "Baby shower celebration setup",
+    category: "Baby Shower",
+  },
+  {
+    id: 32,
+    src: "/images/babyshower14.webp",
+    alt: "Baby shower at Loft 442 venue",
+    category: "Baby Shower",
   },
 ];
 
@@ -254,11 +426,10 @@ export default function GalleryPage() {
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => setActiveCategory(category)}
                   onKeyDown={(event) => handleTabKeyDown(event, index)}
-                  className={`relative min-h-11 rounded-sm border border-white/10 bg-white/5 px-5 py-2 text-[0.65rem] uppercase tracking-[0.35em] text-white/60 transition duration-200 ease-out hover:border-white/30 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${
-                    isActive
-                      ? "border-white/40 text-white shadow-[0_0_25px_rgba(255,255,255,0.18)] after:opacity-100"
-                      : ""
-                  }`}
+                  className={`relative min-h-11 rounded-sm border border-white/10 bg-white/5 px-5 py-2 text-[0.65rem] uppercase tracking-[0.35em] text-white/60 transition duration-200 ease-out hover:border-white/30 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${isActive
+                    ? "border-white/40 text-white shadow-[0_0_25px_rgba(255,255,255,0.18)] after:opacity-100"
+                    : ""
+                    }`}
                 >
                   {category}
                 </button>
@@ -315,73 +486,72 @@ export default function GalleryPage() {
 
       {activeItem && isMounted
         ? createPortal(
+          <div
+            className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4 backdrop-blur-sm sm:p-6"
+            onClick={() => setActiveIndex(null)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
-              className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4 backdrop-blur-sm sm:p-6"
-              onClick={() => setActiveIndex(null)}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
+              className="relative flex w-[92vw] max-w-[900px] h-[calc(100svh-3rem)] max-h-[calc(100svh-3rem)] flex-col min-h-0 rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
+              onClick={(event) => event.stopPropagation()}
             >
-              <div
-                className="relative flex w-[92vw] max-w-[900px] h-[calc(100svh-3rem)] max-h-[calc(100svh-3rem)] flex-col min-h-0 rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className="relative flex-1 min-h-0 overflow-hidden rounded-2xl bg-black/40">
-                  <div className="absolute inset-0 p-0 sm:p-4">
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={activeItem.src}
-                        alt={activeItem.alt ?? ""}
-                        fill
-                        sizes="(max-width: 640px) 92vw, 900px"
-                        className="object-contain object-center"
-                        priority
-                      />
-                    </div>
+              <div className="relative flex-1 min-h-0 overflow-hidden rounded-2xl bg-black/40">
+                <div className="absolute inset-0 p-0 sm:p-4">
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={activeItem.src}
+                      alt={activeItem.alt ?? ""}
+                      fill
+                      sizes="(max-width: 640px) 92vw, 900px"
+                      className="object-contain object-center"
+                    />
                   </div>
-                  <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  <button
-                    type="button"
-                    onClick={() => setActiveIndex(null)}
-                    aria-label="Close gallery"
-                    className="absolute right-3 top-3 z-20 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                  {filteredItems.length > 1 ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={handlePrev}
-                        aria-label="Previous image"
-                        className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
-                      >
-                        <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        aria-label="Next image"
-                        className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
-                      >
-                        <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
-                      </button>
-                    </>
-                  ) : null}
                 </div>
-                <div className="mt-4 flex max-w-full flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
-                  <span>{activeItem.category}</span>
-                  <span>
-                    {activeIndex !== null ? activeIndex + 1 : 1} /{" "}
-                    {filteredItems.length}
-                  </span>
-                </div>
-                <p className="mt-2 max-w-full text-sm text-white/70">
-                  {activeItem.alt}
-                </p>
+                <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <button
+                  type="button"
+                  onClick={() => setActiveIndex(null)}
+                  aria-label="Close gallery"
+                  className="absolute right-3 top-3 z-20 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+                {filteredItems.length > 1 ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handlePrev}
+                      aria-label="Previous image"
+                      className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
+                    >
+                      <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      aria-label="Next image"
+                      className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
+                    >
+                      <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
+                    </button>
+                  </>
+                ) : null}
               </div>
-            </div>,
-            document.body
-          )
+              <div className="mt-4 flex max-w-full flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
+                <span>{activeItem.category}</span>
+                <span>
+                  {activeIndex !== null ? activeIndex + 1 : 1} /{" "}
+                  {filteredItems.length}
+                </span>
+              </div>
+              <p className="mt-2 max-w-full text-sm text-white/70">
+                {activeItem.alt}
+              </p>
+            </div>
+          </div>,
+          document.body
+        )
         : null}
     </div>
   );
