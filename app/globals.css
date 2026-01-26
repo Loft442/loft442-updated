@@ -27,7 +27,7 @@
   --font-heading: "Google Sans Flex", system-ui, sans-serif;
   --hero-no-glow-height: calc(100vw * 367 / 640);
   --hero-no-glow-buffer: 0px;
-  --rail-duration: 12s;
+  --rail-duration: 120s;
   /* desktop */
   --mask-fade-horizontal: linear-gradient(to right,
       transparent 0%,
