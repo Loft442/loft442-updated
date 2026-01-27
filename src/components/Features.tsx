@@ -119,7 +119,7 @@ export default function Features() {
             </div>
             <div className="relative h-[240px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] sm:h-[320px] lg:h-[360px]">
               <Image
-                src="/images/quality-promise.png"
+                src="/images/quality-promise2.png"
                 alt="Loft 442 venue detail"
                 fill
                 sizes="(max-width: 768px) 100vw, 45vw"
