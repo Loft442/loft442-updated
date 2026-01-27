@@ -34,6 +34,11 @@
       black 18%,
       black 82%,
       transparent 100%);
+  /* iOS Safari safe area insets with fallbacks */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
 }
 
 @theme inline {
@@ -52,7 +57,9 @@ body {
   background: transparent;
   color: var(--foreground);
   font-family: var(--font-body);
+  /* iOS Safari viewport height fix: use svh with vh fallback */
   min-height: 100vh;
+  min-height: 100svh;
   position: relative;
   overflow-x: hidden;
   z-index: 0;
@@ -60,6 +67,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+  /* Prevent iOS Safari text size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Enable momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
 .faq button>span {
@@ -987,9 +999,14 @@ html::after {
   animation-duration: var(--rail-duration, 12s);
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  animation-play-state: running;
   will-change: transform;
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
 }
 
 .video-rail--reverse .video-rail__track {
@@ -997,22 +1014,47 @@ html::after {
 }
 
 @keyframes loft-rail-left {
-  from {
-    transform: translateX(0);
+  0% {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
   }
 
-  to {
-    transform: translateX(-50%);
+  100% {
+    transform: translate3d(-50%, 0, 0);
+    -webkit-transform: translate3d(-50%, 0, 0);
   }
 }
 
 @keyframes loft-rail-right {
-  from {
-    transform: translateX(-50%);
+  0% {
+    transform: translate3d(-50%, 0, 0);
+    -webkit-transform: translate3d(-50%, 0, 0);
   }
 
-  to {
-    transform: translateX(0);
+  100% {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+/* WebKit-specific keyframes for Safari/Mac */
+@-webkit-keyframes loft-rail-left {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@-webkit-keyframes loft-rail-right {
+  0% {
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+
+  100% {
+    -webkit-transform: translate3d(0, 0, 0);
   }
 }
 
@@ -1198,4 +1240,106 @@ html::after {
   z-index: 1;
   isolation: isolate;
   pointer-events: auto;
+}
+
+/* ============================================
+   iOS SAFARI SPECIFIC HARDENING
+   ============================================ */
+
+/* Ensure fixed elements don't break on iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari only */
+
+  /* Prevent rubber-banding affecting fixed elements */
+  .fixed {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+
+  /* Ensure backdrop-filter works on iOS */
+  .backdrop-blur-md,
+  .backdrop-blur-sm,
+  .backdrop-blur-xl,
+  .backdrop-blur {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Fix for iOS Safari 100vh issue on full-height elements */
+.h-screen,
+.min-h-screen {
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Gallery modal iOS fixes */
+.gallery-modal-open {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+/* Safe area padding utilities */
+.pb-safe {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.pt-safe {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.pl-safe {
+  padding-left: var(--safe-area-inset-left);
+}
+
+.pr-safe {
+  padding-right: var(--safe-area-inset-right);
+}
+
+/* Ensure minimum tap target size for iOS (44pt) */
+.min-tap-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* GPU acceleration helper that doesn't break fixed positioning */
+.gpu-accelerate {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Prevent iOS Safari from zooming on input focus */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* iOS Safari image rendering optimization */
+img {
+  -webkit-transform: translateZ(0);
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Prevent iOS tap highlight */
+a,
+button,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
 }

@@ -36,7 +36,7 @@ export default function Features() {
             </div>
             <div className="relative order-1 h-[358px] w-full max-w-[543px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] md:order-2">
               <Image
-                src="/images/ribbon2.png"
+                src="/images/ribbon3.png"
                 alt="Loft 442 event venue interior"
                 fill
                 sizes="(max-width: 768px) 100vw, 45vw"
@@ -119,7 +119,7 @@ export default function Features() {
             </div>
             <div className="relative h-[240px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] sm:h-[320px] lg:h-[360px]">
               <Image
-                src="/images/2.png"
+                src="/images/quality-promise.png"
                 alt="Loft 442 venue detail"
                 fill
                 sizes="(max-width: 768px) 100vw, 45vw"

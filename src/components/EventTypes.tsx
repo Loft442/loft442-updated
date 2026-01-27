@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, Gift, Heart, PartyPopper, Sparkles } from "lucide-react";
 
 const eventTypes = [
@@ -132,6 +132,8 @@ export default function EventTypes() {
   const [openKey, setOpenKey] = useState<PanelKey | null>(null);
   const [renderKey, setRenderKey] = useState<PanelKey | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const expandableKeys: PanelKey[] = [
     "Weddings",
     "Private Events",
@@ -140,19 +142,45 @@ export default function EventTypes() {
     "Baby Shower",
   ];
 
-  useEffect(() => {
-    if (openKey) {
-      setRenderKey(openKey);
-      requestAnimationFrame(() => setIsPanelOpen(true));
-      return;
+  // Open a panel - called from event handler
+  const handleOpenPanel = useCallback((key: PanelKey) => {
+    // Clear any pending close timer
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
     }
+    setOpenKey(key);
+    setRenderKey(key);
+    requestAnimationFrame(() => setIsPanelOpen(true));
+  }, []);
 
-    if (renderKey) {
-      setIsPanelOpen(false);
-      const timer = setTimeout(() => setRenderKey(null), 500);
-      return () => clearTimeout(timer);
+  // Close the panel - called from event handler
+  const handleClosePanel = useCallback(() => {
+    setOpenKey(null);
+    setIsPanelOpen(false);
+    closeTimerRef.current = setTimeout(() => {
+      setRenderKey(null);
+      closeTimerRef.current = null;
+    }, 500);
+  }, []);
+
+  // Toggle panel
+  const handleTogglePanel = useCallback((key: PanelKey) => {
+    if (openKey === key) {
+      handleClosePanel();
+    } else {
+      handleOpenPanel(key);
     }
-  }, [openKey, renderKey]);
+  }, [openKey, handleOpenPanel, handleClosePanel]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <section
@@ -178,11 +206,11 @@ export default function EventTypes() {
                   aria-expanded={isExpandable ? isExpanded : undefined}
                   aria-controls={panelControls}
                   id={panelMeta?.triggerId}
-                  onClick={() =>
-                    setOpenKey((prev) =>
-                      panelKey ? (prev === panelKey ? null : panelKey) : null
-                    )
-                  }
+                  onClick={() => {
+                    if (panelKey) {
+                      handleTogglePanel(panelKey);
+                    }
+                  }}
                   className="about-card-outline group relative flex min-w-0 min-h-12 items-center justify-between gap-3 rounded-sm p-4 text-left shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition"
                 >
                   <div className="flex min-w-0 items-center gap-3">
@@ -203,8 +231,8 @@ export default function EventTypes() {
                 {renderKey === panelKey && panelMeta ? (
                   <div
                     className={`mt-4 overflow-hidden transition-[max-height,opacity,transform] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] md:hidden ${isPanelOpen
-                        ? "max-h-[900px] translate-y-0 opacity-100"
-                        : "max-h-0 -translate-y-1 opacity-0"
+                      ? "max-h-[900px] translate-y-0 opacity-100"
+                      : "max-h-0 -translate-y-1 opacity-0"
                       }`}
                     aria-hidden={!isPanelOpen}
                   >
@@ -237,8 +265,8 @@ export default function EventTypes() {
         {renderKey ? (
           <div
             className={`mt-6 hidden overflow-hidden transition-[max-height,opacity,transform] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] md:block ${isPanelOpen
-                ? "max-h-[900px] translate-y-0 opacity-100"
-                : "max-h-0 -translate-y-1 opacity-0"
+              ? "max-h-[900px] translate-y-0 opacity-100"
+              : "max-h-0 -translate-y-1 opacity-0"
               }`}
             aria-hidden={!isPanelOpen}
           >

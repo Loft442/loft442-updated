@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     partyType,
     phone,
     email,
-    message,
+    // message - reserved for future use
   } = payload as Record<string, string | undefined>;
 
   const missing = [

@@ -7,11 +7,18 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
 import Reveal from "@/components/Reveal";
+import { useLockBodyScroll } from "@/lib/useIOSSafari";
+
+// Helper to check if we're in browser - doesn't change after mount
+const subscribe = () => () => { };
+const getIsBrowser = () => typeof window !== "undefined";
+const getServerSnapshot = () => false;
 
 type GalleryCategory =
   | "All"
@@ -151,6 +158,48 @@ export const galleryItems: GalleryItem[] = [
     alt: "Birthday gathering at Loft 442",
     category: "Birthdays",
   },
+  {
+    id: 33,
+    src: "/images/birthday6.webp",
+    alt: "Birthday party celebration at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 34,
+    src: "/images/birthday7.webp",
+    alt: "Birthday event setup at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 35,
+    src: "/images/birthday8.webp",
+    alt: "Birthday party venue at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 36,
+    src: "/images/birthday9.webp",
+    alt: "Birthday celebration decor at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 37,
+    src: "/images/birthday10.webp",
+    alt: "Birthday party atmosphere at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 38,
+    src: "/images/birthday11.webp",
+    alt: "Birthday event gathering at Loft 442",
+    category: "Birthdays",
+  },
+  {
+    id: 39,
+    src: "/images/birthday12.webp",
+    alt: "Birthday party setup at Loft 442",
+    category: "Birthdays",
+  },
   // Baby Shower
   {
     id: 19,
@@ -244,9 +293,11 @@ export default function GalleryPage() {
   const [activeCategory, setActiveCategory] =
     useState<GalleryCategory>("All");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const touchStartX = useRef<number | null>(null);
+
+  // Use useSyncExternalStore to safely detect browser environment
+  const isBrowser = useSyncExternalStore(subscribe, getIsBrowser, getServerSnapshot);
 
   const filteredItems = useMemo(() => {
     if (activeCategory === "All") {
@@ -258,26 +309,14 @@ export default function GalleryPage() {
 
   const activeTabId = `gallery-tab-${slugify(activeCategory)}`;
 
-  useEffect(() => {
+  // Reset active index when category changes (in event handler, not effect)
+  const handleCategoryChange = useCallback((category: GalleryCategory) => {
+    setActiveCategory(category);
     setActiveIndex(null);
-  }, [activeCategory]);
-
-  useEffect(() => {
-    setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (activeIndex === null) {
-      return;
-    }
-
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = originalOverflow;
-    };
-  }, [activeIndex]);
+  // Use iOS-safe body scroll locking
+  useLockBodyScroll(activeIndex !== null);
 
   const handlePrev = useCallback(() => {
     if (!filteredItems.length) {
@@ -354,7 +393,7 @@ export default function GalleryPage() {
       nextIndex = lastIndex;
     }
 
-    setActiveCategory(filterCategories[nextIndex]);
+    handleCategoryChange(filterCategories[nextIndex]);
     tabRefs.current[nextIndex]?.focus();
   };
 
@@ -424,7 +463,7 @@ export default function GalleryPage() {
                   aria-selected={isActive}
                   aria-controls="gallery-panel"
                   tabIndex={isActive ? 0 : -1}
-                  onClick={() => setActiveCategory(category)}
+                  onClick={() => handleCategoryChange(category)}
                   onKeyDown={(event) => handleTabKeyDown(event, index)}
                   className={`relative min-h-11 rounded-sm border border-white/10 bg-white/5 px-5 py-2 text-[0.65rem] uppercase tracking-[0.35em] text-white/60 transition duration-200 ease-out hover:border-white/30 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${isActive
                     ? "border-white/40 text-white shadow-[0_0_25px_rgba(255,255,255,0.18)] after:opacity-100"
@@ -459,14 +498,15 @@ export default function GalleryPage() {
                   onClick={() => setActiveIndex(index)}
                   className="gallery-card group relative w-full overflow-hidden rounded-sm border border-white/10 bg-white/5 text-left shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition hover:border-white/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
                 >
-                  <div className="relative w-full overflow-hidden bg-black sm:aspect-[4/3]">
+                  <div className="relative w-full overflow-hidden bg-black aspect-[4/3]">
                     <Image
                       src={item.src}
                       alt={item.alt}
                       width={1200}
                       height={900}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="gallery-image h-auto w-full object-contain transition duration-200 ease-out group-hover:scale-[1.03] sm:h-full sm:w-full"
+                      className="gallery-image h-full w-full object-cover transition duration-200 ease-out group-hover:scale-[1.03]"
+                      style={{ objectFit: 'cover' }}
                     />
                     <div className="gallery-overlay absolute inset-0 bg-black/0 transition duration-200 ease-out group-hover:bg-black/40" />
                     <span className="gallery-shine" aria-hidden="true" />
@@ -484,7 +524,7 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {activeItem && isMounted
+      {activeItem && isBrowser
         ? createPortal(
           <div
             className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4 backdrop-blur-sm sm:p-6"
@@ -505,6 +545,8 @@ export default function GalleryPage() {
                       fill
                       sizes="(max-width: 640px) 92vw, 900px"
                       className="object-contain object-center"
+                      style={{ objectFit: 'contain' }}
+                      quality={90}
                     />
                   </div>
                 </div>

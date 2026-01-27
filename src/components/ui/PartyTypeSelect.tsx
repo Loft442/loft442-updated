@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -52,17 +53,19 @@ export default function PartyTypeSelect({
     selectedIndex >= 0 ? selectedIndex : 0
   );
 
-  const closeMenu = (shouldBlur: boolean) => {
+  const closeMenu = useCallback((shouldBlur: boolean) => {
     setOpen(false);
     if (shouldBlur) {
       onBlur?.();
     }
-  };
+  }, [onBlur]);
 
-  useEffect(() => {
-    if (!open) return;
+  // Reset active index when menu opens - use callback in toggle function instead
+  const openMenu = useCallback(() => {
+    setOpen(true);
+    // Reset to selected item when opening
     setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
-  }, [open, selectedIndex]);
+  }, [selectedIndex]);
 
   useEffect(() => {
     if (!open) return;
@@ -77,7 +80,7 @@ export default function PartyTypeSelect({
       document.removeEventListener("mousedown", handlePointer);
       document.removeEventListener("touchstart", handlePointer);
     };
-  }, [open]);
+  }, [open, closeMenu]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === "Escape") {
@@ -89,7 +92,7 @@ export default function PartyTypeSelect({
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       if (!open) {
-        setOpen(true);
+        openMenu();
         return;
       }
       if (!options.length) return;
@@ -104,7 +107,7 @@ export default function PartyTypeSelect({
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       if (!open) {
-        setOpen(true);
+        openMenu();
         return;
       }
       const nextValue = options[activeIndex];
@@ -166,8 +169,8 @@ export default function PartyTypeSelect({
           id={listboxId}
           aria-labelledby={buttonId}
           className={`absolute left-0 top-full z-50 mt-2 w-full rounded-sm border border-white/10 bg-[#070708]/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)] backdrop-blur transition duration-150 ${open
-              ? "pointer-events-auto translate-y-0 opacity-100"
-              : "pointer-events-none translate-y-1 opacity-0"
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none translate-y-1 opacity-0"
             } motion-reduce:transition-none`}
         >
           {options.map((option, index) => {
@@ -183,8 +186,8 @@ export default function PartyTypeSelect({
                 onMouseEnter={() => setActiveIndex(index)}
                 onClick={() => handleSelect(option)}
                 className={`flex w-full items-center rounded-sm px-3 py-2 text-left text-xs uppercase tracking-[0.2em] transition ${isSelected
-                    ? "bg-white/12 text-white/90 shadow-[0_0_12px_rgba(255,255,255,0.12)]"
-                    : "text-white/70 hover:bg-white/8 hover:text-white/90"
+                  ? "bg-white/12 text-white/90 shadow-[0_0_12px_rgba(255,255,255,0.12)]"
+                  : "text-white/70 hover:bg-white/8 hover:text-white/90"
                   } ${isActive ? "bg-white/8 text-white/90" : ""}`}
               >
                 {option}

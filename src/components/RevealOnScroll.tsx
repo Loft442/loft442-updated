@@ -30,6 +30,8 @@ export default function RevealOnScroll({ enabled = true }: Props) {
         return;
       }
 
+      // iOS Safari-safe IntersectionObserver configuration
+      // Use lower threshold and smaller rootMargin for reliable callbacks
       const io = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
@@ -37,20 +39,25 @@ export default function RevealOnScroll({ enabled = true }: Props) {
               const target = entry.target as HTMLElement;
               target.classList.add("is-visible");
               const handleTransitionEnd = (event: TransitionEvent) => {
-                if (event.propertyName !== "transform") return;
+                if (event.propertyName !== "transform" && event.propertyName !== "opacity") return;
                 target.classList.add("reveal-done");
                 target.removeEventListener("transitionend", handleTransitionEnd);
               };
               target.addEventListener("transitionend", handleTransitionEnd);
+              // Fallback timeout in case transitionend doesn't fire (iOS Safari quirk)
               window.setTimeout(() => {
                 target.classList.add("reveal-done");
                 target.removeEventListener("transitionend", handleTransitionEnd);
-              }, 900);
+              }, 800);
               io.unobserve(entry.target);
             }
           }
         },
-        { root: null, threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+        {
+          root: null,
+          threshold: [0, 0.1, 0.15], // Multiple thresholds for iOS Safari reliability
+          rootMargin: "0px 0px -8% 0px" // Slightly reduced for iOS
+        }
       );
 
       nodes.forEach((el) => io.observe(el));

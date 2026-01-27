@@ -204,7 +204,7 @@ export default function SchedulePage() {
       });
       setSubmitAttempted(false);
       setSuccessMessage("Request sent successfully.");
-    } catch (error) {
+    } catch {
       setSubmitError("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);

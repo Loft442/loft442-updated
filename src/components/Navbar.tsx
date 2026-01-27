@@ -43,15 +43,26 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    let ticking = false;
+
     const update = () => {
       const y = window.scrollY;
-      // small hysteresis so it doesn’t flicker around the threshold
+      // small hysteresis so it doesn't flicker around the threshold
       setIsScrolled((prev) => (prev ? y > 8 : y > 24));
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      // Throttle with requestAnimationFrame for iOS Safari performance
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
     };
 
     update();
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {

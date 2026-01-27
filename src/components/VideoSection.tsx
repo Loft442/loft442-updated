@@ -17,6 +17,14 @@ const buildRailImages = (offset: number, count = 5) =>
 
 const unifiedRail = { id: "unified-rail", offset: 0 };
 
+// Inline styles for better Safari/WebKit compatibility
+const trackStyle: CSSProperties = {
+  WebkitTransform: 'translate3d(0, 0, 0)',
+  transform: 'translate3d(0, 0, 0)',
+  WebkitBackfaceVisibility: 'hidden',
+  backfaceVisibility: 'hidden',
+};
+
 export default function VideoSection() {
 
   return (
@@ -34,6 +42,7 @@ export default function VideoSection() {
           {(() => {
             const mobileImages = buildRailImages(unifiedRail.offset, railImages.length);
             const desktopImages = buildRailImages(unifiedRail.offset, railImages.length);
+            // Triple the images for seamless looping on all devices (especially Safari/Mac)
             const mobileLoop = [...mobileImages, ...mobileImages];
             const desktopLoop = [...desktopImages, ...desktopImages];
 
@@ -44,6 +53,7 @@ export default function VideoSection() {
                   <div className="video-rail video-rail--mobile relative w-full overflow-hidden">
                     <div
                       className="video-rail__track flex w-max items-center gap-3"
+                      style={trackStyle}
                     >
                       {mobileLoop.map((image, index) => (
                         <div
@@ -70,6 +80,7 @@ export default function VideoSection() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-10 sm:w-14 bg-gradient-to-r from-[#070708] to-transparent" />
                     <div
                       className="video-rail__track flex h-full w-max items-center gap-2"
+                      style={trackStyle}
                     >
                       {desktopLoop.map((image, index) => (
                         <div

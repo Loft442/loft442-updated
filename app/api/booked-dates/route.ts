@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const month = searchParams.get("month"); // YYYY-MM
 
-  let range: { from?: string; to?: string } = {};
+  const range: { from?: string; to?: string } = {};
 
   if (month) {
     const [y, mRaw] = month.split("-");
