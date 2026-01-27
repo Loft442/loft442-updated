@@ -43,8 +43,8 @@ export default function VideoSection() {
             const mobileImages = buildRailImages(unifiedRail.offset, railImages.length);
             const desktopImages = buildRailImages(unifiedRail.offset, railImages.length);
             // Triple the images for seamless looping on all devices (especially Safari/Mac)
-            const mobileLoop = [...mobileImages, ...mobileImages];
-            const desktopLoop = [...desktopImages, ...desktopImages];
+            const mobileLoop = [...mobileImages, ...mobileImages, ...mobileImages];
+            const desktopLoop = [...desktopImages, ...desktopImages, ...desktopImages];
 
             return (
               <>
@@ -64,9 +64,11 @@ export default function VideoSection() {
                             src={image.src}
                             alt={image.alt}
                             fill
-                            sizes="(max-width: 640px) 240px, 0px"
+                            sizes="240px"
                             className="object-cover"
-                            loading="lazy"
+                            // iOS Safari/WebKit can skip lazy-loading inside transformed/animated containers.
+                            loading={index < 12 ? "eager" : "lazy"}
+                            priority={index < 4}
                           />
                         </div>
                       ))}
@@ -91,9 +93,11 @@ export default function VideoSection() {
                             src={image.src}
                             alt={image.alt}
                             fill
-                            sizes="(min-width: 641px) 280px, 0px"
+                            sizes="280px"
                             className="object-cover"
-                            loading="lazy"
+                            // iOS Safari/WebKit can skip lazy-loading inside transformed/animated containers.
+                            loading={index < 16 ? "eager" : "lazy"}
+                            priority={index < 4}
                           />
                         </div>
                       ))}
