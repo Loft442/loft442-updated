@@ -19,10 +19,12 @@ const unifiedRail = { id: "unified-rail", offset: 0 };
 
 // Inline styles for better Safari/WebKit compatibility
 const trackStyle: CSSProperties = {
-  WebkitTransform: 'translate3d(0, 0, 0)',
-  transform: 'translate3d(0, 0, 0)',
-  WebkitBackfaceVisibility: 'hidden',
-  backfaceVisibility: 'hidden',
+  WebkitTransform: "translate3d(0, 0, 0)",
+  transform: "translate3d(0, 0, 0)",
+  WebkitBackfaceVisibility: "hidden",
+  backfaceVisibility: "hidden",
+  willChange: "transform",
+  contain: "paint",
 };
 
 export default function VideoSection() {
