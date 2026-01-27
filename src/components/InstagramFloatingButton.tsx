@@ -7,14 +7,10 @@ const INSTAGRAM_URL = "https://www.instagram.com/loft.442/";
 export default function InstagramFloatingButton() {
   return (
     <div
-      className="fixed z-[9999]"
+      className="fixed bottom-4 left-4 z-[9999] sm:bottom-5"
       style={{
-        // iOS Safari safe area handling with fallbacks
-        bottom: "max(16px, env(safe-area-inset-bottom, 16px))",
-        left: "max(16px, env(safe-area-inset-left, 16px))",
-        // Prevent transform from ancestors breaking fixed positioning
-        transform: "translateZ(0)",
-        WebkitTransform: "translateZ(0)",
+        paddingBottom: "env(safe-area-inset-bottom)",
+        paddingLeft: "env(safe-area-inset-left)",
       }}
     >
       <a
@@ -22,12 +18,10 @@ export default function InstagramFloatingButton() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Follow Loft 442 on Instagram"
-        className="group relative inline-flex items-center rounded-sm p-[1px] shadow-lg shadow-black/30 transition duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 min-w-[44px] min-h-[44px]"
+        className="group relative inline-flex items-center rounded-sm p-[1px] shadow-lg shadow-black/30 transition duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0"
         style={{
           background:
             "linear-gradient(180deg, rgba(245,230,168,0.7), rgba(212,175,55,0.6), rgba(184,150,46,0.7))",
-          // Ensure tap target is accessible
-          WebkitTapHighlightColor: "transparent",
         }}
       >
         {/* INNER BUTTON */}
