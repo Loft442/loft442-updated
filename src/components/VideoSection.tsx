@@ -142,6 +142,15 @@ export default function VideoSection() {
     setIsSafari(detected);
   }, []);
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      const imgs = Array.from(document.querySelectorAll(".rail img")) as HTMLImageElement[];
+      const bad = imgs.filter(i => i.complete && i.naturalWidth === 0);
+      console.log("imgs:", imgs.length, "bad:", bad.length, "hidden:", document.hidden);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
   // Keep rails short to limit DOM count and WebKit memory pressure.
   const mobileCount = Math.min(railImages.length, 6);
   const desktopCount = Math.min(railImages.length, 10);
@@ -267,8 +276,7 @@ export default function VideoSection() {
               <>
                 {/* Mobile carousel (sm and below) */}
                 <div className="flex sm:hidden overflow-hidden">
-                  <div className="video-rail video-rail--mobile relative w-full overflow-hidden">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-8 bg-gradient-to-r from-[#070708] to-transparent" />
+                  <div className="rail video-rail video-rail--mobile relative w-full overflow-hidden">
                     <div className="video-rail__motion">
                       <div className="video-rail__track flex w-max items-center gap-3">
                         {mobileLoop.map((image, index) => (
@@ -292,14 +300,12 @@ export default function VideoSection() {
                         ))}
                       </div>
                     </div>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-[#070708] to-transparent" />
                   </div>
                 </div>
 
                 {/* Desktop carousel (sm and above) */}
                 <div className="hidden sm:flex">
-                  <div className="video-rail video-rail--unified relative h-full w-full overflow-hidden">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-10 sm:w-14 bg-gradient-to-r from-[#070708] to-transparent" />
+                  <div className="rail video-rail video-rail--unified relative h-full w-full overflow-hidden">
                     <div className="video-rail__motion">
                       <div className="video-rail__track flex h-full w-max items-center gap-2">
                         {desktopLoop.map((image, index) => (
@@ -323,7 +329,6 @@ export default function VideoSection() {
                         ))}
                       </div>
                     </div>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-10 sm:w-14 bg-gradient-to-l from-[#070708] to-transparent" />
                   </div>
                 </div>
               </>
