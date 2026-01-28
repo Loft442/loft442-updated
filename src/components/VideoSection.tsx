@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import NextImage from "next/image";
 import styles from "./Hero.module.css";
-import { galleryItems } from "./GalleryPage";
+import { galleryItems } from "@/lib/galleryItems";
 
 const railImages = galleryItems.map(item => ({
   src: item.src,
