@@ -32,11 +32,11 @@ export default function MarqueeRail({
 
   const trackClass = direction === "right" ? styles.animateRight : styles.animateLeft;
 
-  const styleVars: CSSProperties = {
+  const styleVars = {
     "--rail-height": `${heightPx}px`,
     "--rail-gap": `${gapPx}px`,
     "--rail-speed": `${speedSec}s`
-  };
+  } as CSSProperties;
 
   return (
     <div
