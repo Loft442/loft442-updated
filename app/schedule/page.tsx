@@ -370,24 +370,6 @@ export default function SchedulePage() {
                   </p>
                 </div>
 
-<<<<<<< HEAD
-                {successMessage ? (
-                  <div
-                    className="rounded-2xl border border-emerald-300/30 bg-emerald-500/10 px-4 py-3 text-[0.6rem] uppercase tracking-[0.3em] text-emerald-100/80"
-                    aria-live="polite"
-                  >
-                    {successMessage}
-                  </div>
-                ) : null}
-
-                {submitError ? (
-                  <div className="rounded-2xl border border-rose-200/40 bg-rose-500/10 px-4 py-3 text-[0.6rem] uppercase tracking-[0.3em] text-rose-100/80">
-                    {submitError}
-                  </div>
-                ) : null}
-
-=======
->>>>>>> 1075a9d (Initial commit)
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
                     First Name
@@ -525,8 +507,6 @@ export default function SchedulePage() {
                     {isSubmitting ? "Sending..." : "Send Request"}
                   </button>
                 </div>
-<<<<<<< HEAD
-=======
 
                 {successMessage ? (
                   <div
@@ -541,9 +521,8 @@ export default function SchedulePage() {
                   <div className="rounded-2xl border border-rose-200/40 bg-rose-500/10 px-4 py-3 text-[0.6rem] uppercase tracking-[0.3em] text-rose-100/80">
                     {submitError}
                   </div>
-                ) : null}
->>>>>>> 1075a9d (Initial commit)
-              </form>
+                ) : null}               
+                </form>
             </Reveal>
           </div>
         </div>
@@ -552,3 +531,4 @@ export default function SchedulePage() {
     </main>
   );
 }
+
