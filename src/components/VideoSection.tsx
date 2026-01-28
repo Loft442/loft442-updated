@@ -98,6 +98,19 @@ const railImages = galleryItems.map(item => ({
   alt: item.alt
 }));
 
+const railQuality = 70;
+const mobilePreloadWidth = 256;
+const desktopPreloadWidth = 384;
+
+const buildNextImageUrl = (src: string, width: number, quality = railQuality) => {
+  if (!src) return "";
+  const params = new URLSearchParams();
+  params.set("url", src);
+  params.set("w", String(width));
+  params.set("q", String(quality));
+  return `/_next/image?${params.toString()}`;
+};
+
 const buildRailImages = (offset: number, count = 5) =>
   Array.from({ length: count }, (_, index) => {
     return railImages[(index + offset) % railImages.length];
@@ -167,38 +180,40 @@ export default function VideoSection() {
   const mobileLoop = useMemo(() => [...mobileImages, ...mobileImages], [mobileImages]);
   const desktopLoop = useMemo(() => [...desktopImages, ...desktopImages], [desktopImages]);
 
-  const preloadSources = useMemo(() => {
+  const preloadUrls = useMemo(() => {
     const eagerCount = 2;
     const warmCount = 4;
     const targets = isMobile
       ? mobileImages.slice(eagerCount, eagerCount + warmCount)
       : desktopImages.slice(eagerCount, eagerCount + warmCount);
-    return Array.from(new Set(targets.map(item => item.src))).filter(Boolean);
+    const width = isMobile ? mobilePreloadWidth : desktopPreloadWidth;
+    const optimized = targets.map(item => buildNextImageUrl(item.src, width));
+    return Array.from(new Set(optimized)).filter(Boolean);
   }, [isMobile, mobileImages, desktopImages]);
 
   useEffect(() => {
     if (!isSafari) return;
     if (typeof document === "undefined") return;
 
-    // Safari/WebKit: warm-decode the next few images to avoid blank tiles.
-    preloadSources.forEach(src => {
-      if (!src) return;
-      const existing = document.querySelector(`link[rel="preload"][href="${src}"]`);
+    // Safari/WebKit: preload exact Next/Image URLs to avoid blank tiles.
+    preloadUrls.forEach(url => {
+      if (!url) return;
+      const existing = document.querySelector(`link[rel="preload"][href="${url}"]`);
       if (!existing) {
         const link = document.createElement("link");
         link.rel = "preload";
         link.as = "image";
-        link.href = src;
+        link.href = url;
         document.head.appendChild(link);
       }
 
       const img = new Image();
-      img.src = src;
+      img.src = url;
       if (typeof img.decode === "function") {
         img.decode().catch(() => {});
       }
     });
-  }, [isSafari, preloadSources]);
+  }, [isSafari, preloadUrls]);
 
   useEffect(() => {
     if (!isSafari) return;
@@ -279,25 +294,29 @@ export default function VideoSection() {
                   <div className="rail video-rail video-rail--mobile relative w-full overflow-hidden">
                     <div className="video-rail__motion">
                       <div className="video-rail__track flex w-max items-center gap-3">
-                        {mobileLoop.map((image, index) => (
-                          <div
-                            key={`${unifiedRail.id}-mobile-${image.src}-${index}`}
-                            className="video-rail__item relative h-40 w-60 shrink-0 overflow-hidden bg-white/5"
-                          >
-                            <NextImage
-                              src={image.src}
-                              alt={image.alt}
-                              fill
-                              sizes="(max-width: 640px) 240px, 240px"
-                              className={`video-rail__image object-cover ${loadedSrcs[image.src] ? "is-loaded" : ""}`}
-                              quality={70}
-                              decoding="async"
-                              loading={index < 2 ? "eager" : "lazy"}
-                              priority={index < 2}
-                              onLoadingComplete={() => markLoaded(image.src)}
-                            />
-                          </div>
-                        ))}
+                        {mobileLoop.map((image, index) => {
+                          const eager = isSafari || index < 2;
+                          const priority = isSafari ? index < 4 : index < 2;
+                          return (
+                            <div
+                              key={`${unifiedRail.id}-mobile-${image.src}-${index}`}
+                              className="video-rail__item relative h-40 w-60 shrink-0 overflow-hidden bg-white/5"
+                            >
+                              <NextImage
+                                src={image.src}
+                                alt={image.alt}
+                                fill
+                                sizes="(max-width: 640px) 240px, 240px"
+                                className={`video-rail__image object-cover ${loadedSrcs[image.src] ? "is-loaded" : ""}`}
+                                quality={railQuality}
+                                decoding="async"
+                                loading={eager ? "eager" : "lazy"}
+                                priority={priority}
+                                onLoadingComplete={() => markLoaded(image.src)}
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -308,25 +327,29 @@ export default function VideoSection() {
                   <div className="rail video-rail video-rail--unified relative h-full w-full overflow-hidden">
                     <div className="video-rail__motion">
                       <div className="video-rail__track flex h-full w-max items-center gap-2">
-                        {desktopLoop.map((image, index) => (
-                          <div
-                            key={`${unifiedRail.id}-desktop-${image.src}-${index}`}
-                            className="video-rail__item relative h-[200px] w-[280px] shrink-0 overflow-hidden bg-white/5"
-                          >
-                            <NextImage
-                              src={image.src}
-                              alt={image.alt}
-                              fill
-                              sizes="(max-width: 640px) 240px, 280px"
-                              className={`video-rail__image object-cover ${loadedSrcs[image.src] ? "is-loaded" : ""}`}
-                              quality={70}
-                              decoding="async"
-                              loading={index < 2 ? "eager" : "lazy"}
-                              priority={index < 2}
-                              onLoadingComplete={() => markLoaded(image.src)}
-                            />
-                          </div>
-                        ))}
+                        {desktopLoop.map((image, index) => {
+                          const eager = isSafari || index < 2;
+                          const priority = isSafari ? index < 4 : index < 2;
+                          return (
+                            <div
+                              key={`${unifiedRail.id}-desktop-${image.src}-${index}`}
+                              className="video-rail__item relative h-[200px] w-[280px] shrink-0 overflow-hidden bg-white/5"
+                            >
+                              <NextImage
+                                src={image.src}
+                                alt={image.alt}
+                                fill
+                                sizes="(max-width: 640px) 240px, 280px"
+                                className={`video-rail__image object-cover ${loadedSrcs[image.src] ? "is-loaded" : ""}`}
+                                quality={railQuality}
+                                decoding="async"
+                                loading={eager ? "eager" : "lazy"}
+                                priority={priority}
+                                onLoadingComplete={() => markLoaded(image.src)}
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
