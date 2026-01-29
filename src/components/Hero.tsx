@@ -30,7 +30,7 @@ export default function Hero() {
       text: "VENUE ",
       className: `${styles.heroLetterGroup} ${styles.venueUnderline}`,
     },
-    { text: "FOR UNFORGETTABLE", className: styles.heroLetterGroup },
+    { text: "FOR", className: styles.heroLetterGroup },
   ];
 
   const line1Nodes = line1Segments.map((segment) => {
@@ -43,7 +43,11 @@ export default function Hero() {
     );
   });
 
-  const { nodes: line2Nodes } = renderLetters("EVENTS", letterIndex);
+  const { nodes: line2Nodes, nextIndex: line2End } = renderLetters(
+    "UNFORGETTABLE",
+    letterIndex
+  );
+  const { nodes: line3Nodes } = renderLetters("EVENTS", line2End);
 
   return (
     <section
@@ -55,18 +59,22 @@ export default function Hero() {
           alt="Loft 442 elegant event venue interior"
           fill
           priority
+          loading="eager"
+          fetchPriority="high"
           quality={85}
           sizes="100vw"
-          className="object-cover object-center hero-motion sm:hidden"
+          className="object-cover object-center sm:hidden"
         />
         <Image
           src="/images/banner-opt.webp"
           alt="Loft 442 elegant event venue interior"
           fill
           priority
+          loading="eager"
+          fetchPriority="high"
           quality={85}
           sizes="100vw"
-          className="object-cover object-center hero-motion hidden sm:block"
+          className="object-cover object-center hidden sm:block"
         />
       </div>
       <div className="relative z-10 translate-y-19 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 md:px-10 md:pb-16 md:pt-28 lg:px-12 lg:pb-20 lg:pt-32">
@@ -78,7 +86,12 @@ export default function Hero() {
               </p>
               <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.12em] text-white sm:text-4xl md:text-4xl lg:text-6xl leading-[1.05] md:leading-[1.1]">
                 <span className={styles.heroHeadlineLine}>{line1Nodes}</span>
-                <span className={`${styles.heroHeadlineLine} block`}><span className={styles.heroLetterGroup}>{line2Nodes}</span></span>
+                <span className={`${styles.heroHeadlineLine} block`}>
+                  <span className={styles.heroLetterGroup}>{line2Nodes}</span>
+                </span>
+                <span className={`${styles.heroHeadlineLine} block`}>
+                  <span className={styles.heroLetterGroup}>{line3Nodes}</span>
+                </span>
               </h1>
               <div className="hero-stagger hero-stagger--2 flex flex-col gap-3 md:gap-2">
                 <div className="flex items-center gap-3">
@@ -94,7 +107,7 @@ export default function Hero() {
                     VETERAN OWNED & OPERATED
                   </p>
                 </div>
-                <p className={`text-xs sm:text-sm md:text-sm uppercase tracking-[0.35em] text-white/70 ${styles.heroTextStroke}`}>
+                <p className={`text-xs sm:text-sm md:text-sm uppercase tracking-[0.35em] text-white ${styles.heroTextStroke}`}>
                   Proudly Serving Those Who Served
                 </p>
                 <div

@@ -1,21 +1,21 @@
-from PIL import Image
+import sys
 import os
+from PIL import Image
 
-# Directory containing the images
-folder = r"c:\Users\fahib\Desktop\Stuff\Repo clone\Images updated V"
+def resize_image(input_path, output_path, width, height):
+    with Image.open(input_path) as img:
+        img_resized = img.resize((width, height), Image.LANCZOS)
+        img_resized.save(output_path, 'WEBP')
 
-# Target width
-target_width = 720
-
-# Only resize feature_0000.webp to feature_0004.webp and feuture_0000_weding.webp
-files_to_resize = [f"feature_{i:04d}.webp" for i in range(5)]
-files_to_resize.append("feuture_0000_weding.webp")
-for filename in files_to_resize:
-    filepath = os.path.join(folder, filename)
-    if os.path.exists(filepath):
-        with Image.open(filepath) as img:
-            w_percent = (target_width / float(img.size[0]))
-            h_size = int((float(img.size[1]) * float(w_percent)))
-            img_resized = img.resize((target_width, h_size), Image.LANCZOS)
-            img_resized.save(filepath, 'WEBP')
-print("feature_0000.webp to feature_0004.webp and feuture_0000_weding.webp resized to 720px width, maintaining aspect ratio.")
+if __name__ == "__main__":
+    if len(sys.argv) < 4:
+        print("Usage: python resize_webp_images.py <filename> <width> <height>")
+        sys.exit(1)
+    filename = sys.argv[1]
+    width = int(sys.argv[2])
+    height = int(sys.argv[3])
+    folder = os.path.dirname(os.path.abspath(filename))
+    input_path = filename if os.path.isabs(filename) else os.path.join(os.getcwd(), filename)
+    output_path = input_path  # Overwrite original
+    resize_image(input_path, output_path, width, height)
+    print(f"{os.path.basename(filename)} resized to {width}x{height}.")

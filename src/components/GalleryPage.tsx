@@ -36,6 +36,7 @@ const filterCategories: GalleryCategory[] = ["All", ...categories];
 const slugify = (value: string) => value.toLowerCase().replace(/\s+/g, "-");
 
 export default function GalleryPage() {
+  const eagerImageCount = 6;
   const [activeCategory, setActiveCategory] =
     useState<GalleryCategory>("All");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -232,7 +233,9 @@ export default function GalleryPage() {
             aria-labelledby={activeTabId}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
-            {filteredItems.map((item, index) => (
+            {filteredItems.map((item, index) => {
+              const isEager = index < eagerImageCount;
+              return (
               <Reveal
                 key={item.id}
                 immediate
@@ -250,6 +253,9 @@ export default function GalleryPage() {
                       alt={item.alt}
                       width={1200}
                       height={900}
+                      priority={isEager}
+                      loading={isEager ? "eager" : "lazy"}
+                      fetchPriority={isEager ? "high" : "auto"}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="gallery-image h-full w-full object-cover transition duration-200 ease-out group-hover:scale-[1.03]"
                       style={{ objectFit: 'cover' }}
@@ -265,7 +271,8 @@ export default function GalleryPage() {
                   </div>
                 </button>
               </Reveal>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>
