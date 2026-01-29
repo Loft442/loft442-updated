@@ -188,6 +188,19 @@ export default function EventTypes() {
       className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider -mt-[clamp(76px,12vh,180px)] py-16 sm:py-20 pt-[calc(4rem+clamp(76px,12vh,180px))] sm:pt-[calc(5rem+clamp(76px,12vh,180px))]"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="sr-only" aria-hidden="true">
+          {Object.values(panelContent).map((panel) => (
+            <Image
+              key={panel.imageSrc}
+              src={panel.imageSrc}
+              alt=""
+              width={800}
+              height={560}
+              sizes="(min-width: 768px) 40vw, 100vw"
+              loading="eager"
+            />
+          ))}
+        </div>
         <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {eventTypes.map((event) => {
             const Icon = event.icon;

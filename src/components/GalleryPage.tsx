@@ -235,7 +235,7 @@ export default function GalleryPage() {
             {filteredItems.map((item, index) => (
               <Reveal
                 key={item.id}
-                delayMs={index * 80}
+                immediate
                 className="w-full"
               >
                 <button

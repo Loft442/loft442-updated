@@ -69,8 +69,6 @@ export async function POST(request: Request) {
   let payload: RequestPayload | null = null;
   try {
     payload = await request.json();
-    console.log("[send-request] Payload parsed successfully");
-    console.log("[send-request] Payload keys:", payload ? Object.keys(payload) : "null");
   } catch (parseError) {
     console.error("[send-request] JSON parse error:", parseError);
     return Response.json({ ok: false, error: "Invalid JSON payload." }, { status: 400 });
@@ -86,12 +84,19 @@ export async function POST(request: Request) {
     return Response.json({ ok: true });
   }
 
+  const clean = (value?: string) => (value ?? "").trim();
+  const clamp = (value: string, max: number) =>
+    value.length > max ? value.slice(0, max) : value;
+  const partyType = clamp(clean(payload.partyType), 60);
+  console.log("[send-request] Payload received:", Object.keys(payload));
+  console.log("[send-request] Party Type:", partyType);
+
   console.log("[send-request] Validating required fields...");
   const missing = [
     ["date", payload.date],
     ["firstName", payload.firstName],
     ["lastName", payload.lastName],
-    ["partyType", payload.partyType],
+    ["partyType", partyType],
     ["phone", payload.phone],
     ["email", payload.email],
   ].filter(([, value]) => !value || !String(value).trim());
@@ -109,10 +114,6 @@ export async function POST(request: Request) {
   }
 
   console.log("[send-request] All required fields present");
-  console.log("[send-request] Date:", payload.date);
-  console.log("[send-request] Name:", payload.firstName, payload.lastName);
-  console.log("[send-request] Email:", payload.email);
-  console.log("[send-request] Party Type:", payload.partyType);
 
   if (!datePattern.test(String(payload.date))) {
     console.error("[send-request] Invalid date format:", payload.date);
@@ -155,7 +156,7 @@ export async function POST(request: Request) {
 Name: ${payload.firstName} ${payload.lastName}
 Email: ${payload.email}
 Phone: ${payload.phone ?? ""}
-Type of Party: ${payload.partyType}
+Type of Party: ${partyType || "Unknown"}
 Date: ${dateLabel}
 
 Message:
@@ -167,20 +168,20 @@ ${messageText}
   console.log("[send-request] From:", fromAddress);
   console.log("[send-request] To:", LEADS_TO_EMAIL);
   console.log("[send-request] Reply-To:", payload.email);
-  console.log("[send-request] Subject:", `New Event Request – ${payload.partyType}`);
+  console.log("[send-request] Subject:", `New Event Request – ${partyType || "Unknown"}`);
 
   try {
     const result = await resend.emails.send({
       from: fromAddress,
       to: LEADS_TO_EMAIL,
       replyTo: payload.email,
-      subject: `New Event Request – ${payload.partyType}`,
+      subject: `New Event Request – ${partyType || "Unknown"}`,
       react: EventRequestNotification({
         firstName: String(payload.firstName),
         lastName: String(payload.lastName),
         email: String(payload.email),
         phone: String(payload.phone ?? ""),
-        partyType: String(payload.partyType),
+        partyType: partyType || "Unknown",
         dateLabel,
         messageText,
       }),
@@ -195,7 +196,7 @@ ${messageText}
       console.error("[send-request] Resend API returned error:");
       console.error("[send-request] Error name:", err?.name);
       console.error("[send-request] Error message:", err?.message);
-      return Response.json({ ok: false, error: err?.message ?? "Email send failed" }, { status: 500 });
+      return Response.json({ ok: false, error: "Email send failed." }, { status: 500 });
     }
 
     const duration = Date.now() - startTime;
@@ -214,9 +215,6 @@ ${messageText}
       console.error("[send-request] Error message:", sendError.message);
       console.error("[send-request] Error stack:", sendError.stack);
     }
-    return Response.json(
-      { ok: false, error: sendError instanceof Error ? sendError.message : "Unknown error" },
-      { status: 500 }
-    );
+    return Response.json({ ok: false, error: "Email send failed." }, { status: 500 });
   }
 }

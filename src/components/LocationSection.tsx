@@ -56,43 +56,44 @@ export default function LocationSection() {
           {/* Map container with fixed aspect ratio to prevent CLS */}
           <div
             ref={mapRef}
-            className="relative overflow-hidden rounded-sm border border-white/10 bg-black/60 shadow-[0_0_20px_rgba(255,255,255,0.12),0_0_32px_rgba(59,130,246,0.06),0_0_32px_rgba(239,68,68,0.06),0_25px_70px_rgba(0,0,0,0.45)] transition duration-200 ease-out hover:shadow-[0_0_32px_rgba(255,255,255,0.22),0_0_48px_rgba(59,130,246,0.1),0_0_48px_rgba(239,68,68,0.1),0_25px_70px_rgba(0,0,0,0.45)] focus-within:shadow-[0_0_32px_rgba(255,255,255,0.22),0_0_48px_rgba(59,130,246,0.1),0_0_48px_rgba(239,68,68,0.1),0_25px_70px_rgba(0,0,0,0.45)]"
-            style={{ aspectRatio: "16/9", minHeight: "240px" }}
+            className="w-full max-w-full overflow-hidden rounded-sm border border-white/10 bg-black/60 shadow-[0_0_20px_rgba(255,255,255,0.12),0_0_32px_rgba(59,130,246,0.06),0_0_32px_rgba(239,68,68,0.06),0_25px_70px_rgba(0,0,0,0.45)] transition duration-200 ease-out hover:shadow-[0_0_32px_rgba(255,255,255,0.22),0_0_48px_rgba(59,130,246,0.1),0_0_48px_rgba(239,68,68,0.1),0_25px_70px_rgba(0,0,0,0.45)] focus-within:shadow-[0_0_32px_rgba(255,255,255,0.22),0_0_48px_rgba(59,130,246,0.1),0_0_48px_rgba(239,68,68,0.1),0_25px_70px_rgba(0,0,0,0.45)] min-w-0"
           >
-            {/* Always show placeholder first for CLS prevention */}
-            <div
-              className={`absolute inset-0 z-10 transition-opacity duration-500 ease-out ${isMapLoaded && !hasMapError ? "opacity-0 pointer-events-none" : "opacity-100"
-                }`}
-            >
-              <Image
-                src="/google-embed.png"
-                alt="Loft 442 location on map"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-                priority={false}
-                loading="eager"
-              />
+            <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[3/2]">
+              {/* Always show placeholder first for CLS prevention */}
+              <div
+                className={`absolute inset-0 z-10 transition-opacity duration-500 ease-out ${isMapLoaded && !hasMapError ? "opacity-0 pointer-events-none" : "opacity-100"
+                  }`}
+              >
+                <Image
+                  src="/google-embed.png"
+                  alt="Loft 442 location on map"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                  priority={false}
+                  loading="eager"
+                />
+              </div>
+
+              {/* Lazy-loaded iframe */}
+              {shouldLoadMap && !hasMapError && (
+                <iframe
+                  title="Loft 442 location map"
+                  src="https://www.google.com/maps?q=LOFT+442%2C+784+Elmont+Rd%2C+Elmont+NY+11003&output=embed"
+                  className="absolute inset-0 h-full w-full"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  onLoad={handleMapLoad}
+                  onError={handleMapError}
+                  style={{ border: 0 }}
+                />
+              )}
+
+              {/* Gradient overlay */}
+              <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             </div>
-
-            {/* Lazy-loaded iframe */}
-            {shouldLoadMap && !hasMapError && (
-              <iframe
-                title="Loft 442 location map"
-                src="https://www.google.com/maps?q=LOFT+442%2C+784+Elmont+Rd%2C+Elmont+NY+11003&output=embed"
-                className="absolute inset-0 h-full w-full"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                onLoad={handleMapLoad}
-                onError={handleMapError}
-                style={{ border: 0 }}
-              />
-            )}
-
-            {/* Gradient overlay */}
-            <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="text-spotlight inline-block rounded-sm px-4 py-3">
               <div className="flex flex-col gap-4">
                 <p className="text-xs uppercase tracking-[0.4em] text-white/60">

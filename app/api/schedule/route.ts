@@ -13,15 +13,30 @@ export async function POST(request: Request) {
     );
   }
 
-  const {
-    date,
-    firstName,
-    lastName,
-    partyType,
-    phone,
-    email,
-    // message - reserved for future use
-  } = payload as Record<string, string | undefined>;
+  const clean = (v?: string) => (v ?? "").trim();
+  const clamp = (v: string, n: number) => (v.length > n ? v.slice(0, n) : v);
+
+  const firstName = clamp(clean(payload.firstName), 60);
+  const lastName = clamp(clean(payload.lastName), 60);
+  const email = clamp(clean(payload.email).toLowerCase(), 120);
+  const phone = clamp(clean(payload.phone), 25);
+  const partyType = clamp(clean(payload.partyType), 60);
+  const date = clean(payload.date);
+  const message = clamp(clean(payload.message), 1500);
+
+  const origin = request.headers.get("origin") || "";
+  const host = request.headers.get("host") || "";
+
+  // allow your real domains here
+  const allowedOrigins = [
+    `https://${host}`, // current host
+    "https://loft442.com",
+    "https://www.loft442.com",
+  ];
+
+  if (origin && !allowedOrigins.includes(origin)) {
+    return Response.json({ ok: false, error: "Forbidden" }, { status: 403 });
+  }
 
   const missing = [
     ["date", date],

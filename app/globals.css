@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 @font-face {
   font-family: "Ubuntu";
   src: url("/Fonts/Ubuntu-Regular.ttf") format("truetype");
@@ -1006,20 +1007,21 @@ html::after {
   -webkit-backface-visibility: hidden;
 }
 
-.video-rail__item > span img,
+.video-rail__item>span img,
 .video-rail__item img {
   opacity: 0;
   transition: opacity 200ms ease;
 }
 
-.video-rail__item.is-loaded > span img,
+.video-rail__item.is-loaded>span img,
 .video-rail__item.is-loaded img {
   opacity: 1;
 }
 
 
 @media (prefers-reduced-motion: reduce) {
-  .video-rail__item > span img,
+
+  .video-rail__item>span img,
   .video-rail__item img {
     transition: none;
     opacity: 1;

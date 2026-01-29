@@ -14,6 +14,7 @@ type RevealProps = {
   className?: string;
   delayMs?: number;
   mode?: "text" | "media";
+  immediate?: boolean;
 };
 
 export default function Reveal({
@@ -21,6 +22,7 @@ export default function Reveal({
   className,
   delayMs = 0,
   mode = "media",
+  immediate = false,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -29,6 +31,16 @@ export default function Reveal({
   useEffect(() => {
     const node = ref.current;
     if (!node) {
+      return;
+    }
+
+    if (immediate) {
+      setVisible(true);
+      return;
+    }
+
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      setVisible(true);
       return;
     }
 
@@ -45,7 +57,7 @@ export default function Reveal({
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, []);
+  }, [immediate]);
 
   const handleTransitionEnd = (event: TransitionEvent<HTMLDivElement>) => {
     if (done) return;

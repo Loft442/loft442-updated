@@ -1,0 +1,43 @@
+.embla {
+  position: relative;
+  --slide-gap: 8px;
+}
+
+.embla::before,
+.embla::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 64px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.embla::before {
+  left: 0;
+  background: linear-gradient(to right, #000000, rgba(0, 0, 0, 0));
+}
+
+.embla::after {
+  right: 0;
+  background: linear-gradient(to left, #000000, rgba(0, 0, 0, 0));
+}
+
+.embla__viewport {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.embla__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  gap: var(--slide-gap);
+  padding: 0 var(--slide-gap);
+}
+
+.embla__slide {
+  flex: 0 0 224px;
+  min-width: 224px;
+  height: 320px;
+}
