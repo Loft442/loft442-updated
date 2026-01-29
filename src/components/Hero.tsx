@@ -28,7 +28,7 @@ export default function Hero() {
     { text: "ELEGANT ", className: styles.heroLetterGroup },
     {
       text: "VENUE ",
-      className: `${styles.heroLetterGroup} ${styles.venueUnderline}`,
+      className: `${styles.heroLetterGroup} ${styles.venueUnderline} ${styles.venueUnderlineAnimated}`,
     },
     { text: "FOR", className: styles.heroLetterGroup },
   ];
