@@ -1,18 +1,49 @@
 "use client";
 
 import Carousel from "@/components/Carousel";
-import styles from "./Hero.module.css";
+import { useEffect, useRef, useState } from "react";
+import styles from "./VideoSection.module.css";
 
 export default function VideoSection() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [underlineVisible, setUnderlineVisible] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || underlineVisible) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setUnderlineVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.9 }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, [underlineVisible]);
+
   return (
-    <section id="video-section" className="pt-12 pb-10 sm:pt-16 sm:pb-14">
+    <section
+      id="video-section"
+      ref={sectionRef}
+      className="pt-12 pb-10 sm:pt-16 sm:pb-14"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-4 sm:mb-6 text-center sm:text-left">
           <h3
             className="text-2xl font-semibold tracking-[0.12em] text-white sm:text-3xl md:text-4xl"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            <span className={`text-spotlight ${styles.venueUnderline} video-underline-static`}>
+            <span
+              className={`text-spotlight ${styles.videoUnderline} ${underlineVisible ? styles.videoUnderlineActive : ""}`}
+            >
               Moments at Loft 442
             </span>
           </h3>

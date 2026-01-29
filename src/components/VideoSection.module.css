@@ -1,0 +1,48 @@
+.videoUnderline {
+    position: relative;
+    display: inline-block;
+}
+
+
+.videoUnderline::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -0.1em;
+    width: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 238, 185, 0.7) 18%,
+            rgba(255, 210, 95, 1) 50%,
+            rgba(214, 172, 60, 0.7) 82%,
+            transparent 100%);
+    opacity: 1;
+    transform: translateX(-50%);
+    transform-origin: center;
+}
+
+.videoUnderlineActive::after {
+    animation: videoUnderlineReveal 340ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    will-change: width;
+}
+
+@keyframes videoUnderlineReveal {
+    to {
+        width: 105%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce),
+(prefers-reduced-data: reduce) {
+    .videoUnderlineActive::after {
+        animation: none;
+        width: 105%;
+    }
+}
+
+:global(html.reduce-motion) .videoUnderlineActive::after {
+    animation: none;
+    width: 105%;
+}
