@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Loft 442 | Luxury Event Venue",
   description:
     "Loft 442 is a veteran-owned event venue designed for elegant weddings, corporate events, and private celebrations.",
+  icons: {
+    icon: "/favico-logo.ico",
+  },
 };
 
 export const viewport: Viewport = {
