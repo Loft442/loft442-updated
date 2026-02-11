@@ -144,7 +144,7 @@ export default function Hero() {
                 </Link>
                 <Link
                   href="/schedule"
-                  className={`cta-button cta-book no-shadow inline-flex h-10 sm:h-11 md:h-10 items-center justify-center px-6 text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-black transition hover:opacity-90 ${styles.heroCtaReveal}`}
+                  className={`cta-button cta-book inline-flex h-10 sm:h-11 md:h-10 items-center justify-center px-6 text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-black transition hover:-translate-y-px hover:shadow-[0_0_20px_rgba(212,175,55,0.18)] ${styles.heroCtaReveal}`}
                 >
                   Plan Your Event
                 </Link>

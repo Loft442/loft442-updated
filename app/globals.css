@@ -732,6 +732,7 @@ html.reduce-motion .nav-about-reveal {
   align-items: center;
   justify-content: center;
   transform: translateY(0);
+  transition-property: transform, box-shadow;
   transition-duration: 180ms;
   transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform, box-shadow;
@@ -947,6 +948,10 @@ html.reduce-motion .nav-about-reveal {
   border: 1px solid transparent;
   background: linear-gradient(135deg, #f5e6a8 0%, #d4af37 55%, #b8962e 100%);
   color: #0c0c0c;
+  transform: translateY(0);
+  transition-property: transform, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.35);
 }
@@ -1003,6 +1008,7 @@ html.reduce-motion .nav-about-reveal {
   filter: brightness(1.05);
   opacity: 1;
   color: #0c0c0c;
+  transform: translateY(-1px);
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.4),
     0 0 20px rgba(212, 175, 55, 0.35),
