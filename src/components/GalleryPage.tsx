@@ -228,12 +228,20 @@ export default function GalleryPage() {
       <section className="bg-black pb-20 pt-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div
+            key={activeCategory}
             id="gallery-panel"
             role="tabpanel"
             aria-labelledby={activeTabId}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
-            {filteredItems.map((item, index) => {
+            {filteredItems.length === 0 ? (
+              <Reveal immediate className="col-span-full flex flex-col items-center justify-center py-24 text-center">
+                <p className="text-sm tracking-[0.2em] uppercase text-white/70">
+                  Images coming soon
+                </p>
+              </Reveal>
+            ) : (
+            filteredItems.map((item, index) => {
               const isEager = index < eagerImageCount;
               return (
               <Reveal
@@ -272,7 +280,8 @@ export default function GalleryPage() {
                 </button>
               </Reveal>
             );
-            })}
+            })
+            )}
           </div>
         </div>
       </section>
