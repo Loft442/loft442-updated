@@ -426,10 +426,4 @@ export const galleryItems: GalleryItem[] = [
     alt: "Baby shower decor setup at Loft 442",
     category: "Baby Shower",
   },
-  {
-    id: 63,
-    src: "/images/babyshower38.webp",
-    alt: "Baby shower event celebration at Loft 442",
-    category: "Baby Shower",
-  },
 ];
