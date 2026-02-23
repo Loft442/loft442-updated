@@ -47,11 +47,12 @@ export default function GalleryPage() {
   const isBrowser = useSyncExternalStore(subscribe, getIsBrowser, getServerSnapshot);
 
   const filteredItems = useMemo(() => {
-    if (activeCategory === "All") {
-      return galleryItems;
-    }
+    const items =
+      activeCategory === "All"
+        ? galleryItems
+        : galleryItems.filter((item) => item.category === activeCategory);
 
-    return galleryItems.filter((item) => item.category === activeCategory);
+    return [...items].reverse();
   }, [activeCategory]);
 
   const activeTabId = `gallery-tab-${slugify(activeCategory)}`;
