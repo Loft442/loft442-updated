@@ -49,10 +49,10 @@ export default function Carousel() {
               <Image
                 src={src}
                 alt={`Slide ${idx + 1}`}
-                width={224}
+                width={240}
                 height={320}
                 className="h-full w-full object-cover"
-                sizes="(max-width: 640px) 70vw, 224px"
+                sizes="(max-width: 640px) 70vw, 240px"
                 priority={idx === 0}
                 draggable={false}
               />
