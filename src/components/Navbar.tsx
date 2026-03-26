@@ -9,6 +9,7 @@ import { Menu, X } from "lucide-react";
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Gallery", href: "/gallery" },
+  { label: "Pricing", href: "/pricing" },
   { label: "About", href: "#about" },
 ];
 
@@ -114,7 +115,7 @@ export default function Navbar() {
               key={link.label}
               href={link.href}
               onClick={(event) => handleNavClick(event, link.href)}
-              className={`nav-underline relative transition hover:text-white after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] hover:after:opacity-100 after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${link.label === "Home" ? "nav-home-reveal" : ""} ${link.label === "Gallery" ? "nav-gallery-reveal" : ""} ${link.label === "About" ? "nav-about-reveal" : ""}`}
+              className={`nav-underline relative transition hover:text-white after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] hover:after:opacity-100 after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${link.label === "Home" ? "nav-home-reveal" : ""} ${link.label === "Gallery" ? "nav-gallery-reveal" : ""} ${link.label === "Pricing" ? "nav-pricing-reveal" : ""} ${link.label === "About" ? "nav-about-reveal" : ""}`}
             >
               {link.label}
             </Link>

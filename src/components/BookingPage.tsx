@@ -35,6 +35,12 @@ const bookingTypes = [
   "Baby Shower",
 ];
 
+const fieldClassName =
+  "w-full rounded-sm border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none transition duration-300 placeholder:text-white/35 focus:border-[#d9be62]/70 focus:bg-black/50";
+
+const iconButtonClassName =
+  "rounded-sm border border-white/10 bg-black/40 p-2 text-white/70 transition duration-300 hover:border-[#d9be62]/60 hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50";
+
 const isSameDay = (a: Date, b: Date) =>
   a.getFullYear() === b.getFullYear() &&
   a.getMonth() === b.getMonth() &&
@@ -76,47 +82,64 @@ export default function BookingPage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden border-b border-white/10 bg-black">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.05),_transparent_45%)]" />
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 sm:px-6 sm:py-10 md:py-12">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-            Loft 442
-          </p>
-          <h1 className="text-3xl font-semibold tracking-[0.35em] text-white sm:text-4xl md:text-5xl">
-            BOOK YOUR EVENT
-          </h1>
-          <p className="max-w-xl text-sm text-white/70">
-            Reserve your date at LOFT 442.
-          </p>
+      <section className="section-glow section-divider relative border-t border-white/10 pb-10 pt-6 sm:pb-12 sm:pt-8">
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
+        />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="spotlight rounded-sm px-4 py-3">
+            <Reveal mode="text" className="flex flex-col gap-4">
+              <p className="text-xs uppercase tracking-[0.4em] text-white">Loft 442</p>
+              <h1 className="text-spotlight relative inline-block text-3xl font-semibold tracking-[0.32em] text-white sm:text-4xl md:text-5xl">
+                <span
+                  className="pointer-events-none absolute -inset-x-12 -inset-y-8 z-0 blur-3xl"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse at center, rgba(200,200,210,0.85) 0%, transparent 65%)",
+                  }}
+                  aria-hidden="true"
+                />
+                <span className="relative z-10">BOOK YOUR EVENT</span>
+              </h1>
+              <p className="max-w-2xl text-sm text-white/70">
+                Reserve your date at Loft 442 and share the event details needed to
+                prepare the next step.
+              </p>
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      <section className="border-b border-white/10 bg-black">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8">
-          <Reveal className="flex w-full flex-col gap-3">
-            <span className="text-[0.6rem] uppercase tracking-[0.35em] text-white/60">
+      <section className="section-divider border-t border-white/10 py-8 sm:py-10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 sm:px-6">
+          <Reveal mode="text" className="rounded-sm border border-white/10 bg-white/6 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.38)] backdrop-blur sm:p-8">
+            <span className="text-[0.62rem] uppercase tracking-[0.32em] text-[#d9be62]">
               Step 1 of 2
             </span>
-            <div className="relative h-[10px] w-full">
-              <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/15" />
-              <div className="absolute left-0 top-1/2 h-px w-1/2 -translate-y-1/2 bg-white/60 shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
-              <div className="absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full border border-white/60 bg-white/40 shadow-[0_0_10px_rgba(255,255,255,0.25)]" />
-              <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full border border-white/20 bg-black" />
+            <div className="relative mt-3 h-2.5 w-full">
+              <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/10" />
+              <div className="absolute left-0 top-1/2 h-px w-1/2 -translate-y-1/2 bg-[#d9be62] shadow-[0_0_18px_rgba(217,190,98,0.28)]" />
+              <div className="absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full border border-[#d9be62]/80 bg-[#d9be62]/35 shadow-[0_0_14px_rgba(217,190,98,0.28)]" />
+              <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full border border-white/20 bg-black/80" />
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="bg-black pb-20 pt-10">
+      <section className="section-divider border-t border-white/10 pb-20 pt-2">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="gallery-card group relative grid gap-10 overflow-hidden rounded-sm border border-white/10 bg-white/5 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition duration-200 ease-out hover:border-white/20 sm:p-8 lg:grid-cols-[1.1fr_1fr]">
-            <span className="gallery-shine" aria-hidden="true" />
+          <Reveal className="text-spotlight relative grid gap-10 rounded-sm border border-white/10 bg-white/8 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-8 lg:grid-cols-[1.1fr_1fr]">
             <div className="relative z-10 flex flex-col gap-8">
-              <div className="flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                  Select Date
-                </p>
+              <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-5">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.35em] text-[#d9be62] sm:text-sm">
+                    Select Date
+                  </p>
+                  <p className="mt-2 text-xs uppercase tracking-[0.3em] text-white">
+                    Choose the day, time, and event type
+                  </p>
+                </div>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
@@ -130,7 +153,7 @@ export default function BookingPage() {
                         )
                       )
                     }
-                    className="rounded-sm border border-white/20 bg-black/60 p-2 text-white/70 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/50"
+                    className={iconButtonClassName}
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -146,19 +169,19 @@ export default function BookingPage() {
                         )
                       )
                     }
-                    className="rounded-sm border border-white/20 bg-black/60 p-2 text-white/70 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/50"
+                    className={iconButtonClassName}
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>
-              <div className="rounded-sm border border-white/10 bg-black/60 p-4">
+              <div className="rounded-sm border border-white/10 bg-black/40 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                 <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm uppercase tracking-[0.35em] text-white/80">
+                  <p className="text-sm uppercase tracking-[0.35em] text-white">
                     {monthLabel}
                   </p>
                   {selectedDate ? (
-                    <span className="text-[0.6rem] uppercase tracking-[0.35em] text-white/50">
+                    <span className="text-[0.62rem] uppercase tracking-[0.32em] text-[#d9be62]">
                       {selectedDate.toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -167,7 +190,7 @@ export default function BookingPage() {
                     </span>
                   ) : null}
                 </div>
-                <div className="grid grid-cols-7 gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/40">
+                <div className="grid grid-cols-7 gap-2 text-[0.62rem] uppercase tracking-[0.3em] text-white/45">
                   {weekdays.map((day) => (
                     <div key={day} className="text-center">
                       {day}
@@ -195,11 +218,11 @@ export default function BookingPage() {
                         role="gridcell"
                         aria-selected={isSelected}
                         onClick={() => setSelectedDate(date)}
-                        className={`flex h-10 items-center justify-center rounded-sm border text-[0.65rem] uppercase tracking-[0.3em] transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${
+                        className={`flex h-10 items-center justify-center rounded-sm border text-[0.65rem] uppercase tracking-[0.3em] transition duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50 ${
                           isSelected
-                            ? "border-white/60 bg-white/10 text-white shadow-[0_0_18px_rgba(255,255,255,0.2)]"
-                            : "border-white/10 text-white/70 hover:border-white/40 hover:text-white"
-                        } ${isToday ? "border-white/30 text-white/90" : ""}`}
+                            ? "border-[#d9be62]/70 bg-[#d9be62]/12 text-white shadow-[0_0_18px_rgba(217,190,98,0.18)]"
+                            : "border-white/10 bg-black/30 text-white/70 hover:border-[#d9be62]/50 hover:bg-white/6 hover:text-white"
+                        } ${isToday ? "border-white/20 text-white" : ""}`}
                       >
                         {date.getDate()}
                       </button>
@@ -209,9 +232,9 @@ export default function BookingPage() {
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-[#d9be62]">
                   Start Time
-                  <select className="w-full rounded-sm border border-white/20 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/60 sm:text-sm">
+                  <select className={fieldClassName}>
                     <option value="" className="text-black">
                       Select start
                     </option>
@@ -222,9 +245,9 @@ export default function BookingPage() {
                     ))}
                   </select>
                 </label>
-                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-[#d9be62]">
                   End Time
-                  <select className="w-full rounded-sm border border-white/20 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/60 sm:text-sm">
+                  <select className={fieldClassName}>
                     <option value="" className="text-black">
                       Select end
                     </option>
@@ -237,9 +260,9 @@ export default function BookingPage() {
                 </label>
               </div>
 
-              <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+              <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-[#d9be62]">
                 Type of Booking
-                <select className="w-full rounded-sm border border-white/20 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/60 sm:text-sm">
+                <select className={fieldClassName}>
                   <option value="" className="text-black">
                     Select type
                   </option>
@@ -251,48 +274,55 @@ export default function BookingPage() {
                 </select>
               </label>
 
-              <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+              <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-[#d9be62]">
                 Special Requests (optional)
                 <textarea
                   rows={4}
                   placeholder="Share lighting, setup, or accessibility needs."
-                  className="w-full rounded-sm border border-white/20 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/60 sm:text-sm"
+                  className={fieldClassName}
                 />
               </label>
             </div>
 
             <div className="relative z-10 flex flex-col gap-6">
-              <div className="flex flex-col gap-3">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                  Contact Information
-                </p>
-                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+              <div className="rounded-sm border border-white/10 bg-black/40 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:p-6">
+                <div className="flex flex-col gap-3 border-b border-white/10 pb-5">
+                  <p className="text-xs uppercase tracking-[0.35em] text-[#d9be62] sm:text-sm">
+                    Contact Information
+                  </p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-white">
+                    Where we should send next-step details
+                  </p>
+                </div>
+                <div className="mt-5 flex flex-col gap-4">
+                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-[#d9be62]">
                   Full Name
                   <input
                     type="text"
-                    className="w-full rounded-sm border border-white/20 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/60 sm:text-sm"
+                    className={fieldClassName}
                   />
                 </label>
-                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-[#d9be62]">
                   Email Address
                   <input
                     type="email"
-                    className="w-full rounded-sm border border-white/20 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/60 sm:text-sm"
+                    className={fieldClassName}
                   />
                 </label>
-                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-[#d9be62]">
                   Phone Number
                   <input
                     type="tel"
-                    className="w-full rounded-sm border border-white/20 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/60 sm:text-sm"
+                    className={fieldClassName}
                   />
                 </label>
+                </div>
               </div>
 
               <div className="mt-auto flex justify-center lg:justify-end">
                 <Link
                   href="/payment"
-                  className="cta-button bg-white px-6 py-3 text-[0.65rem] uppercase tracking-[0.35em] text-black transition hover:opacity-90"
+                  className="inline-flex h-11 items-center justify-center rounded-sm border border-[#d4af37] px-5 text-[0.65rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-[#f5e6a8] hover:bg-[#d4af37]/15 hover:text-white hover:shadow-[0_0_24px_rgba(212,175,55,0.3)]"
                 >
                   CONTINUE
                 </Link>

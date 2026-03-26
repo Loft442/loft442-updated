@@ -33,6 +33,15 @@ const requiredFields: FieldName[] = [
   "email",
 ];
 
+const FIELD_MAX_LENGTH: Record<FieldName, number> = {
+  firstName: 50,
+  lastName: 50,
+  partyType: 60,
+  phone: 20,
+  email: 254,
+  message: 1000,
+};
+
 const isSameDay = (a: Date, b: Date) =>
   a.getFullYear() === b.getFullYear() &&
   a.getMonth() === b.getMonth() &&
@@ -136,13 +145,22 @@ export default function SchedulePage() {
     Boolean(selectedDate) && requiredFields.every((field) => !errors[field]);
 
   const baseInputClass =
-    "w-full rounded-sm border border-white/20 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/60 sm:text-sm";
+    "w-full rounded-sm border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none transition duration-300 placeholder:text-white focus:border-[#d9be62]/70 focus:bg-black";
+  const sectionAccentLabelClass =
+    "text-xs font-medium uppercase tracking-[0.35em] text-[#d9be62] sm:text-sm";
   const errorInputClass = "border-rose-200/60 focus:border-rose-200/80";
   const errorTextClass =
     "min-h-[0.75rem] text-[0.6rem] uppercase tracking-[0.2em] text-rose-200/70 transition";
 
   const updateField = (field: FieldName, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    const nextValue =
+      field === "phone"
+        ? value.replace(/[^0-9()-]/g, "")
+        : value;
+    setForm((prev) => ({
+      ...prev,
+      [field]: nextValue.slice(0, FIELD_MAX_LENGTH[field]),
+    }));
   };
 
   const markTouched = (field: FieldName) => {
@@ -212,11 +230,11 @@ export default function SchedulePage() {
   };
 
   return (
-    <main className="ambient-surface scheduling-page bg-black pt-[76px] text-white">
+    <main className="ambient-surface scheduling-page bg-black pt-19 text-white">
       <div className="ambient-glow" aria-hidden="true">
         <span className="ambient-glow__layer" />
       </div>
-      <div className="divider-glow h-[2px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <div className="divider-glow h-0.5 w-full bg-linear-to-r from-transparent via-white/20 to-transparent" />
 
       <section className="section-glow section-divider relative border-t border-white/10 py-16 sm:py-20">
         <span
@@ -224,14 +242,20 @@ export default function SchedulePage() {
           className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
         />
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal mode="text" className="flex flex-col gap-4">
-            <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-              Loft 442
-            </p>
-            <h1 className="text-spotlight schedule-title inline-block text-3xl font-semibold tracking-[0.35em] text-white sm:text-4xl md:text-5xl">
-              PLAN YOUR EVENT
+          <Reveal mode="text" className="spotlight rounded-sm px-4 py-3 flex flex-col gap-4">
+            <p className="text-xs uppercase tracking-[0.4em] text-white">Loft 442</p>
+            <h1 className="text-spotlight relative inline-block text-3xl font-semibold tracking-[0.32em] text-white sm:text-4xl md:text-5xl">
+              <span
+                className="pointer-events-none absolute -inset-x-12 -inset-y-8 z-0 blur-3xl"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at center, rgba(200,200,210,0.85) 0%, transparent 65%)",
+                }}
+                aria-hidden="true"
+              />
+              <span className="relative z-10">PLAN YOUR EVENT</span>
             </h1>
-            <p className="max-w-xl text-sm text-white/70">
+            <p className="max-w-2xl text-sm text-white/70">
               Select your preferred date and tell us about your event. Our team will follow up to confirm availability.
             </p>
           </Reveal>
@@ -241,10 +265,15 @@ export default function SchedulePage() {
               mode="text"
               className="rounded-sm border border-white/10 bg-white/8 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-8"
             >
-              <div className="flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                  Select Preferred Date
-                </p>
+              <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-5">
+                <div>
+                  <p className={sectionAccentLabelClass}>
+                    Select Preferred Date
+                  </p>
+                  <p className="mt-2 text-xs uppercase tracking-[0.3em] text-white">
+                    Pick a date and we will confirm availability
+                  </p>
+                </div>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
@@ -258,7 +287,7 @@ export default function SchedulePage() {
                         )
                       )
                     }
-                    className="rounded-sm border border-white/20 bg-black/60 p-2 text-white/70 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                    className="rounded-sm border border-white/10 bg-black/40 p-2 text-white/70 transition duration-300 hover:border-[#d9be62]/60 hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -274,20 +303,20 @@ export default function SchedulePage() {
                         )
                       )
                     }
-                    className="rounded-sm border border-white/20 bg-black/60 p-2 text-white/70 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                    className="rounded-sm border border-white/10 bg-black/40 p-2 text-white/70 transition duration-300 hover:border-[#d9be62]/60 hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
-              <div className="mt-6 rounded-sm border border-white/10 bg-black/60 p-4 sm:p-5">
+              <div className="mt-6 rounded-sm border border-white/10 bg-black/40 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:p-5">
                 <div className="mb-4 flex items-center justify-between">
-                  <p className="text-base uppercase tracking-[0.35em] text-white/80 sm:text-lg">
+                  <p className="text-base uppercase tracking-[0.35em] text-white sm:text-lg">
                     {monthLabel}
                   </p>
                   {selectedDate ? (
-                    <span className="text-[0.6rem] uppercase tracking-[0.35em] text-white/50">
+                    <span className="text-[0.62rem] uppercase tracking-[0.32em] text-[#d9be62]">
                       {formatSelectedDate(selectedDate)}
                     </span>
                   ) : null}
@@ -323,8 +352,8 @@ export default function SchedulePage() {
                     const stateClass = disabled
                       ? "border-white/10 bg-black/70 text-white/25 opacity-70 cursor-not-allowed"
                       : isSelected
-                        ? "border-white/60 bg-white/12 text-white shadow-[0_0_18px_rgba(255,255,255,0.2)]"
-                        : "border-white/10 text-white/70 md:hover:border-white/40 md:hover:text-white";
+                        ? "border-[#d9be62]/70 bg-[#d9be62]/12 text-white shadow-[0_0_18px_rgba(217,190,98,0.18)]"
+                        : "border-white/10 bg-black/30 text-white/70 md:hover:border-[#d9be62]/50 md:hover:bg-white/6 md:hover:text-white";
 
                     return (
                       <button
@@ -335,7 +364,7 @@ export default function SchedulePage() {
                         aria-selected={isSelected}
                         disabled={disabled}
                         onClick={disabled ? undefined : () => setSelectedDate(date)}
-                        className={`flex w-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-sm border text-[0.7rem] uppercase tracking-[0.3em] leading-none transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 aspect-square sm:aspect-auto sm:h-14 sm:w-14 sm:text-sm ${stateClass} ${!disabled && isToday ? "border-white/30 text-white/90" : ""
+                        className={`flex w-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-sm border text-[0.7rem] uppercase tracking-[0.3em] leading-none transition duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50 aspect-square sm:aspect-auto sm:h-14 sm:w-14 sm:text-sm ${stateClass} ${!disabled && isToday ? "border-white/20 text-white" : ""
                           }`}
                       >
                         <span className="leading-none">{date.getDate()}</span>
@@ -361,20 +390,21 @@ export default function SchedulePage() {
                     onChange={(event) => setHoneypot(event.target.value)}
                   />
                 </label>
-                <div className="flex flex-col gap-3">
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+                <div className="flex flex-col gap-3 border-b border-white/10 pb-5">
+                  <p className={sectionAccentLabelClass}>
                     Selected Date
                   </p>
-                  <p className="text-sm uppercase tracking-[0.3em] text-white/80">
+                  <p className="text-sm uppercase tracking-[0.3em] text-white">
                     {selectedDate ? formatSelectedDate(selectedDate) : "None"}
                   </p>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                  <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white">
                     First Name
                     <input
                       type="text"
+                      maxLength={FIELD_MAX_LENGTH.firstName}
                       value={form.firstName}
                       onChange={(event) =>
                         updateField("firstName", event.target.value)
@@ -395,10 +425,11 @@ export default function SchedulePage() {
                     </span>
                   </label>
 
-                  <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                  <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white">
                     Last Name
                     <input
                       type="text"
+                      maxLength={FIELD_MAX_LENGTH.lastName}
                       value={form.lastName}
                       onChange={(event) =>
                         updateField("lastName", event.target.value)
@@ -434,10 +465,11 @@ export default function SchedulePage() {
                 />
 
                 <div className="flex flex-col gap-4">
-                  <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                  <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white">
                     Phone
                     <input
                       type="tel"
+                      maxLength={FIELD_MAX_LENGTH.phone}
                       value={form.phone}
                       onChange={(event) =>
                         updateField("phone", event.target.value)
@@ -458,10 +490,11 @@ export default function SchedulePage() {
                     </span>
                   </label>
 
-                  <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                  <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white">
                     Email
                     <input
                       type="email"
+                      maxLength={FIELD_MAX_LENGTH.email}
                       value={form.email}
                       onChange={(event) =>
                         updateField("email", event.target.value)
@@ -483,17 +516,18 @@ export default function SchedulePage() {
                   </label>
                 </div>
 
-                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+                <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white">
                   Message (optional)
                   <textarea
                     rows={4}
-                    placeholder="Tell us about your event guest count, preferred time, special requests, or anything you'd like us to know."
+                    maxLength={FIELD_MAX_LENGTH.message}
+                    placeholder="Tell us about your event, guest count, preferred time, special requests, or anything you'd like us to know."
                     value={form.message}
                     onChange={(event) =>
                       updateField("message", event.target.value)
                     }
                     onBlur={() => markTouched("message")}
-                    className={`${baseInputClass} min-h-[180px] sm:min-h-[120px]`}
+                    className={`${baseInputClass} min-h-45 sm:min-h-30`}
                   />
                   <span className={`${errorTextClass} opacity-0`} />
                 </label>
@@ -502,7 +536,7 @@ export default function SchedulePage() {
                   <button
                     type="submit"
                     disabled={!isFormValid || isSubmitting}
-                    className="cta-button cta-book inline-flex h-11 items-center justify-center rounded-sm px-6 text-[0.65rem] uppercase tracking-[0.35em] text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-11 items-center justify-center rounded-sm border border-[#d4af37] px-5 text-[0.65rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-[#f5e6a8] hover:bg-[#d4af37]/15 hover:text-white hover:shadow-[0_0_24px_rgba(212,175,55,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isSubmitting ? "Sending..." : "Send Request"}
                   </button>

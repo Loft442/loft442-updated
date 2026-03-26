@@ -37,7 +37,7 @@ export default function PartyTypeSelect({
   reserveErrorSpace = false,
 }: PartyTypeSelectProps) {
   const baseInputClass =
-    "w-full rounded-sm border border-white/10 bg-black/60 px-4 py-3 text-base text-white/80 outline-none transition focus:border-white/40 sm:text-sm";
+    "w-full rounded-sm border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none transition duration-300 focus:border-[#d9be62]/70 focus:bg-black";
   const errorInputClass = "border-rose-200/60 focus:border-rose-200/80";
   const errorTextClass =
     "min-h-[0.75rem] text-[0.6rem] uppercase tracking-[0.2em] text-rose-200/70 transition";
@@ -128,7 +128,7 @@ export default function PartyTypeSelect({
     open && options[activeIndex] ? `${buttonId}-option-${activeIndex}` : undefined;
 
   return (
-    <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white/60">
+    <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white">
       {label}
       <div
         ref={wrapperRef}
@@ -155,11 +155,11 @@ export default function PartyTypeSelect({
           className={`${baseInputClass} ${error ? errorInputClass : ""
             } flex items-center justify-between gap-3`}
         >
-          <span className={showPlaceholder ? "text-white/50" : "text-white/80"}>
+          <span className="text-white">
             {showPlaceholder ? placeholder : value}
           </span>
           <ChevronDown
-            className={`h-4 w-4 text-white/70 transition ${open ? "rotate-180" : ""
+            className={`h-4 w-4 text-white transition duration-300 ${open ? "rotate-180" : ""
               }`}
             aria-hidden="true"
           />
@@ -185,10 +185,10 @@ export default function PartyTypeSelect({
                 aria-selected={isSelected}
                 onMouseEnter={() => setActiveIndex(index)}
                 onClick={() => handleSelect(option)}
-                className={`flex w-full items-center rounded-sm px-3 py-2 text-left text-xs uppercase tracking-[0.2em] transition ${isSelected
-                  ? "bg-white/12 text-white/90 shadow-[0_0_12px_rgba(255,255,255,0.12)]"
-                  : "text-white/70 hover:bg-white/8 hover:text-white/90"
-                  } ${isActive ? "bg-white/8 text-white/90" : ""}`}
+                className={`flex w-full items-center rounded-sm px-3 py-2 text-left text-xs uppercase tracking-[0.2em] transition duration-300 ${isSelected
+                  ? "border border-[#d9be62]/50 bg-[#d9be62]/12 text-white shadow-[0_0_12px_rgba(217,190,98,0.14)]"
+                    : "text-white hover:bg-white/8"
+                  } ${isActive ? "bg-white/8 text-white" : ""}`}
               >
                 {option}
               </button>

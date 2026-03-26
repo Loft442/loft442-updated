@@ -204,31 +204,33 @@ html::after {
 
 .page-transition {
   opacity: 0;
-  transform: translateY(10px);
   animation: pageEnter 320ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-  will-change: opacity, transform;
+  will-change: opacity;
   position: relative;
   z-index: 10;
+}
+
+.page-transition.page-transition--done {
+  animation: none;
+  opacity: 1;
+  will-change: auto;
 }
 
 @keyframes pageEnter {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
 
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
 .hero-stagger {
   opacity: 0;
-  transform: translateY(10px);
   animation: heroStagger 480ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   animation-delay: calc(var(--hero-delay, 0ms) + var(--motion-start-delay, 0ms));
-  will-change: opacity, transform;
+  will-change: opacity;
 }
 
 .hero-stagger--1 {
@@ -246,7 +248,6 @@ html::after {
 @keyframes heroStagger {
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
@@ -531,13 +532,10 @@ html::after {
 
 .reveal {
   opacity: 0;
-  transform: translateY(12px);
-  transition:
-    opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform: none;
+  transition: opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
   transition-delay: calc(var(--reveal-delay, 0ms) + var(--motion-start-delay, 0ms));
-  will-change: opacity, transform;
-  -webkit-font-smoothing: antialiased;
+  will-change: auto;
 }
 
 .reveal.reveal--text {
@@ -550,6 +548,18 @@ html::after {
   opacity: 1;
   transform: none;
   will-change: auto;
+}
+
+.reveal.reveal--slide {
+  transform: translateY(40px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: calc(var(--reveal-delay, 0ms) + var(--motion-start-delay, 0ms));
+}
+
+.reveal.reveal--slide.is-visible {
+  transform: translateY(0);
 }
 
 .reveal.reveal-image {
@@ -590,6 +600,7 @@ html::after {
   .cta-button.nav-cta-reveal,
   .nav-home-reveal,
   .nav-gallery-reveal,
+  .nav-pricing-reveal,
   .nav-about-reveal {
     animation: none;
     opacity: 1;
@@ -608,6 +619,7 @@ html.reduce-motion .hero-stagger {
 html.reduce-motion .cta-button.nav-cta-reveal,
 html.reduce-motion .nav-home-reveal,
 html.reduce-motion .nav-gallery-reveal,
+html.reduce-motion .nav-pricing-reveal,
 html.reduce-motion .nav-about-reveal {
   animation: none;
   opacity: 1;
@@ -718,11 +730,19 @@ html.reduce-motion .nav-about-reveal {
   will-change: opacity, transform;
 }
 
-.nav-about-reveal {
+.nav-pricing-reveal {
   opacity: 0;
   transform: translateY(-16px);
   animation: navHomeReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   animation-delay: calc(940ms + var(--motion-start-delay, 0ms));
+  will-change: opacity, transform;
+}
+
+.nav-about-reveal {
+  opacity: 0;
+  transform: translateY(-16px);
+  animation: navHomeReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation-delay: calc(1060ms + var(--motion-start-delay, 0ms));
   will-change: opacity, transform;
 }
 
@@ -852,8 +872,80 @@ html.reduce-motion .nav-about-reveal {
       transparent 70%);
 }
 
+.metallic-outline {
+  position: relative;
+  overflow: hidden;
+}
+
+.metallic-outline::before,
+.metallic-outline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.metallic-outline::before {
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 168, 0.18),
+    0 0 16px rgba(212, 175, 55, 0.22);
+}
+
+.metallic-outline::after {
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.42) 50%,
+    rgba(247, 216, 122, 0.34) 56%,
+    transparent 68%,
+    transparent 100%
+  );
+  opacity: 0.7;
+  transform: translateX(-130%);
+  mix-blend-mode: screen;
+  animation: metallicShine 4.8s ease-in-out infinite;
+}
+
+@keyframes metallicShine {
+  0% {
+    transform: translateX(-130%);
+    opacity: 0;
+  }
+  16% {
+    opacity: 0.7;
+  }
+  42% {
+    transform: translateX(130%);
+    opacity: 0.75;
+  }
+  55% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (prefers-reduced-data: reduce) {
+  .metallic-outline::after {
+    animation: none;
+    opacity: 0.22;
+    transform: none;
+  }
+}
+
+html.reduce-motion .metallic-outline::after {
+  animation: none;
+  opacity: 0.22;
+  transform: none;
+}
+
 .about-card-outline {
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   background:
     linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1)) padding-box,
     linear-gradient(135deg,
@@ -1202,6 +1294,18 @@ html.reduce-motion .nav-about-reveal {
   .scheduling-page .section-glow::before {
     opacity: 0.2;
   }
+}
+
+.scheduling-page .spotlight::before,
+.scheduling-page .text-spotlight::before {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.pricing-page .spotlight::before,
+.pricing-page .text-spotlight::before {
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .gallery-card:hover .gallery-shine {

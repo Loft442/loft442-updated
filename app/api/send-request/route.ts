@@ -7,6 +7,17 @@ const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
+const MAX_BODY_BYTES = 20_000;
+const MAX_FIELD_LENGTH = {
+  firstName: 50,
+  lastName: 50,
+  partyType: 60,
+  phone: 20,
+  email: 254,
+  message: 1000,
+} as const;
+// NOTE: In-memory store is reset on every cold-start in serverless environments (e.g. Vercel).
+// For production-grade rate limiting, replace this with a Redis/Upstash store.
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
 
 type RequestPayload = {
@@ -45,6 +56,20 @@ export async function POST(request: Request) {
   console.log("[send-request] Timestamp:", new Date().toISOString());
   console.log("[send-request] Request URL:", request.url);
   console.log("[send-request] Request method:", request.method);
+
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    return Response.json({ ok: false, error: "Unsupported content type." }, { status: 415 });
+  }
+
+  const contentLengthHeader = request.headers.get("content-length");
+  const contentLength = contentLengthHeader ? Number(contentLengthHeader) : 0;
+  if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) {
+    return Response.json(
+      { ok: false, error: "Request payload too large." },
+      { status: 413 }
+    );
+  }
 
   const ip = getClientIp(request);
   console.log("[send-request] Client IP:", ip);
@@ -85,20 +110,43 @@ export async function POST(request: Request) {
   }
 
   const clean = (value?: string) => (value ?? "").trim();
-  const clamp = (value: string, max: number) =>
-    value.length > max ? value.slice(0, max) : value;
-  const partyType = clamp(clean(payload.partyType), 60);
+  const firstName = clean(payload.firstName);
+  const lastName = clean(payload.lastName);
+  const phone = clean(payload.phone);
+  const email = clean(payload.email);
+  const message = clean(payload.message);
+  const partyType = clean(payload.partyType);
   console.log("[send-request] Payload received:", Object.keys(payload));
   console.log("[send-request] Party Type:", partyType);
+
+  const lengthViolations = [
+    ["firstName", firstName.length, MAX_FIELD_LENGTH.firstName],
+    ["lastName", lastName.length, MAX_FIELD_LENGTH.lastName],
+    ["partyType", partyType.length, MAX_FIELD_LENGTH.partyType],
+    ["phone", phone.length, MAX_FIELD_LENGTH.phone],
+    ["email", email.length, MAX_FIELD_LENGTH.email],
+    ["message", message.length, MAX_FIELD_LENGTH.message],
+  ].filter(([, length, max]) => length > max);
+
+  if (lengthViolations.length > 0) {
+    return Response.json(
+      {
+        ok: false,
+        error: "One or more fields exceed allowed length.",
+        fields: lengthViolations.map(([field]) => field),
+      },
+      { status: 400 }
+    );
+  }
 
   console.log("[send-request] Validating required fields...");
   const missing = [
     ["date", payload.date],
-    ["firstName", payload.firstName],
-    ["lastName", payload.lastName],
+    ["firstName", firstName],
+    ["lastName", lastName],
     ["partyType", partyType],
-    ["phone", payload.phone],
-    ["email", payload.email],
+    ["phone", phone],
+    ["email", email],
   ].filter(([, value]) => !value || !String(value).trim());
 
   if (missing.length > 0) {
@@ -120,8 +168,8 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: "Invalid date format." }, { status: 400 });
   }
 
-  if (!emailPattern.test(String(payload.email))) {
-    console.error("[send-request] Invalid email format:", payload.email);
+  if (!emailPattern.test(email)) {
+    console.error("[send-request] Invalid email format:", email);
     return Response.json({ ok: false, error: "Invalid email address." }, { status: 400 });
   }
 
@@ -149,13 +197,13 @@ export async function POST(request: Request) {
   const resend = new Resend(RESEND_API_KEY);
 
   const dateLabel = formatDate(String(payload.date));
-  const messageText = payload.message?.trim() ? payload.message.trim() : "None";
+  const messageText = message.length > 0 ? message : "None";
 
   const emailText = `New Event Request – Loft 442
 
-Name: ${payload.firstName} ${payload.lastName}
-Email: ${payload.email}
-Phone: ${payload.phone ?? ""}
+Name: ${firstName} ${lastName}
+Email: ${email}
+Phone: ${phone}
 Type of Party: ${partyType || "Unknown"}
 Date: ${dateLabel}
 
@@ -167,20 +215,20 @@ ${messageText}
   console.log("[send-request] Preparing to send email...");
   console.log("[send-request] From:", fromAddress);
   console.log("[send-request] To:", LEADS_TO_EMAIL);
-  console.log("[send-request] Reply-To:", payload.email);
+  console.log("[send-request] Reply-To:", email);
   console.log("[send-request] Subject:", `New Event Request – ${partyType || "Unknown"}`);
 
   try {
     const result = await resend.emails.send({
       from: fromAddress,
       to: LEADS_TO_EMAIL,
-      replyTo: payload.email,
+      replyTo: email,
       subject: `New Event Request – ${partyType || "Unknown"}`,
       react: EventRequestNotification({
-        firstName: String(payload.firstName),
-        lastName: String(payload.lastName),
-        email: String(payload.email),
-        phone: String(payload.phone ?? ""),
+        firstName,
+        lastName,
+        email,
+        phone,
         partyType: partyType || "Unknown",
         dateLabel,
         messageText,

@@ -13,7 +13,7 @@ type RevealProps = {
   children: ReactNode;
   className?: string;
   delayMs?: number;
-  mode?: "text" | "media";
+  mode?: "text" | "media" | "slide";
   immediate?: boolean;
 };
 
@@ -77,7 +77,7 @@ export default function Reveal({
   const style = { "--reveal-delay": `${delayMs}ms` } as CSSProperties;
   const classes = [
     "reveal",
-    mode === "text" ? "reveal--text" : "",
+    mode === "text" ? "reveal--text" : mode === "slide" ? "reveal--slide" : "",
     visible ? "is-visible" : "",
     done ? "reveal-done" : "",
     className,
