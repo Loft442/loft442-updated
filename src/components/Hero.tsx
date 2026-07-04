@@ -24,23 +24,14 @@ export default function Hero() {
   };
 
   let letterIndex = 0;
-  const line1Segments = [
-    { text: "CREATING ", className: styles.heroLetterGroup },
-    {
-      text: "UNFORGETTABLE",
-      className: `${styles.heroLetterGroup} ${styles.venueUnderline} ${styles.venueUnderlineAnimated}`,
-    },
-  ];
-
-  const line1Nodes = line1Segments.map((segment) => {
-    const { nodes, nextIndex } = renderLetters(segment.text, letterIndex);
-    letterIndex = nextIndex;
-    return (
-      <span key={`${segment.text}-${letterIndex}`} className={segment.className}>
-        {nodes}
-      </span>
-    );
-  });
+  const { nodes: creatingNodes, nextIndex: afterCreating } = renderLetters(
+    "CREATING",
+    letterIndex
+  );
+  letterIndex = afterCreating;
+  const { nodes: unforgettableNodes, nextIndex: afterUnforgettable } =
+    renderLetters("UNFORGETTABLE", letterIndex);
+  letterIndex = afterUnforgettable;
 
   const { nodes: line2Nodes, nextIndex: line2End } = renderLetters(
     "MEMORIES ONE EVENT ",
@@ -84,8 +75,13 @@ export default function Hero() {
                 Loft 442
               </p>
               <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.06em] text-white sm:text-4xl sm:tracking-[0.12em] md:text-4xl lg:text-6xl leading-[1.05] md:leading-[1.1]">
-                <span className={`${styles.heroHeadlineLine} block whitespace-nowrap`}>
-                  {line1Nodes}
+                <span className={`${styles.heroHeadlineLine} block sm:whitespace-nowrap`}>
+                  <span className={styles.heroLetterGroup}>{creatingNodes}</span>
+                  <span
+                    className={`${styles.heroLetterGroup} ${styles.venueUnderline} ${styles.venueUnderlineAnimated} block sm:inline`}
+                  >
+                    {unforgettableNodes}
+                  </span>
                 </span>
                 <span className={`${styles.heroHeadlineLine} block`}>
                   <span className={styles.heroLetterGroup}>{line2Nodes}</span>

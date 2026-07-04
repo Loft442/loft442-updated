@@ -6,6 +6,7 @@ import { Eye, X } from "lucide-react";
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -19,8 +20,6 @@ const getIsBrowser = () => typeof window !== "undefined";
 const getServerSnapshot = () => false;
 
 const MODAL_MAX_WIDTH = 1280;
-const DESKTOP_MAGNIFIER_QUERY =
-  "(min-width: 768px) and (hover: hover) and (pointer: fine)";
 
 function getSafeAreaInsets() {
   const style = getComputedStyle(document.documentElement);
@@ -107,7 +106,7 @@ export default function FlyerViewer({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, handleClose]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!open) return;
 
     const syncModalSize = () => {
@@ -117,6 +116,9 @@ export default function FlyerViewer({
 
       const safeArea = getSafeAreaInsets();
       const isSm = window.matchMedia("(min-width: 640px)").matches;
+      const isDesktopMagnifier = window.matchMedia(
+        "(min-width: 768px) and (hover: hover) and (pointer: fine)"
+      ).matches;
       const overlayPadY = isSm ? 48 : 32;
       const overlayPadX = isSm ? 48 : 32;
       const maxWidth = Math.min(viewport.width * 0.96, MODAL_MAX_WIDTH);
@@ -129,8 +131,8 @@ export default function FlyerViewer({
       shell.style.height = `${height}px`;
       shell.style.maxHeight = `${height}px`;
 
-      if (window.matchMedia(DESKTOP_MAGNIFIER_QUERY).matches) {
-        shell.style.width = "fit-content";
+      if (isDesktopMagnifier) {
+        shell.style.width = "";
       } else {
         shell.style.width = `${Math.min(
           viewport.width - overlayPadX - safeArea.left - safeArea.right,
@@ -143,12 +145,10 @@ export default function FlyerViewer({
 
     const viewport = window.visualViewport;
     viewport?.addEventListener("resize", syncModalSize);
-    viewport?.addEventListener("scroll", syncModalSize);
     window.addEventListener("resize", syncModalSize);
 
     return () => {
       viewport?.removeEventListener("resize", syncModalSize);
-      viewport?.removeEventListener("scroll", syncModalSize);
       window.removeEventListener("resize", syncModalSize);
 
       const shell = modalShellRef.current;
@@ -196,6 +196,7 @@ export default function FlyerViewer({
       type="button"
       aria-label={`View fullscreen: ${alt}`}
       onClick={handleOpen}
+      onMouseDown={(event) => event.preventDefault()}
       className={thumbnailClasses}
     >
       <div className={imageContainerClass}>
@@ -271,7 +272,7 @@ export default function FlyerViewer({
       {open && isBrowser
         ? createPortal(
             <div
-              className="fixed inset-0 z-50 grid place-items-center overscroll-contain bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
+              className="fixed inset-0 z-[60] grid place-items-center overscroll-contain bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
               onClick={handleClose}
             >
               <div

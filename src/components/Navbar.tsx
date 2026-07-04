@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
   useSyncExternalStore,
   type MouseEvent,
@@ -11,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { useLockBodyScroll } from "@/lib/useIOSSafari";
+import { getScrollY, useLockBodyScroll } from "@/lib/useIOSSafari";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -49,12 +50,13 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const scrollYRef = useRef(0);
   const isDesktopNav = useDesktopNav();
   const isHome = pathname === "/";
   const suppressNavBorder =
     pathname === "/repass" || pathname === "/catering";
 
-  useLockBodyScroll(menuOpen);
+  useLockBodyScroll(menuOpen, scrollYRef.current);
   const handleNavClick = (
     event: MouseEvent<HTMLAnchorElement>,
     href: string
@@ -84,6 +86,11 @@ export default function Navbar() {
     let ticking = false;
 
     const update = () => {
+      if (menuOpen) {
+        ticking = false;
+        return;
+      }
+
       const y = window.scrollY;
       // small hysteresis so it doesn't flicker around the threshold
       setIsScrolled((prev) => (prev ? y > 8 : y > 24));
@@ -101,7 +108,7 @@ export default function Navbar() {
     update();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [menuOpen]);
 
   useEffect(() => {
     if (isDesktopNav) {
@@ -113,14 +120,18 @@ export default function Navbar() {
     setMenuOpen(false);
   }, []);
 
-  const showScrollDivider = isScrolled && !suppressNavBorder;
+  const showScrollDivider = isScrolled && !suppressNavBorder && !menuOpen;
 
   return (
     <header
       className={[
-        "fixed inset-x-0 top-0 z-50 w-full overflow-hidden",
+        "fixed inset-x-0 top-0 z-50 w-full overflow-x-hidden",
         "transition-[background-color] duration-300 ease-out motion-reduce:transition-none",
-        isScrolled ? "bg-black/70 backdrop-blur-md" : "bg-transparent",
+        menuOpen
+          ? "bg-black/90 backdrop-blur-md"
+          : isScrolled
+            ? "bg-black/70 backdrop-blur-md"
+            : "bg-transparent",
       ].join(" ")}
     >
       {showScrollDivider ? (
@@ -176,7 +187,14 @@ export default function Navbar() {
             aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            onClick={() => setMenuOpen((prev) => !prev)}
+            onClick={() =>
+              setMenuOpen((prev) => {
+                if (!prev) {
+                  scrollYRef.current = getScrollY();
+                }
+                return !prev;
+              })
+            }
             className="inline-flex h-11 w-11 items-center justify-center rounded-sm border border-white/20 text-white/80 transition hover:border-white/40 hover:text-white md:hidden"
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

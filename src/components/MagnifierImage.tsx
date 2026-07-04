@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -56,10 +57,12 @@ export default function MagnifierImage({
   const touchContainerRef = useRef<HTMLDivElement>(null);
   const pointerRef = useRef({ x: 0, y: 0 });
   const frameRef = useRef<number | null>(null);
+  const layoutSyncFrameRef = useRef<number | null>(null);
   const activeRef = useRef(false);
 
   const [magnifierEnabled, setMagnifierEnabled] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [layoutReady, setLayoutReady] = useState(false);
 
   const [touchScale, setTouchScale] = useState(MIN_TOUCH_SCALE);
   const [touchTranslate, setTouchTranslate] = useState({ x: 0, y: 0 });
@@ -365,10 +368,10 @@ export default function MagnifierImage({
   const syncPaneSize = useCallback(() => {
     const img = imgRef.current;
     const pane = zoomPaneRef.current;
-    if (!img || !pane) return;
+    if (!img || !pane) return false;
 
     const { width, height } = img.getBoundingClientRect();
-    if (width === 0 || height === 0) return;
+    if (width === 0 || height === 0) return false;
 
     pane.style.width = `${width}px`;
     pane.style.height = `${height * PANE_HEIGHT_SCALE}px`;
@@ -376,7 +379,20 @@ export default function MagnifierImage({
     if (activeRef.current) {
       queueUpdate();
     }
+
+    return true;
   }, [queueUpdate]);
+
+  const queueSyncPaneSize = useCallback(() => {
+    if (layoutSyncFrameRef.current !== null) return;
+
+    layoutSyncFrameRef.current = requestAnimationFrame(() => {
+      layoutSyncFrameRef.current = null;
+      if (syncPaneSize()) {
+        setLayoutReady(true);
+      }
+    });
+  }, [syncPaneSize]);
 
   const handleMouseEnter = useCallback(
     (event: React.MouseEvent<HTMLImageElement>) => {
@@ -407,19 +423,28 @@ export default function MagnifierImage({
       if (frameRef.current !== null) {
         cancelAnimationFrame(frameRef.current);
       }
+      if (layoutSyncFrameRef.current !== null) {
+        cancelAnimationFrame(layoutSyncFrameRef.current);
+      }
     };
   }, []);
 
-  useEffect(() => {
-    if (!magnifierEnabled) return;
+  useLayoutEffect(() => {
+    if (!magnifierEnabled) {
+      setLayoutReady(false);
+      return;
+    }
 
     const img = imgRef.current;
     if (!img) return;
 
-    syncPaneSize();
+    setLayoutReady(false);
+    if (syncPaneSize()) {
+      setLayoutReady(true);
+    }
 
     const observer = new ResizeObserver(() => {
-      syncPaneSize();
+      queueSyncPaneSize();
     });
 
     observer.observe(img);
@@ -428,20 +453,18 @@ export default function MagnifierImage({
     }
 
     const handleViewportChange = () => {
-      syncPaneSize();
+      queueSyncPaneSize();
     };
 
     window.addEventListener("resize", handleViewportChange);
     window.visualViewport?.addEventListener("resize", handleViewportChange);
-    window.visualViewport?.addEventListener("scroll", handleViewportChange);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", handleViewportChange);
       window.visualViewport?.removeEventListener("resize", handleViewportChange);
-      window.visualViewport?.removeEventListener("scroll", handleViewportChange);
     };
-  }, [magnifierEnabled, src, syncPaneSize]);
+  }, [magnifierEnabled, src, syncPaneSize, queueSyncPaneSize]);
 
   useEffect(() => {
     if (magnifierEnabled) {
@@ -515,7 +538,17 @@ export default function MagnifierImage({
               alt={alt}
               draggable={false}
               className="block h-auto max-h-full w-auto max-w-full select-none object-contain"
-              onLoad={magnifierEnabled ? syncPaneSize : undefined}
+              onLoad={
+                magnifierEnabled
+                  ? () => {
+                      if (syncPaneSize()) {
+                        setLayoutReady(true);
+                      } else {
+                        queueSyncPaneSize();
+                      }
+                    }
+                  : undefined
+              }
               onMouseEnter={magnifierEnabled ? handleMouseEnter : undefined}
               onMouseMove={magnifierEnabled ? handleMouseMove : undefined}
               onMouseLeave={magnifierEnabled ? handleMouseLeave : undefined}
@@ -543,7 +576,11 @@ export default function MagnifierImage({
       </div>
 
       {magnifierEnabled ? (
-        <div className="hidden min-h-0 md:flex md:h-full md:flex-col md:items-stretch">
+        <div
+          className={`hidden min-h-0 transition-opacity duration-150 motion-reduce:transition-none md:flex md:h-full md:flex-col md:items-stretch${
+            layoutReady ? " opacity-100" : " opacity-0"
+          }`}
+        >
           <div className="flex min-h-0 flex-1 items-center justify-start">
             <div
               ref={zoomPaneRef}
