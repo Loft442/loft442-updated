@@ -205,7 +205,7 @@ export default function EventRequestNotification({
                 <Column style={{ width: "50%", paddingLeft: 6 }}>
                   <Section style={styles.fieldCard}>
                     <Text style={styles.label}>
-                      <Icon>🎉</Icon>PARTY TYPE
+                      <Icon>🎉</Icon>EVENT TYPE
                     </Text>
                     <Text style={styles.value}>{partyType}</Text>
                   </Section>

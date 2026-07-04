@@ -100,7 +100,7 @@ const addOns = [
 export default function PricingPage() {
   return (
     <>
-      <section className="pricing-page section-glow section-divider relative border-t border-white/10 pb-16 pt-6 sm:pb-20 sm:pt-8">
+      <section className="pricing-page section-glow section-divider relative border-t border-white/10 pb-0 pt-6 sm:pt-8">
         <span
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
@@ -120,7 +120,7 @@ export default function PricingPage() {
             </Reveal>
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+          <div className="mt-6 grid gap-6 sm:mt-8 lg:grid-cols-2">
             {packages.map((pkg, index) => (
               <Reveal
                 key={pkg.name}

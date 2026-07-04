@@ -16,8 +16,21 @@ type FieldName =
   | "billingPhone"
   | "billingAddress";
 
+const getNextSaturday = () => {
+  const today = new Date();
+  const daysUntilSaturday = (6 - today.getDay() + 7) % 7 || 7;
+  const nextSaturday = new Date(today);
+  nextSaturday.setDate(today.getDate() + daysUntilSaturday);
+  return nextSaturday.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
 const bookingSummary = {
-  date: "Saturday, March 16, 2026",
+  date: getNextSaturday(),
   startTime: "5:00 PM",
   endTime: "11:00 PM",
   type: "Weddings",
@@ -151,43 +164,57 @@ export default function PaymentPage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden border-b border-white/10 bg-black">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.05),_transparent_45%)]" />
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6 sm:py-16 md:py-20">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-            Loft 442
-          </p>
-          <h1 className="text-3xl font-semibold tracking-[0.3em] text-white sm:text-4xl md:text-5xl">
-            PAYMENT
-          </h1>
-          <p className="max-w-xl text-sm text-white/70">
-            Securely confirm your booking.
-          </p>
-        </div>
-      </section>
-
-      <section className="bg-black">
-        <div className="mx-auto max-w-6xl px-4 pb-6 pt-4 sm:px-6">
-          <div className="flex flex-col gap-3">
-            <span className="text-[0.6rem] uppercase tracking-[0.35em] text-white/60">
-              Step 2 of 2
-            </span>
-            <div className="relative h-[10px] w-full">
-              <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/15" />
-              <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/60 shadow-[0_0_10px_rgba(255,255,255,0.18)]" />
-              <div className="absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full border border-white/50 bg-white/40 shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
-              <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full border border-white/70 bg-white/60 shadow-[0_0_12px_rgba(255,255,255,0.28)]" />
-            </div>
+      <section className="section-glow section-divider relative border-t border-white/10 pb-0 pt-6 sm:pt-8">
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
+        />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="spotlight rounded-sm px-4 py-3">
+            <Reveal mode="text" className="flex flex-col gap-4">
+              <p className="text-xs uppercase tracking-[0.4em] text-white">
+                Loft 442
+              </p>
+              <h1 className="text-spotlight relative inline-block text-3xl font-semibold tracking-[0.32em] text-white sm:text-4xl md:text-5xl">
+                <span
+                  className="pointer-events-none absolute -inset-x-12 -inset-y-8 z-0 blur-3xl"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse at center, rgba(200,200,210,0.85) 0%, transparent 65%)",
+                  }}
+                  aria-hidden="true"
+                />
+                <span className="relative z-10">PAYMENT</span>
+              </h1>
+              <p className="max-w-2xl text-sm text-white/70">
+                Securely confirm your booking.
+              </p>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      <section className="bg-black py-16 sm:py-20">
+      <section className="section-divider border-t border-white/10 bg-black">
+        <div className="mx-auto max-w-6xl px-4 pb-6 pt-4 sm:px-6">
+          <Reveal mode="text" className="rounded-sm border border-white/10 bg-white/6 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.38)] backdrop-blur sm:p-8">
+            <span className="text-[0.62rem] uppercase tracking-[0.32em] text-[#d9be62]">
+              Step 2 of 2
+            </span>
+            <div className="relative mt-3 h-2.5 w-full">
+              <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/10" />
+              <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-[#d9be62] shadow-[0_0_18px_rgba(217,190,98,0.28)]" />
+              <div className="absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full border border-[#d9be62]/80 bg-[#d9be62]/35 shadow-[0_0_14px_rgba(217,190,98,0.28)]" />
+              <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full border border-[#d9be62]/80 bg-[#d9be62]/35 shadow-[0_0_14px_rgba(217,190,98,0.28)]" />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section-divider border-t border-white/10 bg-black py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <Reveal className="text-spotlight rounded-sm border border-white/10 bg-white/5 p-5 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-6">
-              <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+            <Reveal className="text-spotlight rounded-sm border border-white/10 bg-white/8 p-5 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-6">
+              <p className="text-xs uppercase tracking-[0.4em] text-[#d9be62]">
                 BOOKING SUMMARY
               </p>
               <div className="mt-6 divide-y divide-white/10">
@@ -227,10 +254,10 @@ export default function PaymentPage() {
             <Reveal delayMs={80}>
               <form
               onSubmit={handleSubmit}
-              className="text-spotlight rounded-sm border border-white/10 bg-white/5 p-5 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-6"
+              className="text-spotlight rounded-sm border border-white/10 bg-white/8 p-5 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-6"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+                <p className="text-xs uppercase tracking-[0.4em] text-[#d9be62]">
                   PAYMENT DETAILS
                 </p>
                 <div className="flex items-center gap-3 text-[0.6rem] uppercase tracking-[0.3em] text-white/50">
@@ -359,7 +386,7 @@ export default function PaymentPage() {
               </div>
 
               <div className="mt-6 border-t border-white/10 pt-6">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+                <p className="text-xs uppercase tracking-[0.4em] text-[#d9be62]">
                   PRICE BREAKDOWN
                 </p>
                 <div className="mt-4 grid gap-3 text-sm text-white/70">
@@ -383,7 +410,7 @@ export default function PaymentPage() {
               </div>
 
               <div className="mt-6 border-t border-white/10 pt-6">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+                <p className="text-xs uppercase tracking-[0.4em] text-[#d9be62]">
                   BILLING INFORMATION
                 </p>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -471,14 +498,14 @@ export default function PaymentPage() {
               </div>
 
               <div className="mt-6 border-t border-white/10 pt-6">
-                <label className="flex items-start gap-3 text-xs uppercase tracking-[0.3em] text-white/60">
+                <label className="flex min-h-11 cursor-pointer items-start gap-3 py-1 text-xs uppercase tracking-[0.3em] text-white/60">
                   <input
                     type="checkbox"
                     checked={form.agree}
                     onChange={(event) =>
                       setForm((prev) => ({ ...prev, agree: event.target.checked }))
                     }
-                    className="mt-0.5 h-4 w-4 rounded-sm border border-white/30 bg-black/60 text-white accent-white"
+                    className="mt-1 h-4 w-4 shrink-0 rounded-sm border border-white/30 bg-black/60 text-white accent-white"
                   />
                   <span>
                     I agree to the{" "}
@@ -494,7 +521,7 @@ export default function PaymentPage() {
                   <button
                     type="submit"
                     disabled={!isFormValid}
-                    className="cta-button inline-flex h-11 items-center justify-center bg-white px-6 text-[0.65rem] uppercase tracking-[0.35em] text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-11 items-center justify-center rounded-sm border border-[#d4af37] px-6 text-[0.65rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-[#f5e6a8] hover:bg-[#d4af37]/15 hover:text-white hover:shadow-[0_0_24px_rgba(212,175,55,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     CONFIRM & PAY
                   </button>

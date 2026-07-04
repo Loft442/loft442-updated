@@ -1,5 +1,3 @@
-"use client";
-
 import { Instagram } from "lucide-react";
 
 const INSTAGRAM_URL = "https://www.instagram.com/loft.442/";

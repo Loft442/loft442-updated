@@ -1,8 +1,8 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronDown, Gift, Heart, PartyPopper, Sparkles } from "lucide-react";
+import { ChevronDown, Gift, Heart, HeartHandshake, PartyPopper, Sparkles } from "lucide-react";
 
 const eventTypes = [
   {
@@ -30,6 +30,11 @@ const eventTypes = [
     title: "Baby Shower",
     description: "Soft, elegant settings for welcoming new beginnings.",
     icon: Heart,
+  },
+  {
+    title: "Repass Service",
+    description: "A warm, private space for families to gather and honor loved ones.",
+    icon: HeartHandshake,
   },
 ];
 
@@ -67,6 +72,12 @@ const iconStyles: Record<
     glowActive:
       "group-hover:[filter:drop-shadow(0_0_8px_rgba(232,166,184,0.45))_drop-shadow(0_0_14px_rgba(232,166,184,0.3))] group-focus-visible:[filter:drop-shadow(0_0_8px_rgba(232,166,184,0.45))_drop-shadow(0_0_14px_rgba(232,166,184,0.3))]",
   },
+  "Repass Service": {
+    color: "text-[#C9B896]",
+    glow: "[filter:drop-shadow(0_0_6px_rgba(201,184,150,0.35))_drop-shadow(0_0_10px_rgba(201,184,150,0.2))]",
+    glowActive:
+      "group-hover:[filter:drop-shadow(0_0_8px_rgba(201,184,150,0.45))_drop-shadow(0_0_14px_rgba(201,184,150,0.3))] group-focus-visible:[filter:drop-shadow(0_0_8px_rgba(201,184,150,0.45))_drop-shadow(0_0_14px_rgba(201,184,150,0.3))]",
+  },
 };
 
 type PanelKey =
@@ -74,7 +85,8 @@ type PanelKey =
   | "Private Events"
   | "Birthdays"
   | "Kids Parties"
-  | "Baby Shower";
+  | "Baby Shower"
+  | "Repass Service";
 
 const panelContent: Record<
   PanelKey,
@@ -126,6 +138,14 @@ const panelContent: Record<
     bodyText:
       "Our elegantly designed hall accommodates various group sizes, ensuring a comfortable and memorable experience for your guests. With state-of-the-art facilities, customizable layouts, and dedicated event planning support, we strive to make every celebration seamless and extraordinary. \n\nChoose Celebrations for an unforgettable venue that transforms your vision into reality.",
   },
+  "Repass Service": {
+    imageSrc: "/images/feuture_0002_c event.webp",
+    imageAlt: "Repass services at Loft 442",
+    panelId: "event-panel-repass-service",
+    triggerId: "event-repass-service",
+    bodyText:
+      "During a difficult time, LOFT 442 provides a warm, private, and elegant space for families to gather, reflect, and honor the life of their loved one. Our venue offers comfort, privacy, and a welcoming atmosphere for family and friends following funeral or memorial services.\n\nLocated in Elmont, NY, we serve families throughout Nassau County, Queens, Long Island, and surrounding communities. Families are welcome to bring outside catering, and our team is here to help with compassionate, professional service every step of the way.",
+  },
 };
 
 export default function EventTypes() {
@@ -140,6 +160,7 @@ export default function EventTypes() {
     "Birthdays",
     "Kids Parties",
     "Baby Shower",
+    "Repass Service",
   ];
 
   // Open a panel - called from event handler
@@ -185,13 +206,13 @@ export default function EventTypes() {
   return (
     <section
       id="overview"
-      className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider -mt-[clamp(76px,12vh,180px)] py-16 sm:py-20 pt-[calc(4rem+clamp(76px,12vh,180px))] sm:pt-[calc(5rem+clamp(76px,12vh,180px))]"
+      className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider -mt-[clamp(76px,12vh,180px)] pb-8 sm:pb-10 pt-[calc(4rem+clamp(76px,12vh,180px))] sm:pt-[calc(5rem+clamp(76px,12vh,180px))]"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="sr-only" aria-hidden="true">
           {Object.values(panelContent).map((panel) => (
             <Image
-              key={panel.imageSrc}
+              key={panel.panelId}
               src={panel.imageSrc}
               alt=""
               width={800}
@@ -201,7 +222,7 @@ export default function EventTypes() {
             />
           ))}
         </div>
-        <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-6 lg:gap-2 xl:gap-3">
           {eventTypes.map((event) => {
             const Icon = event.icon;
             const isExpandable = expandableKeys.includes(event.title as PanelKey);
@@ -224,20 +245,20 @@ export default function EventTypes() {
                       handleTogglePanel(panelKey);
                     }
                   }}
-                  className="overview-button about-card-outline group relative flex min-w-0 min-h-12 items-center justify-between gap-3 rounded-sm p-4 text-left shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition"
+                  className="overview-button about-card-outline group relative flex min-h-11 min-w-0 items-center justify-between gap-1.5 rounded-md px-2.5 py-3 text-left shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition sm:min-h-12 sm:gap-2 sm:px-3 lg:gap-1.5 lg:px-2 lg:py-2.5 xl:gap-2 xl:px-3"
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-1.5 sm:gap-2 lg:gap-1.5 xl:gap-2">
                     <Icon
-                      className={`h-6 w-6 ${iconStyles[event.title]?.color ?? "text-white/80"
+                      className={`h-4 w-4 shrink-0 sm:h-5 sm:w-5 lg:h-4 lg:w-4 xl:h-5 xl:w-5 ${iconStyles[event.title]?.color ?? "text-white/80"
                         } ${iconStyles[event.title]?.glow ?? ""} ${iconStyles[event.title]?.glowActive ?? ""
                         }`}
                     />
-                    <h3 className="truncate text-sm font-semibold tracking-[0.14em] text-white whitespace-nowrap">
+                    <h3 className="truncate text-xs font-semibold tracking-[0.08em] text-white sm:text-xs sm:tracking-[0.1em] lg:text-[0.7rem] xl:text-sm xl:tracking-[0.12em]">
                       {event.title}
                     </h3>
                   </div>
                   <ChevronDown
-                    className={`h-4 w-4 text-white/50 transition group-hover:text-white/70 ${isExpanded ? "rotate-180" : ""
+                    className={`h-3 w-3 shrink-0 text-white/45 transition group-hover:text-white/65 sm:h-3.5 sm:w-3.5 lg:h-3 lg:w-3 xl:h-4 xl:w-4 ${isExpanded ? "rotate-180" : ""
                       }`}
                   />
                 </button>

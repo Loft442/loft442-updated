@@ -81,10 +81,10 @@ export default function Hero() {
         <div className="max-w-2xl md:max-w-3xl">
           <div className="text-spotlight inline-block rounded-sm px-4 py-3">
             <div className="flex flex-col gap-6 sm:gap-8 md:gap-7 lg:gap-8">
-              <p className={`pl-1 text-[0.75rem] uppercase tracking-[0.45em] text-white/60 ${styles.heroTextStroke}`}>
+              <p className={`pl-1 text-[0.75rem] uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.45em] ${styles.heroTextStroke}`}>
                 Loft 442
               </p>
-              <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.12em] text-white sm:text-4xl md:text-4xl lg:text-6xl leading-[1.05] md:leading-[1.1]">
+              <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.06em] text-white sm:text-4xl sm:tracking-[0.12em] md:text-4xl lg:text-6xl leading-[1.05] md:leading-[1.1]">
                 <span className={styles.heroHeadlineLine}>{line1Nodes}</span>
                 <span className={`${styles.heroHeadlineLine} block`}>
                   <span className={styles.heroLetterGroup}>{line2Nodes}</span>
@@ -107,7 +107,7 @@ export default function Hero() {
                     VETERAN OWNED & OPERATED
                   </p>
                 </div>
-                <p className={`text-xs sm:text-sm md:text-sm uppercase tracking-[0.35em] text-white ${styles.heroTextStroke}`}>
+                <p className={`text-xs sm:text-sm md:text-sm uppercase tracking-[0.18em] text-white sm:tracking-[0.35em] ${styles.heroTextStroke}`}>
                   Proudly Serving Those Who Served
                 </p>
                 <div

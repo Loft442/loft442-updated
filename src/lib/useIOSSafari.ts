@@ -1,6 +1,19 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useLayoutEffect, useSyncExternalStore } from "react";
+
+export function getScrollY(): number {
+    if (typeof window === "undefined") {
+        return 0;
+    }
+
+    return (
+        window.scrollY ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0
+    );
+}
 
 /**
  * Detects if the current browser is iOS Safari.
@@ -31,11 +44,11 @@ export function useIsIOSSafari(): boolean {
  * Lock body scroll for modals on iOS Safari.
  * Uses position fixed approach to prevent scroll-behind.
  */
-export function useLockBodyScroll(lock: boolean): void {
-    useEffect(() => {
+export function useLockBodyScroll(lock: boolean, scrollY?: number): void {
+    useLayoutEffect(() => {
         if (!lock) return;
 
-        const scrollY = window.scrollY;
+        const lockedScrollY = scrollY ?? getScrollY();
         const body = document.body;
         const html = document.documentElement;
 
@@ -44,14 +57,16 @@ export function useLockBodyScroll(lock: boolean): void {
         const originalBodyTop = body.style.top;
         const originalBodyLeft = body.style.left;
         const originalBodyRight = body.style.right;
+        const originalBodyWidth = body.style.width;
         const originalBodyOverflow = body.style.overflow;
         const originalHtmlOverflow = html.style.overflow;
 
         // Apply scroll lock
         body.style.position = "fixed";
-        body.style.top = `-${scrollY}px`;
+        body.style.top = `-${lockedScrollY}px`;
         body.style.left = "0";
         body.style.right = "0";
+        body.style.width = "100%";
         body.style.overflow = "hidden";
         html.style.overflow = "hidden";
 
@@ -61,13 +76,14 @@ export function useLockBodyScroll(lock: boolean): void {
             body.style.top = originalBodyTop;
             body.style.left = originalBodyLeft;
             body.style.right = originalBodyRight;
+            body.style.width = originalBodyWidth;
             body.style.overflow = originalBodyOverflow;
             html.style.overflow = originalHtmlOverflow;
 
             // Restore scroll position
-            window.scrollTo(0, scrollY);
+            window.scrollTo(0, lockedScrollY);
         };
-    }, [lock]);
+    }, [lock, scrollY]);
 }
 
 /**

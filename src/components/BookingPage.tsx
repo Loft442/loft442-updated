@@ -39,7 +39,7 @@ const fieldClassName =
   "w-full rounded-sm border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none transition duration-300 placeholder:text-white/35 focus:border-[#d9be62]/70 focus:bg-black/50";
 
 const iconButtonClassName =
-  "rounded-sm border border-white/10 bg-black/40 p-2 text-white/70 transition duration-300 hover:border-[#d9be62]/60 hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50";
+  "inline-flex h-11 w-11 items-center justify-center rounded-sm border border-white/10 bg-black/40 text-white/70 transition duration-300 hover:border-[#d9be62]/60 hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50";
 
 const isSameDay = (a: Date, b: Date) =>
   a.getFullYear() === b.getFullYear() &&
@@ -82,7 +82,7 @@ export default function BookingPage() {
 
   return (
     <div>
-      <section className="section-glow section-divider relative border-t border-white/10 pb-10 pt-6 sm:pb-12 sm:pt-8">
+      <section className="section-glow section-divider relative border-t border-white/10 pb-0 pt-6 sm:pt-8">
         <span
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
@@ -129,7 +129,7 @@ export default function BookingPage() {
 
       <section className="section-divider border-t border-white/10 pb-20 pt-2">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="text-spotlight relative grid gap-10 rounded-sm border border-white/10 bg-white/8 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-8 lg:grid-cols-[1.1fr_1fr]">
+          <Reveal mode="text" className="text-spotlight relative grid gap-10 rounded-sm border border-white/10 bg-white/8 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-8 lg:grid-cols-[1.1fr_1fr]">
             <div className="relative z-10 flex flex-col gap-8">
               <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-5">
                 <div>
@@ -204,7 +204,7 @@ export default function BookingPage() {
                 >
                   {days.map((date, index) => {
                     if (!date) {
-                      return <div key={`empty-${index}`} className="h-10" />;
+                      return <div key={`empty-${index}`} className="h-11" />;
                     }
 
                     const isSelected =
@@ -218,7 +218,7 @@ export default function BookingPage() {
                         role="gridcell"
                         aria-selected={isSelected}
                         onClick={() => setSelectedDate(date)}
-                        className={`flex h-10 items-center justify-center rounded-sm border text-[0.65rem] uppercase tracking-[0.3em] transition duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50 ${
+                        className={`flex h-11 items-center justify-center rounded-sm border text-xs transition duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50 ${
                           isSelected
                             ? "border-[#d9be62]/70 bg-[#d9be62]/12 text-white shadow-[0_0_18px_rgba(217,190,98,0.18)]"
                             : "border-white/10 bg-black/30 text-white/70 hover:border-[#d9be62]/50 hover:bg-white/6 hover:text-white"

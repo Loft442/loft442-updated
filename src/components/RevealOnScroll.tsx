@@ -31,12 +31,44 @@ export default function RevealOnScroll({ enabled = true }: Props) {
       document.documentElement.classList.toggle("reduce-motion", reduceMotion);
     }
 
+    let io: IntersectionObserver | null = null;
+
+    const scrollToHash = (attempt = 0) => {
+      const hash = window.location.hash;
+      if (!hash) {
+        return;
+      }
+
+      const target = document.getElementById(hash.slice(1));
+      if (!target) {
+        if (attempt < 20) {
+          window.setTimeout(() => scrollToHash(attempt + 1), 100);
+        }
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    };
+
+    const handleHashScroll = () => {
+      scrollToHash();
+    };
+
+    window.addEventListener("hashchange", handleHashScroll);
+    scrollToHash();
+
     // Debounce to avoid excessive queries on rapid route changes
     const timeoutId = setTimeout(() => {
+      scrollToHash();
+
       const nodes = Array.from(
         document.querySelectorAll<HTMLElement>(".reveal:not(.is-visible):not(.reveal-done)")
       );
-      if (!nodes.length) return;
+      if (!nodes.length) {
+        return;
+      }
 
       if (reduceMotion) {
         nodes.forEach((el) => el.classList.add("is-visible", "reveal-done"));
@@ -45,7 +77,7 @@ export default function RevealOnScroll({ enabled = true }: Props) {
 
       // iOS Safari-safe IntersectionObserver configuration
       // Use lower threshold and smaller rootMargin for reliable callbacks
-      const io = new IntersectionObserver(
+      io = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
             if (entry.isIntersecting) {
@@ -62,7 +94,7 @@ export default function RevealOnScroll({ enabled = true }: Props) {
                 target.classList.add("reveal-done");
                 target.removeEventListener("transitionend", handleTransitionEnd);
               }, 800);
-              io.unobserve(entry.target);
+              io?.unobserve(entry.target);
             }
           }
         },
@@ -73,35 +105,14 @@ export default function RevealOnScroll({ enabled = true }: Props) {
         }
       );
 
-      nodes.forEach((el) => io.observe(el));
-
-      const handleHashScroll = () => {
-        const hash = window.location.hash;
-        if (!hash) {
-          return;
-        }
-
-        const target = document.getElementById(hash.slice(1));
-        if (!target) {
-          return;
-        }
-
-        requestAnimationFrame(() => {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      };
-
-      handleHashScroll();
-      window.addEventListener("hashchange", handleHashScroll);
-
-      return () => {
-        clearTimeout(timeoutId);
-        io.disconnect();
-        window.removeEventListener("hashchange", handleHashScroll);
-      };
+      nodes.forEach((el) => io?.observe(el));
     }, 100); // Wait 100ms after route change
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      io?.disconnect();
+      window.removeEventListener("hashchange", handleHashScroll);
+    };
   }, [enabled, pathname]);
 
   return null;

@@ -65,7 +65,7 @@ export default function LocationSection() {
                   }`}
               >
                 <Image
-                  src="/google-embed.png"
+                  src="/google-embed.webp"
                   alt="Loft 442 location on map"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

@@ -128,7 +128,7 @@ export default function PartyTypeSelect({
     open && options[activeIndex] ? `${buttonId}-option-${activeIndex}` : undefined;
 
   return (
-    <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] text-white">
+    <label className="flex flex-col gap-2 text-xs uppercase tracking-[0.2em] text-[#d9be62]">
       {label}
       <div
         ref={wrapperRef}

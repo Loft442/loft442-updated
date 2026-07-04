@@ -204,7 +204,7 @@ export async function POST(request: Request) {
 Name: ${firstName} ${lastName}
 Email: ${email}
 Phone: ${phone}
-Type of Party: ${partyType || "Unknown"}
+Type of Event: ${partyType || "Unknown"}
 Date: ${dateLabel}
 
 Message:

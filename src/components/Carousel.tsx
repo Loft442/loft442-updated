@@ -39,7 +39,7 @@ export default function Carousel() {
 
   return (
     <div className={`${styles.embla} mx-auto mt-12 w-full max-w-7xl`}>
-      <div className={`${styles.embla__viewport} h-[320px]`} ref={emblaRef}>
+      <div className={`${styles.embla__viewport} h-[220px] sm:h-[320px]`} ref={emblaRef}>
         <div className={`${styles.embla__container} h-full`}>
           {images.map((src, idx) => (
             <div
@@ -52,7 +52,7 @@ export default function Carousel() {
                 width={240}
                 height={320}
                 className="h-full w-full object-cover"
-                sizes="(max-width: 640px) 70vw, 240px"
+                sizes="(max-width: 640px) 160px, 240px"
                 priority={idx === 0}
                 draggable={false}
               />

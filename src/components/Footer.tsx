@@ -1,9 +1,19 @@
+import Link from "next/link";
 import { Instagram } from "lucide-react";
+
+const exploreLinks = [
+  { label: "Gallery", href: "/gallery" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Repass", href: "/repass" },
+  { label: "Catering", href: "/catering" },
+  { label: "Schedule", href: "/schedule" },
+];
 
 export default function Footer() {
   return (
     <footer className="section-glow section-divider border-t border-white/10 py-8 sm:py-10">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 sm:px-6 md:flex-row md:justify-between">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6">
+        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
         <div className="flex flex-col gap-5 text-white/70 md:items-start">
           <div className="flex flex-col gap-1">
             <p className="text-[0.6rem] uppercase tracking-[0.35em] text-white/50">
@@ -52,7 +62,26 @@ export default function Footer() {
             </a>
           </div>
         </div>
-        <p className="text-[0.65rem] uppercase tracking-[0.3em] text-white/50">
+
+        <div className="flex flex-col items-start gap-5 self-start md:items-end md:self-end">
+          <p className="text-[0.6rem] uppercase tracking-[0.35em] text-white/50">
+            Explore
+          </p>
+          <div className="flex flex-col items-start gap-4 md:items-end">
+            {exploreLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-xs uppercase tracking-[0.25em] text-white/70 transition hover:text-white hover:[text-shadow:0_0_10px_rgba(255,255,255,0.35)]"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        </div>
+
+        <p className="text-[0.65rem] uppercase tracking-[0.3em] text-white/50 md:text-left">
           Ac 2024 Loft 442. All Rights Reserved.
         </p>
       </div>

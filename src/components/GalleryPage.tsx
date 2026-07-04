@@ -11,10 +11,11 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import Masonry from "@/components/Masonry";
 import Reveal from "@/components/Reveal";
 import { galleryItems, type GalleryItemCategory } from "@/lib/galleryItems";
-import { useLockBodyScroll } from "@/lib/useIOSSafari";
+import { useLockBodyScroll, getScrollY } from "@/lib/useIOSSafari";
 
 // Helper to check if we're in browser - doesn't change after mount
 const subscribe = () => () => { };
@@ -32,16 +33,26 @@ const categories: GalleryItemCategory[] = [
 ];
 const filterCategories: GalleryCategory[] = ["All", ...categories];
 
+const masonryHeights = [560, 480, 640, 520, 720, 440, 680, 500];
 
 const slugify = (value: string) => value.toLowerCase().replace(/\s+/g, "-");
 
+type MasonryGalleryItem = {
+  id: string;
+  img: string;
+  alt: string;
+  url: string;
+  height: number;
+  index: number;
+};
+
 export default function GalleryPage() {
-  const eagerImageCount = 6;
   const [activeCategory, setActiveCategory] =
     useState<GalleryCategory>("All");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const touchStartX = useRef<number | null>(null);
+  const scrollYRef = useRef(0);
 
   // Use useSyncExternalStore to safely detect browser environment
   const isBrowser = useSyncExternalStore(subscribe, getIsBrowser, getServerSnapshot);
@@ -55,6 +66,19 @@ export default function GalleryPage() {
     return [...items].reverse();
   }, [activeCategory]);
 
+  const masonryItems = useMemo(
+    () =>
+      filteredItems.map((item, index) => ({
+        id: String(item.id),
+        img: item.src,
+        alt: item.alt,
+        url: "",
+        height: masonryHeights[index % masonryHeights.length],
+        index,
+      })),
+    [filteredItems]
+  );
+
   const activeTabId = `gallery-tab-${slugify(activeCategory)}`;
 
   // Reset active index when category changes (in event handler, not effect)
@@ -64,7 +88,12 @@ export default function GalleryPage() {
   }, []);
 
   // Use iOS-safe body scroll locking
-  useLockBodyScroll(activeIndex !== null);
+  useLockBodyScroll(activeIndex !== null, scrollYRef.current);
+
+  const handleOpenGallery = useCallback((index: number) => {
+    scrollYRef.current = getScrollY();
+    setActiveIndex(index);
+  }, []);
 
   const handlePrev = useCallback(() => {
     if (!filteredItems.length) {
@@ -172,23 +201,37 @@ export default function GalleryPage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden border-b border-white/10 bg-black">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.05),_transparent_45%)]" />
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 sm:px-6 sm:py-10 md:py-12">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-            Loft 442
-          </p>
-          <h1 className="text-3xl font-semibold tracking-[0.35em] text-white sm:text-4xl md:text-5xl">
-            GALLERY
-          </h1>
-          <p className="max-w-xl text-sm text-white/70">
-            Explore LOFT 442 across events and setups.
-          </p>
+      <section className="section-glow section-divider relative border-t border-white/10 pb-0 pt-6 sm:pt-8">
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
+        />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="spotlight rounded-sm px-4 py-3">
+            <Reveal mode="text" className="flex flex-col gap-4">
+              <p className="text-xs uppercase tracking-[0.4em] text-white">
+                Loft 442
+              </p>
+              <h1 className="text-spotlight relative inline-block text-3xl font-semibold tracking-[0.32em] text-white sm:text-4xl md:text-5xl">
+                <span
+                  className="pointer-events-none absolute -inset-x-12 -inset-y-8 z-0 blur-3xl"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse at center, rgba(200,200,210,0.85) 0%, transparent 65%)",
+                  }}
+                  aria-hidden="true"
+                />
+                <span className="relative z-10">GALLERY</span>
+              </h1>
+              <p className="max-w-2xl text-sm text-white/70">
+                Explore LOFT 442 across events and setups.
+              </p>
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      <section className="border-b border-white/10 bg-black">
+      <section className="section-divider border-t border-white/10 bg-black">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-6 sm:px-6 sm:py-8">
           <div
             role="tablist"
@@ -213,7 +256,7 @@ export default function GalleryPage() {
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => handleCategoryChange(category)}
                   onKeyDown={(event) => handleTabKeyDown(event, index)}
-                  className={`relative min-h-11 rounded-sm border border-white/10 bg-white/5 px-5 py-2 text-[0.65rem] uppercase tracking-[0.35em] text-white/60 transition duration-200 ease-out hover:border-white/30 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${isActive
+                  className={`relative min-h-11 rounded-sm border border-white/10 bg-white/5 px-5 py-2 text-[0.65rem] uppercase tracking-[0.2em] text-white/60 transition duration-200 ease-out hover:border-white/30 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:tracking-[0.35em] after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${isActive
                     ? "border-white/40 text-white shadow-[0_0_25px_rgba(255,255,255,0.18)] after:opacity-100"
                     : ""
                     }`}
@@ -226,62 +269,33 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      <section className="bg-black pb-20 pt-10">
+      <section className="section-divider border-t border-white/10 bg-black pb-20 pt-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div
             key={activeCategory}
             id="gallery-panel"
             role="tabpanel"
             aria-labelledby={activeTabId}
-            className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
             {filteredItems.length === 0 ? (
-              <Reveal immediate className="col-span-full flex flex-col items-center justify-center py-24 text-center">
+              <Reveal immediate className="flex flex-col items-center justify-center py-24 text-center">
                 <p className="text-sm tracking-[0.2em] uppercase text-white/70">
                   Images coming soon
                 </p>
               </Reveal>
             ) : (
-            filteredItems.map((item, index) => {
-              const isEager = index < eagerImageCount;
-              return (
-              <Reveal
-                key={item.id}
-                immediate
-                className="w-full"
-              >
-                <button
-                  type="button"
-                  aria-label={`Open image: ${item.alt}`}
-                  onClick={() => setActiveIndex(index)}
-                  className="gallery-card group relative w-full overflow-hidden rounded-sm border border-white/10 bg-white/5 text-left shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition hover:border-white/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
-                >
-                  <div className="relative w-full overflow-hidden bg-black aspect-[4/3]">
-                    <Image
-                      src={item.src}
-                      alt={item.alt}
-                      width={1200}
-                      height={900}
-                      priority={isEager}
-                      loading={isEager ? "eager" : "lazy"}
-                      fetchPriority={isEager ? "high" : "auto"}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="gallery-image h-full w-full object-cover transition duration-200 ease-out group-hover:scale-[1.03]"
-                      style={{ objectFit: 'cover' }}
-                    />
-                    <div className="gallery-overlay absolute inset-0 bg-black/0 transition duration-200 ease-out group-hover:bg-black/40" />
-                    <span className="gallery-shine" aria-hidden="true" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-out group-hover:opacity-100">
-                      <span className="flex items-center gap-2 rounded-sm border border-white/40 bg-black/50 px-4 py-2 text-[0.6rem] uppercase tracking-[0.35em] text-white">
-                        <Eye className="h-3.5 w-3.5" />
-                        View
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              </Reveal>
-            );
-            })
+              <Masonry
+                items={masonryItems}
+                ease="power3.out"
+                duration={0.6}
+                stagger={0.05}
+                animateFrom="bottom"
+                scaleOnHover
+                hoverScale={0.95}
+                blurToFocus
+                colorShiftOnHover={false}
+                onItemClick={(item: MasonryGalleryItem) => handleOpenGallery(item.index)}
+              />
             )}
           </div>
         </div>
@@ -318,9 +332,9 @@ export default function GalleryPage() {
                   type="button"
                   onClick={() => setActiveIndex(null)}
                   aria-label="Close gallery"
-                  className="absolute right-3 top-3 z-20 rounded-sm border border-white/20 bg-black/60 p-2 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                  className="min-tap-target absolute right-3 top-3 z-20 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-5 w-5" />
                 </button>
                 {filteredItems.length > 1 ? (
                   <>
@@ -328,7 +342,7 @@ export default function GalleryPage() {
                       type="button"
                       onClick={handlePrev}
                       aria-label="Previous image"
-                      className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
+                      className="min-tap-target absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
                     >
                       <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
                     </button>
@@ -336,7 +350,7 @@ export default function GalleryPage() {
                       type="button"
                       onClick={handleNext}
                       aria-label="Next image"
-                      className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
+                      className="min-tap-target absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
                     >
                       <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
                     </button>
