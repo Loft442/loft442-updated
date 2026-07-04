@@ -202,15 +202,15 @@ export default function FlyerViewer({
       {open && isBrowser
         ? createPortal(
             <div
-              className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
+              className="fixed inset-0 z-50 grid place-items-center overscroll-contain bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
               onClick={handleClose}
             >
               <div
-                className="relative flex h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] max-h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] w-[96vw] max-w-[1280px] min-h-0 flex-col rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
+                className="relative flex h-[calc(100svh-2rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] max-h-[calc(100svh-2rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] w-[96vw] max-w-[1280px] min-h-0 flex-col rounded-sm border border-white/10 bg-black/60 p-3 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:max-h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:w-[96vw] sm:p-5"
                 onClick={(event) => event.stopPropagation()}
               >
-                <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-black/40 p-3 sm:p-4">
-                  <div className="min-h-0 flex-1">
+                <div className="relative flex min-h-0 flex-1 flex-col rounded-2xl bg-black/40 p-2 sm:p-4">
+                  <div className="relative min-h-0 flex-1 overflow-hidden">
                     <MagnifierImage src={src} alt={alt} />
                   </div>
                   <div

@@ -304,13 +304,13 @@ export default function GalleryPage() {
       {activeItem && isBrowser
         ? createPortal(
           <div
-            className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4 backdrop-blur-sm sm:p-6"
+            className="fixed inset-0 z-50 grid place-items-center overscroll-contain bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
             onClick={() => setActiveIndex(null)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
             <div
-              className="relative flex w-[92vw] max-w-[900px] h-[calc(100svh-3rem)] max-h-[calc(100svh-3rem)] flex-col min-h-0 rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
+              className="relative flex w-[92vw] max-w-[900px] h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] max-h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col min-h-0 rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
               onClick={(event) => event.stopPropagation()}
             >
               <div className="relative flex-1 min-h-0 overflow-hidden rounded-2xl bg-black/40">

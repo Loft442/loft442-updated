@@ -89,10 +89,12 @@ export default function MagnifierImage({
       }
 
       const containerRect = container.getBoundingClientRect();
-      const imgRect = img.getBoundingClientRect();
-      const currentScale = touchScale > MIN_TOUCH_SCALE ? touchScale : MIN_TOUCH_SCALE;
-      const baseWidth = imgRect.width / currentScale;
-      const baseHeight = imgRect.height / currentScale;
+      const baseWidth = img.offsetWidth;
+      const baseHeight = img.offsetHeight;
+      if (baseWidth === 0 || baseHeight === 0) {
+        return { x: 0, y: 0 };
+      }
+
       const scaledWidth = baseWidth * nextScale;
       const scaledHeight = baseHeight * nextScale;
 
@@ -104,7 +106,7 @@ export default function MagnifierImage({
         y: clamp(nextTranslate.y, -maxY, maxY),
       };
     },
-    [touchScale]
+    []
   );
 
   const applyTouchTransform = useCallback(
@@ -159,7 +161,6 @@ export default function MagnifierImage({
           if (!container || !img) return;
 
           const containerRect = container.getBoundingClientRect();
-          const imgRect = img.getBoundingClientRect();
           const tapX = touches[0].clientX;
           const tapY = touches[0].clientY;
 
@@ -423,6 +424,30 @@ export default function MagnifierImage({
     }
   }, [magnifierEnabled, src]);
 
+  useEffect(() => {
+    if (magnifierEnabled) return;
+
+    const container = touchContainerRef.current;
+    if (!container) return;
+
+    const resetTouchView = () => {
+      applyTouchTransform(MIN_TOUCH_SCALE, { x: 0, y: 0 });
+    };
+
+    const observer = new ResizeObserver(resetTouchView);
+    observer.observe(container);
+
+    const viewport = window.visualViewport;
+    viewport?.addEventListener("resize", resetTouchView);
+    viewport?.addEventListener("scroll", resetTouchView);
+
+    return () => {
+      observer.disconnect();
+      viewport?.removeEventListener("resize", resetTouchView);
+      viewport?.removeEventListener("scroll", resetTouchView);
+    };
+  }, [magnifierEnabled, src, applyTouchTransform]);
+
   const touchTransformStyle =
     !magnifierEnabled
       ? {
@@ -432,11 +457,15 @@ export default function MagnifierImage({
         }
       : undefined;
 
+  const gridClassName = magnifierEnabled
+    ? "grid h-full min-h-0 w-full grid-cols-1 [grid-template-rows:minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-6"
+    : "grid h-full min-h-0 w-full grid-cols-1 [grid-template-rows:minmax(0,1fr)]";
+
   return (
-    <div className="grid h-full w-full min-h-0 grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-6">
+    <div className={gridClassName}>
       <div
         ref={touchContainerRef}
-        className={`relative flex min-h-0 items-center justify-center${
+        className={`relative flex h-full min-h-0 w-full items-center justify-center${
           magnifierEnabled ? "" : " touch-none overflow-hidden"
         }`}
         onTouchStart={magnifierEnabled ? undefined : handleTouchStart}
@@ -445,28 +474,30 @@ export default function MagnifierImage({
         onTouchCancel={magnifierEnabled ? undefined : handleTouchEnd}
       >
         <div
-          className="relative inline-block max-h-full max-w-full"
+          className="flex h-full w-full items-center justify-center"
           style={touchTransformStyle}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            ref={imgRef}
-            src={src}
-            alt={alt}
-            draggable={false}
-            className="block h-auto max-h-full w-auto max-w-full select-none"
-            onLoad={magnifierEnabled ? syncPaneSize : undefined}
-            onMouseEnter={magnifierEnabled ? handleMouseEnter : undefined}
-            onMouseMove={magnifierEnabled ? handleMouseMove : undefined}
-            onMouseLeave={magnifierEnabled ? handleMouseLeave : undefined}
-          />
-          {magnifierEnabled ? (
-            <div
-              ref={lensRef}
-              aria-hidden
-              className="pointer-events-none absolute border-2 border-[#d4af37] opacity-0 shadow-[0_0_12px_rgba(212,175,55,0.65),0_0_24px_rgba(212,175,55,0.35)]"
+          <div className="relative flex h-full w-full max-h-full max-w-full items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              ref={imgRef}
+              src={src}
+              alt={alt}
+              draggable={false}
+              className="block h-auto max-h-full w-auto max-w-full select-none object-contain"
+              onLoad={magnifierEnabled ? syncPaneSize : undefined}
+              onMouseEnter={magnifierEnabled ? handleMouseEnter : undefined}
+              onMouseMove={magnifierEnabled ? handleMouseMove : undefined}
+              onMouseLeave={magnifierEnabled ? handleMouseLeave : undefined}
             />
-          ) : null}
+            {magnifierEnabled ? (
+              <div
+                ref={lensRef}
+                aria-hidden
+                className="pointer-events-none absolute border-2 border-[#d4af37] opacity-0 shadow-[0_0_12px_rgba(212,175,55,0.65),0_0_24px_rgba(212,175,55,0.35)]"
+              />
+            ) : null}
+          </div>
         </div>
 
         {!magnifierEnabled && showMobileHint ? (
