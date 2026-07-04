@@ -5,26 +5,45 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./VideoSection.module.css";
 
 export default function VideoSection() {
-  const sectionRef = useRef<HTMLElement | null>(null);
+  const headingRef = useRef<HTMLSpanElement | null>(null);
   const [underlineVisible, setUnderlineVisible] = useState(false);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || underlineVisible) {
+    const heading = headingRef.current;
+    if (!heading || underlineVisible) {
+      return;
+    }
+
+    const revealUnderline = () => {
+      setUnderlineVisible(true);
+    };
+
+    const isHeadingInView = () => {
+      const rect = heading.getBoundingClientRect();
+      const viewportHeight =
+        window.visualViewport?.height ?? window.innerHeight;
+      return rect.top < viewportHeight && rect.bottom > 0;
+    };
+
+    if (isHeadingInView()) {
+      revealUnderline();
       return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setUnderlineVisible(true);
+          revealUnderline();
           observer.disconnect();
         }
       },
-      { threshold: 0.9 }
+      {
+        threshold: [0, 0.25, 0.5],
+        rootMargin: "0px 0px -10% 0px",
+      }
     );
 
-    observer.observe(section);
+    observer.observe(heading);
 
     return () => observer.disconnect();
   }, [underlineVisible]);
@@ -32,7 +51,6 @@ export default function VideoSection() {
   return (
     <section
       id="video-section"
-      ref={sectionRef}
       className="pt-12 pb-10 sm:pt-16 sm:pb-14"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -42,6 +60,7 @@ export default function VideoSection() {
             style={{ fontFamily: "var(--font-heading)" }}
           >
             <span
+              ref={headingRef}
               className={`text-spotlight ${styles.videoUnderline} ${underlineVisible ? styles.videoUnderlineActive : ""}`}
             >
               Moments at Loft 442

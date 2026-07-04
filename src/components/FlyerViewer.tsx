@@ -18,6 +18,20 @@ const subscribe = () => () => {};
 const getIsBrowser = () => typeof window !== "undefined";
 const getServerSnapshot = () => false;
 
+const MODAL_MAX_WIDTH = 1280;
+const DESKTOP_MAGNIFIER_QUERY =
+  "(min-width: 768px) and (hover: hover) and (pointer: fine)";
+
+function getSafeAreaInsets() {
+  const style = getComputedStyle(document.documentElement);
+  return {
+    top: parseFloat(style.getPropertyValue("--safe-area-inset-top")) || 0,
+    right: parseFloat(style.getPropertyValue("--safe-area-inset-right")) || 0,
+    bottom: parseFloat(style.getPropertyValue("--safe-area-inset-bottom")) || 0,
+    left: parseFloat(style.getPropertyValue("--safe-area-inset-left")) || 0,
+  };
+}
+
 type FlyerViewerProps = {
   src: string;
   alt: string;
@@ -46,6 +60,7 @@ export default function FlyerViewer({
   const [open, setOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const scrollYRef = useRef(0);
+  const modalShellRef = useRef<HTMLDivElement>(null);
   const isBrowser = useSyncExternalStore(
     subscribe,
     getIsBrowser,
@@ -91,6 +106,60 @@ export default function FlyerViewer({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, handleClose]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const syncModalSize = () => {
+      const shell = modalShellRef.current;
+      const viewport = window.visualViewport;
+      if (!shell || !viewport) return;
+
+      const safeArea = getSafeAreaInsets();
+      const isSm = window.matchMedia("(min-width: 640px)").matches;
+      const overlayPadY = isSm ? 48 : 32;
+      const overlayPadX = isSm ? 48 : 32;
+      const maxWidth = Math.min(viewport.width * 0.96, MODAL_MAX_WIDTH);
+      const height = Math.max(
+        200,
+        viewport.height - overlayPadY - safeArea.top - safeArea.bottom
+      );
+
+      shell.style.maxWidth = `${maxWidth}px`;
+      shell.style.height = `${height}px`;
+      shell.style.maxHeight = `${height}px`;
+
+      if (window.matchMedia(DESKTOP_MAGNIFIER_QUERY).matches) {
+        shell.style.width = "fit-content";
+      } else {
+        shell.style.width = `${Math.min(
+          viewport.width - overlayPadX - safeArea.left - safeArea.right,
+          maxWidth
+        )}px`;
+      }
+    };
+
+    syncModalSize();
+
+    const viewport = window.visualViewport;
+    viewport?.addEventListener("resize", syncModalSize);
+    viewport?.addEventListener("scroll", syncModalSize);
+    window.addEventListener("resize", syncModalSize);
+
+    return () => {
+      viewport?.removeEventListener("resize", syncModalSize);
+      viewport?.removeEventListener("scroll", syncModalSize);
+      window.removeEventListener("resize", syncModalSize);
+
+      const shell = modalShellRef.current;
+      if (shell) {
+        shell.style.width = "";
+        shell.style.maxWidth = "";
+        shell.style.height = "";
+        shell.style.maxHeight = "";
+      }
+    };
+  }, [open]);
 
   const thumbnailBaseClass =
     "group relative block w-full bg-transparent text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40";
@@ -206,33 +275,20 @@ export default function FlyerViewer({
               onClick={handleClose}
             >
               <div
-                className="relative flex h-[calc(100svh-2rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] max-h-[calc(100svh-2rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] w-[96vw] max-w-[1280px] min-h-0 flex-col rounded-sm border border-white/10 bg-black/60 p-3 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:max-h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:w-[96vw] sm:p-5"
+                ref={modalShellRef}
+                className="relative flex min-h-0 max-w-[1280px] flex-col rounded-sm border border-white/10 bg-black/60 p-[clamp(8px,1.5svh,20px)] shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur md:w-fit md:max-w-full"
                 onClick={(event) => event.stopPropagation()}
               >
-                <div className="relative flex min-h-0 flex-1 flex-col rounded-2xl bg-black/40 p-2 sm:p-4">
+                <div className="relative flex min-h-0 flex-1 flex-col rounded-2xl bg-black/40 p-[clamp(6px,1svh,16px)]">
                   <div className="relative min-h-0 flex-1 overflow-hidden">
-                    <MagnifierImage src={src} alt={alt} />
+                    <MagnifierImage
+                      src={src}
+                      alt={alt}
+                      paneAside={downloadLink}
+                    />
                   </div>
-                  <div
-                    className={
-                      centerDownload
-                        ? "mt-4 flex shrink-0 justify-center"
-                        : "mt-4 shrink-0 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-6"
-                    }
-                  >
-                    {centerDownload ? null : (
-                      <div className="hidden md:block" aria-hidden="true" />
-                    )}
-                    <div
-                      className={
-                        centerDownload
-                          ? "flex justify-center"
-                          : "flex w-full justify-stretch sm:justify-end"
-                      }
-                    >
-                      {saveImageButton}
-                      {downloadLink}
-                    </div>
+                  <div className="mt-4 flex shrink-0 justify-center md:hidden">
+                    {saveImageButton}
                   </div>
                   <button
                     type="button"

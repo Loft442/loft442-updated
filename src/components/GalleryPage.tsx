@@ -37,6 +37,18 @@ const masonryHeights = [560, 480, 640, 520, 720, 440, 680, 500];
 
 const slugify = (value: string) => value.toLowerCase().replace(/\s+/g, "-");
 
+const LIGHTBOX_MAX_WIDTH = 900;
+
+function getSafeAreaInsets() {
+  const style = getComputedStyle(document.documentElement);
+  return {
+    top: parseFloat(style.getPropertyValue("--safe-area-inset-top")) || 0,
+    right: parseFloat(style.getPropertyValue("--safe-area-inset-right")) || 0,
+    bottom: parseFloat(style.getPropertyValue("--safe-area-inset-bottom")) || 0,
+    left: parseFloat(style.getPropertyValue("--safe-area-inset-left")) || 0,
+  };
+}
+
 type MasonryGalleryItem = {
   id: string;
   img: string;
@@ -53,6 +65,7 @@ export default function GalleryPage() {
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const touchStartX = useRef<number | null>(null);
   const scrollYRef = useRef(0);
+  const lightboxShellRef = useRef<HTMLDivElement>(null);
 
   // Use useSyncExternalStore to safely detect browser environment
   const isBrowser = useSyncExternalStore(subscribe, getIsBrowser, getServerSnapshot);
@@ -141,6 +154,55 @@ export default function GalleryPage() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeIndex, handleNext, handlePrev]);
+
+  useEffect(() => {
+    if (activeIndex === null) return;
+
+    const syncLightboxSize = () => {
+      const shell = lightboxShellRef.current;
+      const viewport = window.visualViewport;
+      if (!shell || !viewport) return;
+
+      const safeArea = getSafeAreaInsets();
+      const isSm = window.matchMedia("(min-width: 640px)").matches;
+      const overlayPadY = isSm ? 48 : 32;
+      const overlayPadX = isSm ? 48 : 32;
+      const maxWidth = Math.min(viewport.width * 0.92, LIGHTBOX_MAX_WIDTH);
+      const height = Math.max(
+        200,
+        viewport.height - overlayPadY - safeArea.top - safeArea.bottom
+      );
+
+      shell.style.maxWidth = `${maxWidth}px`;
+      shell.style.width = `${Math.min(
+        viewport.width - overlayPadX - safeArea.left - safeArea.right,
+        maxWidth
+      )}px`;
+      shell.style.height = `${height}px`;
+      shell.style.maxHeight = `${height}px`;
+    };
+
+    syncLightboxSize();
+
+    const viewport = window.visualViewport;
+    viewport?.addEventListener("resize", syncLightboxSize);
+    viewport?.addEventListener("scroll", syncLightboxSize);
+    window.addEventListener("resize", syncLightboxSize);
+
+    return () => {
+      viewport?.removeEventListener("resize", syncLightboxSize);
+      viewport?.removeEventListener("scroll", syncLightboxSize);
+      window.removeEventListener("resize", syncLightboxSize);
+
+      const shell = lightboxShellRef.current;
+      if (shell) {
+        shell.style.width = "";
+        shell.style.maxWidth = "";
+        shell.style.height = "";
+        shell.style.maxHeight = "";
+      }
+    };
+  }, [activeIndex]);
 
   const handleTabKeyDown = (
     event: ReactKeyboardEvent<HTMLButtonElement>,
@@ -289,7 +351,7 @@ export default function GalleryPage() {
                 ease="power3.out"
                 duration={0.6}
                 stagger={0.05}
-                animateFrom="bottom"
+                animateFrom="none"
                 scaleOnHover
                 hoverScale={0.95}
                 blurToFocus
@@ -310,11 +372,12 @@ export default function GalleryPage() {
             onTouchEnd={handleTouchEnd}
           >
             <div
-              className="relative flex w-[92vw] max-w-[900px] h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] max-h-[calc(100svh-3rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col min-h-0 rounded-sm border border-white/10 bg-black/60 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur sm:p-5"
+              ref={lightboxShellRef}
+              className="relative flex min-h-0 max-w-[900px] flex-col rounded-sm border border-white/10 bg-black/60 p-[clamp(8px,1.5svh,20px)] shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="relative flex-1 min-h-0 overflow-hidden rounded-2xl bg-black/40">
-                <div className="absolute inset-0 p-0 sm:p-4">
+              <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-black/40">
+                <div className="absolute inset-0 p-[clamp(0px,0.75svh,16px)]">
                   <div className="relative h-full w-full">
                     <Image
                       src={activeItem.src}
@@ -357,14 +420,14 @@ export default function GalleryPage() {
                   </>
                 ) : null}
               </div>
-              <div className="mt-4 flex max-w-full flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
+              <div className="mt-[clamp(8px,1svh,16px)] flex max-w-full shrink-0 flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
                 <span>{activeItem.category}</span>
                 <span>
                   {activeIndex !== null ? activeIndex + 1 : 1} /{" "}
                   {filteredItems.length}
                 </span>
               </div>
-              <p className="mt-2 max-w-full text-sm text-white/70">
+              <p className="mt-[clamp(4px,0.5svh,8px)] max-w-full shrink-0 text-sm text-white/70">
                 {activeItem.alt}
               </p>
             </div>

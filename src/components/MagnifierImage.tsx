@@ -1,11 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 type MagnifierImageProps = {
   src: string;
   alt: string;
   zoom?: number;
+  paneAside?: ReactNode;
 };
 
 const DESKTOP_POINTER_QUERY = "(hover: hover) and (pointer: fine)";
@@ -40,10 +47,12 @@ export default function MagnifierImage({
   src,
   alt,
   zoom = 2,
+  paneAside,
 }: MagnifierImageProps) {
   const imgRef = useRef<HTMLImageElement>(null);
   const zoomPaneRef = useRef<HTMLDivElement>(null);
   const lensRef = useRef<HTMLDivElement>(null);
+  const imageFrameRef = useRef<HTMLDivElement>(null);
   const touchContainerRef = useRef<HTMLDivElement>(null);
   const pointerRef = useRef({ x: 0, y: 0 });
   const frameRef = useRef<number | null>(null);
@@ -332,9 +341,13 @@ export default function MagnifierImage({
     pane.style.backgroundPosition = `${bgX}px ${bgY}px`;
 
     const lens = lensRef.current;
-    if (lens) {
-      lens.style.left = `${-bgX / zoom}px`;
-      lens.style.top = `${-bgY / zoom}px`;
+    const frame = imageFrameRef.current;
+    if (lens && frame) {
+      const frameRect = frame.getBoundingClientRect();
+      const offsetX = rect.left - frameRect.left;
+      const offsetY = rect.top - frameRect.top;
+      lens.style.left = `${offsetX - bgX / zoom}px`;
+      lens.style.top = `${offsetY - bgY / zoom}px`;
       lens.style.width = `${paneWidth / zoom}px`;
       lens.style.height = `${paneHeight / zoom}px`;
       lens.style.opacity = "1";
@@ -357,7 +370,7 @@ export default function MagnifierImage({
     const { width, height } = img.getBoundingClientRect();
     if (width === 0 || height === 0) return;
 
-    pane.style.width = "";
+    pane.style.width = `${width}px`;
     pane.style.height = `${height * PANE_HEIGHT_SCALE}px`;
 
     if (activeRef.current) {
@@ -413,7 +426,21 @@ export default function MagnifierImage({
     if (zoomPaneRef.current) {
       observer.observe(zoomPaneRef.current);
     }
-    return () => observer.disconnect();
+
+    const handleViewportChange = () => {
+      syncPaneSize();
+    };
+
+    window.addEventListener("resize", handleViewportChange);
+    window.visualViewport?.addEventListener("resize", handleViewportChange);
+    window.visualViewport?.addEventListener("scroll", handleViewportChange);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", handleViewportChange);
+      window.visualViewport?.removeEventListener("resize", handleViewportChange);
+      window.visualViewport?.removeEventListener("scroll", handleViewportChange);
+    };
   }, [magnifierEnabled, src, syncPaneSize]);
 
   useEffect(() => {
@@ -458,7 +485,7 @@ export default function MagnifierImage({
       : undefined;
 
   const gridClassName = magnifierEnabled
-    ? "grid h-full min-h-0 w-full grid-cols-1 [grid-template-rows:minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-6"
+    ? "mx-auto grid h-full min-h-0 w-full grid-cols-1 [grid-template-rows:minmax(0,1fr)] md:w-fit md:max-w-full md:grid-cols-[auto_auto] md:justify-center md:gap-6"
     : "grid h-full min-h-0 w-full grid-cols-1 [grid-template-rows:minmax(0,1fr)]";
 
   return (
@@ -466,7 +493,7 @@ export default function MagnifierImage({
       <div
         ref={touchContainerRef}
         className={`relative flex h-full min-h-0 w-full items-center justify-center${
-          magnifierEnabled ? "" : " touch-none overflow-hidden"
+          magnifierEnabled ? " md:justify-end" : " touch-none overflow-hidden"
         }`}
         onTouchStart={magnifierEnabled ? undefined : handleTouchStart}
         onTouchMove={magnifierEnabled ? undefined : handleTouchMove}
@@ -477,7 +504,10 @@ export default function MagnifierImage({
           className="flex h-full w-full items-center justify-center"
           style={touchTransformStyle}
         >
-          <div className="relative flex h-full w-full max-h-full max-w-full items-center justify-center">
+          <div
+            ref={imageFrameRef}
+            className="relative flex h-full w-full max-h-full max-w-full items-center justify-center"
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               ref={imgRef}
@@ -513,20 +543,25 @@ export default function MagnifierImage({
       </div>
 
       {magnifierEnabled ? (
-        <div className="hidden min-h-0 w-full md:flex md:items-center">
-          <div
-            ref={zoomPaneRef}
-            aria-hidden
-            className="relative w-full shrink-0 overflow-hidden rounded-sm border-2 border-white/30 bg-black/80 shadow-[0_24px_70px_rgba(0,0,0,0.55)]"
-          >
-            {!isHovering ? (
-              <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-                <p className="rounded-sm border border-black bg-white px-4 py-2.5 text-[0.65rem] uppercase tracking-[0.35em] text-black">
-                  Hover the flyer to zoom
-                </p>
-              </div>
-            ) : null}
+        <div className="hidden min-h-0 md:flex md:h-full md:flex-col md:items-stretch">
+          <div className="flex min-h-0 flex-1 items-center justify-start">
+            <div
+              ref={zoomPaneRef}
+              aria-hidden
+              className="relative max-w-full shrink-0 overflow-hidden rounded-sm border-2 border-white/30 bg-black/80 shadow-[0_24px_70px_rgba(0,0,0,0.55)]"
+            >
+              {!isHovering ? (
+                <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
+                  <p className="rounded-sm border border-black bg-white px-4 py-2.5 text-[0.65rem] uppercase tracking-[0.35em] text-black">
+                    Hover the flyer to zoom
+                  </p>
+                </div>
+              ) : null}
+            </div>
           </div>
+          {paneAside ? (
+            <div className="flex shrink-0 justify-end">{paneAside}</div>
+          ) : null}
         </div>
       ) : null}
     </div>

@@ -25,12 +25,11 @@ export default function Hero() {
 
   let letterIndex = 0;
   const line1Segments = [
-    { text: "ELEGANT ", className: styles.heroLetterGroup },
+    { text: "CREATING ", className: styles.heroLetterGroup },
     {
-      text: "VENUE ",
+      text: "UNFORGETTABLE",
       className: `${styles.heroLetterGroup} ${styles.venueUnderline} ${styles.venueUnderlineAnimated}`,
     },
-    { text: "FOR", className: styles.heroLetterGroup },
   ];
 
   const line1Nodes = line1Segments.map((segment) => {
@@ -44,10 +43,10 @@ export default function Hero() {
   });
 
   const { nodes: line2Nodes, nextIndex: line2End } = renderLetters(
-    "UNFORGETTABLE",
+    "MEMORIES ONE EVENT ",
     letterIndex
   );
-  const { nodes: line3Nodes } = renderLetters("EVENTS", line2End);
+  const { nodes: line3Nodes } = renderLetters("AT A TIME", line2End);
 
   return (
     <section
@@ -85,7 +84,9 @@ export default function Hero() {
                 Loft 442
               </p>
               <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.06em] text-white sm:text-4xl sm:tracking-[0.12em] md:text-4xl lg:text-6xl leading-[1.05] md:leading-[1.1]">
-                <span className={styles.heroHeadlineLine}>{line1Nodes}</span>
+                <span className={`${styles.heroHeadlineLine} block whitespace-nowrap`}>
+                  {line1Nodes}
+                </span>
                 <span className={`${styles.heroHeadlineLine} block`}>
                   <span className={styles.heroLetterGroup}>{line2Nodes}</span>
                 </span>

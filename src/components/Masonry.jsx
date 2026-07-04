@@ -86,6 +86,8 @@ const Masonry = ({
     }
 
     switch (direction) {
+      case "none":
+        return { x: item.x, y: item.y };
       case "top":
         return { x: item.x, y: -200 };
       case "bottom":
@@ -143,18 +145,21 @@ const Masonry = ({
 
       if (!hasMounted.current) {
         const initialPos = getInitialPosition(item);
+        const popInPlace = animateFrom === "none";
         const initialState = {
           opacity: 0,
           x: initialPos.x,
           y: initialPos.y,
           width: item.w,
           height: item.h,
+          ...(popInPlace && { scale: 0.92 }),
           ...(blurToFocus && { filter: "blur(10px)" }),
         };
 
         gsap.fromTo(selector, initialState, {
           opacity: 1,
           ...animationProps,
+          ...(popInPlace && { scale: 1 }),
           ...(blurToFocus && { filter: "blur(0px)" }),
           duration: 0.8,
           ease: "power3.out",
