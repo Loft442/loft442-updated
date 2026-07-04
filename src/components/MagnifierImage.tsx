@@ -17,11 +17,14 @@ type MagnifierImageProps = {
 };
 
 const DESKTOP_POINTER_QUERY = "(hover: hover) and (pointer: fine)";
+const DESKTOP_GRID_GAP = 24;
 const PANE_HEIGHT_SCALE = 0.5;
 const MIN_TOUCH_SCALE = 1;
 const MAX_TOUCH_SCALE = 4;
 const DOUBLE_TAP_SCALE = 2.5;
 const DOUBLE_TAP_MS = 300;
+const SNAP_TO_IDENTITY_SCALE = 1.02;
+const END_SNAP_TO_IDENTITY_SCALE = 1.15;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -44,6 +47,60 @@ function getTouchCenter(touches: React.TouchList | TouchList) {
   };
 }
 
+type DesktopLayoutSize = {
+  imageWidth: number;
+  imageHeight: number;
+  paneWidth: number;
+  paneHeight: number;
+};
+
+function computeDesktopLayout(
+  containerWidth: number,
+  containerHeight: number,
+  naturalWidth: number,
+  naturalHeight: number
+): DesktopLayoutSize | null {
+  if (
+    containerWidth <= 0 ||
+    containerHeight <= 0 ||
+    naturalWidth <= 0 ||
+    naturalHeight <= 0
+  ) {
+    return null;
+  }
+
+  const aspect = naturalWidth / naturalHeight;
+  const maxImageWidthFromHeight = containerHeight * aspect;
+  const maxImageWidthFromWidth = Math.max(
+    0,
+    (containerWidth - DESKTOP_GRID_GAP) / 2
+  );
+  const imageWidth = Math.round(
+    Math.min(maxImageWidthFromHeight, maxImageWidthFromWidth, naturalWidth)
+  );
+
+  if (imageWidth <= 0) {
+    return null;
+  }
+
+  const imageHeight = Math.round(imageWidth / aspect);
+  return {
+    imageWidth,
+    imageHeight,
+    paneWidth: imageWidth,
+    paneHeight: Math.round(imageHeight * PANE_HEIGHT_SCALE),
+  };
+}
+
+function layoutsMatch(a: DesktopLayoutSize, b: DesktopLayoutSize) {
+  return (
+    Math.abs(a.imageWidth - b.imageWidth) < 1 &&
+    Math.abs(a.imageHeight - b.imageHeight) < 1 &&
+    Math.abs(a.paneWidth - b.paneWidth) < 1 &&
+    Math.abs(a.paneHeight - b.paneHeight) < 1
+  );
+}
+
 export default function MagnifierImage({
   src,
   alt,
@@ -55,9 +112,12 @@ export default function MagnifierImage({
   const lensRef = useRef<HTMLDivElement>(null);
   const imageFrameRef = useRef<HTMLDivElement>(null);
   const touchContainerRef = useRef<HTMLDivElement>(null);
+  const gridRootRef = useRef<HTMLDivElement>(null);
   const pointerRef = useRef({ x: 0, y: 0 });
   const frameRef = useRef<number | null>(null);
   const layoutSyncFrameRef = useRef<number | null>(null);
+  const lastLayoutRef = useRef<DesktopLayoutSize | null>(null);
+  const layoutReadyRef = useRef(false);
   const activeRef = useRef(false);
 
   const [magnifierEnabled, setMagnifierEnabled] = useState(false);
@@ -122,8 +182,13 @@ export default function MagnifierImage({
   );
 
   const applyTouchTransform = useCallback(
-    (scale: number, translate: { x: number; y: number }) => {
-      const clampedScale = clamp(scale, MIN_TOUCH_SCALE, MAX_TOUCH_SCALE);
+    (scale: number, translate: { x: number; y: number }, snapToIdentity = false) => {
+      let clampedScale = clamp(scale, MIN_TOUCH_SCALE, MAX_TOUCH_SCALE);
+
+      if (snapToIdentity || clampedScale <= SNAP_TO_IDENTITY_SCALE) {
+        clampedScale = MIN_TOUCH_SCALE;
+      }
+
       const clampedTranslate =
         clampedScale <= MIN_TOUCH_SCALE
           ? { x: 0, y: 0 }
@@ -163,8 +228,8 @@ export default function MagnifierImage({
           event.preventDefault();
           gesture.lastTapTime = 0;
 
-          if (touchScale > MIN_TOUCH_SCALE + 0.05) {
-            applyTouchTransform(MIN_TOUCH_SCALE, { x: 0, y: 0 });
+          if (touchScale > SNAP_TO_IDENTITY_SCALE) {
+            applyTouchTransform(MIN_TOUCH_SCALE, { x: 0, y: 0 }, true);
             return;
           }
 
@@ -282,13 +347,17 @@ export default function MagnifierImage({
     if (magnifierEnabled) return;
 
     const gesture = touchGestureRef.current;
+    const wasPinching = gesture.isPinching;
     gesture.isPinching = false;
     gesture.isPanning = false;
     gesture.initialDistance = 0;
     setIsTouchActive(false);
 
-    if (touchScale <= MIN_TOUCH_SCALE + 0.05) {
-      applyTouchTransform(MIN_TOUCH_SCALE, { x: 0, y: 0 });
+    if (
+      touchScale <= SNAP_TO_IDENTITY_SCALE ||
+      (wasPinching && touchScale <= END_SNAP_TO_IDENTITY_SCALE)
+    ) {
+      applyTouchTransform(MIN_TOUCH_SCALE, { x: 0, y: 0 }, true);
     }
   }, [magnifierEnabled, touchScale, applyTouchTransform]);
 
@@ -368,13 +437,36 @@ export default function MagnifierImage({
   const syncPaneSize = useCallback(() => {
     const img = imgRef.current;
     const pane = zoomPaneRef.current;
-    if (!img || !pane) return false;
+    const gridRoot = gridRootRef.current;
+    if (!img || !pane || !gridRoot) return false;
 
-    const { width, height } = img.getBoundingClientRect();
-    if (width === 0 || height === 0) return false;
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
+    if (naturalWidth === 0 || naturalHeight === 0) return false;
 
-    pane.style.width = `${width}px`;
-    pane.style.height = `${height * PANE_HEIGHT_SCALE}px`;
+    const { width: containerWidth, height: containerHeight } =
+      gridRoot.getBoundingClientRect();
+    const layout = computeDesktopLayout(
+      containerWidth,
+      containerHeight,
+      naturalWidth,
+      naturalHeight
+    );
+    if (!layout) return false;
+
+    if (lastLayoutRef.current && layoutsMatch(lastLayoutRef.current, layout)) {
+      return true;
+    }
+
+    lastLayoutRef.current = layout;
+
+    img.style.width = `${layout.imageWidth}px`;
+    img.style.height = `${layout.imageHeight}px`;
+    img.style.maxWidth = `${layout.imageWidth}px`;
+    img.style.maxHeight = `${layout.imageHeight}px`;
+
+    pane.style.width = `${layout.paneWidth}px`;
+    pane.style.height = `${layout.paneHeight}px`;
 
     if (activeRef.current) {
       queueUpdate();
@@ -383,16 +475,22 @@ export default function MagnifierImage({
     return true;
   }, [queueUpdate]);
 
+  const markLayoutReady = useCallback(() => {
+    if (layoutReadyRef.current) return;
+    layoutReadyRef.current = true;
+    setLayoutReady(true);
+  }, []);
+
   const queueSyncPaneSize = useCallback(() => {
     if (layoutSyncFrameRef.current !== null) return;
 
     layoutSyncFrameRef.current = requestAnimationFrame(() => {
       layoutSyncFrameRef.current = null;
       if (syncPaneSize()) {
-        setLayoutReady(true);
+        markLayoutReady();
       }
     });
-  }, [syncPaneSize]);
+  }, [syncPaneSize, markLayoutReady]);
 
   const handleMouseEnter = useCallback(
     (event: React.MouseEvent<HTMLImageElement>) => {
@@ -431,26 +529,30 @@ export default function MagnifierImage({
 
   useLayoutEffect(() => {
     if (!magnifierEnabled) {
+      layoutReadyRef.current = false;
       setLayoutReady(false);
+      lastLayoutRef.current = null;
       return;
     }
 
     const img = imgRef.current;
-    if (!img) return;
+    const pane = zoomPaneRef.current;
+    const gridRoot = gridRootRef.current;
+    if (!img || !pane || !gridRoot) return;
 
+    layoutReadyRef.current = false;
     setLayoutReady(false);
+    lastLayoutRef.current = null;
+
     if (syncPaneSize()) {
-      setLayoutReady(true);
+      markLayoutReady();
     }
 
     const observer = new ResizeObserver(() => {
       queueSyncPaneSize();
     });
 
-    observer.observe(img);
-    if (zoomPaneRef.current) {
-      observer.observe(zoomPaneRef.current);
-    }
+    observer.observe(gridRoot);
 
     const handleViewportChange = () => {
       queueSyncPaneSize();
@@ -463,8 +565,17 @@ export default function MagnifierImage({
       observer.disconnect();
       window.removeEventListener("resize", handleViewportChange);
       window.visualViewport?.removeEventListener("resize", handleViewportChange);
+
+      img.style.width = "";
+      img.style.height = "";
+      img.style.maxWidth = "";
+      img.style.maxHeight = "";
+      pane.style.width = "";
+      pane.style.height = "";
+      lastLayoutRef.current = null;
+      layoutReadyRef.current = false;
     };
-  }, [magnifierEnabled, src, syncPaneSize, queueSyncPaneSize]);
+  }, [magnifierEnabled, src, syncPaneSize, queueSyncPaneSize, markLayoutReady]);
 
   useEffect(() => {
     if (magnifierEnabled) {
@@ -481,7 +592,7 @@ export default function MagnifierImage({
     if (!container) return;
 
     const resetTouchView = () => {
-      applyTouchTransform(MIN_TOUCH_SCALE, { x: 0, y: 0 });
+      applyTouchTransform(MIN_TOUCH_SCALE, { x: 0, y: 0 }, true);
     };
 
     const observer = new ResizeObserver(resetTouchView);
@@ -489,47 +600,51 @@ export default function MagnifierImage({
 
     const viewport = window.visualViewport;
     viewport?.addEventListener("resize", resetTouchView);
-    viewport?.addEventListener("scroll", resetTouchView);
 
     return () => {
       observer.disconnect();
       viewport?.removeEventListener("resize", resetTouchView);
-      viewport?.removeEventListener("scroll", resetTouchView);
     };
   }, [magnifierEnabled, src, applyTouchTransform]);
+
+  const isIdentityTransform =
+    touchScale <= MIN_TOUCH_SCALE && touchTranslate.x === 0 && touchTranslate.y === 0;
 
   const touchTransformStyle =
     !magnifierEnabled
       ? {
-          transform: `translate(${touchTranslate.x}px, ${touchTranslate.y}px) scale(${touchScale})`,
+          transform: `translate3d(${touchTranslate.x}px, ${touchTranslate.y}px, 0) scale(${touchScale})`,
           transformOrigin: "center center",
-          transition: isTouchActive ? "none" : "transform 0.2s ease-out",
+          transition:
+            isTouchActive || isIdentityTransform ? "none" : "transform 0.2s ease-out",
+          backfaceVisibility: "hidden" as const,
+          WebkitBackfaceVisibility: "hidden" as const,
         }
       : undefined;
 
   const gridClassName = magnifierEnabled
-    ? "mx-auto grid h-full min-h-0 w-full grid-cols-1 [grid-template-rows:minmax(0,1fr)] md:w-fit md:max-w-full md:grid-cols-[auto_auto] md:justify-center md:gap-6"
+    ? "mx-auto grid h-full min-h-0 w-full max-w-full grid-cols-1 [grid-template-rows:minmax(0,1fr)] md:grid-cols-[auto_auto] md:justify-center md:gap-6"
     : "grid h-full min-h-0 w-full grid-cols-1 [grid-template-rows:minmax(0,1fr)]";
 
   return (
-    <div className={gridClassName}>
+    <div ref={gridRootRef} className={gridClassName}>
       <div
         ref={touchContainerRef}
         className={`relative flex h-full min-h-0 w-full items-center justify-center${
-          magnifierEnabled ? " md:justify-end" : " touch-none overflow-hidden"
+          magnifierEnabled
+            ? " md:justify-end"
+            : " touch-none overflow-hidden [clip-path:inset(0)]"
         }`}
         onTouchStart={magnifierEnabled ? undefined : handleTouchStart}
         onTouchMove={magnifierEnabled ? undefined : handleTouchMove}
         onTouchEnd={magnifierEnabled ? undefined : handleTouchEnd}
         onTouchCancel={magnifierEnabled ? undefined : handleTouchEnd}
       >
-        <div
-          className="flex h-full w-full items-center justify-center"
-          style={touchTransformStyle}
-        >
+        <div className="flex max-h-full max-w-full items-center justify-center overflow-hidden">
           <div
             ref={imageFrameRef}
-            className="relative flex h-full w-full max-h-full max-w-full items-center justify-center"
+            className="relative inline-flex max-h-full max-w-full items-center justify-center overflow-hidden"
+            style={touchTransformStyle}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -542,7 +657,7 @@ export default function MagnifierImage({
                 magnifierEnabled
                   ? () => {
                       if (syncPaneSize()) {
-                        setLayoutReady(true);
+                        markLayoutReady();
                       } else {
                         queueSyncPaneSize();
                       }
@@ -577,8 +692,8 @@ export default function MagnifierImage({
 
       {magnifierEnabled ? (
         <div
-          className={`hidden min-h-0 transition-opacity duration-150 motion-reduce:transition-none md:flex md:h-full md:flex-col md:items-stretch${
-            layoutReady ? " opacity-100" : " opacity-0"
+          className={`hidden min-h-0 md:flex md:h-full md:flex-col md:items-stretch${
+            layoutReady ? "" : " invisible"
           }`}
         >
           <div className="flex min-h-0 flex-1 items-center justify-start">

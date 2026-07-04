@@ -25,7 +25,7 @@ export default function Hero() {
 
   let letterIndex = 0;
   const { nodes: creatingNodes, nextIndex: afterCreating } = renderLetters(
-    "CREATING",
+    "CREATING ",
     letterIndex
   );
   letterIndex = afterCreating;

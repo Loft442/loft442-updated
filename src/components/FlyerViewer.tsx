@@ -60,6 +60,12 @@ export default function FlyerViewer({
   const [isSaving, setIsSaving] = useState(false);
   const scrollYRef = useRef(0);
   const modalShellRef = useRef<HTMLDivElement>(null);
+  const modalSizeFrameRef = useRef<number | null>(null);
+  const lastModalSizeRef = useRef<{
+    maxWidth: number;
+    height: number;
+    width: string;
+  } | null>(null);
   const isBrowser = useSyncExternalStore(
     subscribe,
     getIsBrowser,
@@ -109,7 +115,7 @@ export default function FlyerViewer({
   useLayoutEffect(() => {
     if (!open) return;
 
-    const syncModalSize = () => {
+    const applyModalSize = () => {
       const shell = modalShellRef.current;
       const viewport = window.visualViewport;
       if (!shell || !viewport) return;
@@ -121,27 +127,52 @@ export default function FlyerViewer({
       ).matches;
       const overlayPadY = isSm ? 48 : 32;
       const overlayPadX = isSm ? 48 : 32;
-      const maxWidth = Math.min(viewport.width * 0.96, MODAL_MAX_WIDTH);
-      const height = Math.max(
-        200,
-        viewport.height - overlayPadY - safeArea.top - safeArea.bottom
+      const maxWidth = Math.round(
+        Math.min(viewport.width * 0.96, MODAL_MAX_WIDTH)
       );
+      const height = Math.round(
+        Math.max(
+          200,
+          viewport.height - overlayPadY - safeArea.top - safeArea.bottom
+        )
+      );
+      const width = isDesktopMagnifier
+        ? ""
+        : `${Math.round(
+            Math.min(
+              viewport.width - overlayPadX - safeArea.left - safeArea.right,
+              maxWidth
+            )
+          )}px`;
+
+      const last = lastModalSizeRef.current;
+      if (
+        last &&
+        last.maxWidth === maxWidth &&
+        last.height === height &&
+        last.width === width
+      ) {
+        return;
+      }
+
+      lastModalSizeRef.current = { maxWidth, height, width };
 
       shell.style.maxWidth = `${maxWidth}px`;
       shell.style.height = `${height}px`;
       shell.style.maxHeight = `${height}px`;
-
-      if (isDesktopMagnifier) {
-        shell.style.width = "";
-      } else {
-        shell.style.width = `${Math.min(
-          viewport.width - overlayPadX - safeArea.left - safeArea.right,
-          maxWidth
-        )}px`;
-      }
+      shell.style.width = width;
     };
 
-    syncModalSize();
+    const syncModalSize = () => {
+      if (modalSizeFrameRef.current !== null) return;
+
+      modalSizeFrameRef.current = requestAnimationFrame(() => {
+        modalSizeFrameRef.current = null;
+        applyModalSize();
+      });
+    };
+
+    applyModalSize();
 
     const viewport = window.visualViewport;
     viewport?.addEventListener("resize", syncModalSize);
@@ -150,6 +181,13 @@ export default function FlyerViewer({
     return () => {
       viewport?.removeEventListener("resize", syncModalSize);
       window.removeEventListener("resize", syncModalSize);
+
+      if (modalSizeFrameRef.current !== null) {
+        cancelAnimationFrame(modalSizeFrameRef.current);
+        modalSizeFrameRef.current = null;
+      }
+
+      lastModalSizeRef.current = null;
 
       const shell = modalShellRef.current;
       if (shell) {
