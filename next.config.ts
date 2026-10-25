@@ -12,8 +12,10 @@ const securityHeaders = [
       "base-uri 'self'",
       "object-src 'none'",
       "frame-ancestors 'self'",
-      // Images (your site + Instagram CDN + Google static)
-      "img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://maps.gstatic.com https://maps.google.com",
+      // Images (your site + Instagram/Behold CDNs + Google static)
+      "img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://behold.pictures https://*.behold.pictures https://maps.gstatic.com https://maps.google.com",
+      // Video (Instagram Reels)
+      "media-src 'self' https://*.cdninstagram.com https://*.fbcdn.net",
       // Scripts (Google Maps + Instagram embed if used)
       "script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://maps.gstatic.com https://www.instagram.com",
       // Styles (Tailwind/inline styles + Google)

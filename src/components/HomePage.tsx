@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AvailabilityForm from "@/components/AvailabilityForm";
 import BookingBanner from "@/components/BookingBanner";
 import CTA from "@/components/CTA";
@@ -6,6 +7,9 @@ import FAQ from "@/components/FAQ";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
+import InstagramSection, {
+  InstagramSectionSkeleton,
+} from "@/components/InstagramSection";
 import LocationSection from "@/components/LocationSection";
 import Testimonials from "@/components/Testimonials";
 import VideoSection from "@/components/VideoSection";
@@ -24,6 +28,9 @@ export default function HomePage() {
       <Features />
       <FAQ />
       <Testimonials />
+      <Suspense fallback={<InstagramSectionSkeleton />}>
+        <InstagramSection />
+      </Suspense>
       <CTA />
       <LocationSection />
       <Footer />

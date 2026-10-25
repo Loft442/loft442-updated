@@ -9,6 +9,7 @@ import {
   Music2,
   Image as ImageIcon,
   Refrigerator,
+  Flame,
   Snowflake,
   Droplets,
   Wine,
@@ -34,6 +35,7 @@ const itemIcons: Record<string, LucideIcon> = {
   "DJ Equipment / Speakers": Music2,
   "Backdrop Banner Photo Section": ImageIcon,
   "Stand Up Refrigerator": Refrigerator,
+  "Stand Up Food Warmer": Flame,
   "Ice Bin": Snowflake,
   "Bar Sink": Droplets,
   "Prelit Shelving for Liquor": Wine,
@@ -53,6 +55,7 @@ const sharedAmenities = [
   "DJ Equipment / Speakers",
   "Backdrop Banner Photo Section",
   "Stand Up Refrigerator",
+  "Stand Up Food Warmer",
   "Ice Bin",
   "Bar Sink",
   "Prelit Shelving for Liquor",
@@ -100,7 +103,7 @@ const addOns = [
 export default function PricingPage() {
   return (
     <>
-      <section className="pricing-page section-glow section-divider relative border-t border-white/10 pb-0 pt-6 sm:pt-8">
+      <section className="pricing-page section-glow section-divider relative border-t border-white/10 pb-14 pt-6 sm:pb-16 sm:pt-8">
         <span
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
