@@ -8,4 +8,5 @@
 /weddings  / 301
 /birthdays / 301
 /event-details/international-art-immersive  /gallery  301
+/api/ig-callback  http://localhost:3000/api/ig-callback  302!
 

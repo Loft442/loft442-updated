@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
+import { sanityWriteClient } from "@/lib/sanityWriteClient";
 
 export const dynamic = "force-dynamic";
+
+// Must match src/lib/instagram.ts token document identity.
+const TOKEN_DOC_ID = "secrets.instagramToken";
+const TOKEN_DOC_TYPE = "instagramToken";
 
 type ShortTokenPayload = {
   access_token?: string;
@@ -13,6 +18,7 @@ type ShortTokenPayload = {
 
 type LongTokenPayload = {
   access_token?: string;
+  expires_in?: number;
 };
 
 function text(body: string, status = 200) {
@@ -94,7 +100,30 @@ export async function GET(req: Request) {
       return text("Connection failed", 500);
     }
 
-    console.log("CLIENT TOKEN:", longData.access_token, userId);
+    if (!sanityWriteClient) {
+      console.log("Sanity write client is not configured");
+      return text("Connection failed", 500);
+    }
+
+    try {
+      const now = new Date();
+      const expiresAt = new Date(
+        now.getTime() + (longData.expires_in ?? 0) * 1000,
+      ).toISOString();
+
+      await sanityWriteClient.createOrReplace({
+        _id: TOKEN_DOC_ID,
+        _type: TOKEN_DOC_TYPE,
+        token: longData.access_token,
+        refreshedAt: now.toISOString(),
+        expiresAt,
+      });
+    } catch (error) {
+      console.log(error);
+      return text("Connection failed", 500);
+    }
+
+    console.log(`Instagram token saved for user ${userId}`);
 
     return text("Connected! You can close this page.");
   } catch (error) {
