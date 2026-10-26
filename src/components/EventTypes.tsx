@@ -1,9 +1,6 @@
-"use client";
-
 import Image, { getImageProps } from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { preload } from "react-dom";
 import { ChevronDown, Gift, Heart, HeartHandshake, PartyPopper, Sparkles } from "lucide-react";
+import EventTypesAccordion, { type EventTypeEntry } from "@/components/EventTypesAccordion";
 
 const eventTypes = [
   {
@@ -81,16 +78,8 @@ const iconStyles: Record<
   },
 };
 
-type PanelKey =
-  | "Weddings"
-  | "Private Events"
-  | "Birthdays"
-  | "Kids Parties"
-  | "Baby Shower"
-  | "Repass Service";
-
 const panelContent: Record<
-  PanelKey,
+  string,
   {
     imageSrc: string;
     bodyText: string;
@@ -151,72 +140,68 @@ const panelContent: Record<
 
 const PANEL_IMAGE_SIZES = "(min-width: 768px) 40vw, 100vw";
 
-// Warm a panel's image on hover/focus so it is ready when the panel opens,
-// instead of downloading every panel image during the first page load.
-function preloadPanelImage(key: PanelKey) {
-  const { props } = getImageProps({
-    src: panelContent[key].imageSrc,
-    alt: "",
-    fill: true,
-    sizes: PANEL_IMAGE_SIZES,
-  });
-  preload(props.src, { as: "image", imageSrcSet: props.srcSet, imageSizes: props.sizes });
+function PanelBody({ panel }: { panel: (typeof panelContent)[string] }) {
+  return (
+    <>
+      <div className="relative h-56 w-full overflow-hidden rounded-sm border border-white/10 md:h-72">
+        <Image
+          src={panel.imageSrc}
+          alt={panel.imageAlt}
+          fill
+          sizes={PANEL_IMAGE_SIZES}
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+      </div>
+      <p className="text-sm leading-relaxed text-white/70 whitespace-pre-line">
+        {panel.bodyText}
+      </p>
+    </>
+  );
 }
 
+// Server-rendered: the titles, icons and panel copy are plain markup handed to the
+// EventTypesAccordion island, which only tracks which panel is open.
 export default function EventTypes() {
-  const [openKey, setOpenKey] = useState<PanelKey | null>(null);
-  const [renderKey, setRenderKey] = useState<PanelKey | null>(null);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const entries: EventTypeEntry[] = eventTypes.map((event) => {
+    const Icon = event.icon;
+    const panel = panelContent[event.title];
+    // Lets the island warm a panel's image on hover/focus so it is ready when the
+    // panel opens, instead of downloading every panel image during first load.
+    const { props: imageProps } = getImageProps({
+      src: panel.imageSrc,
+      alt: "",
+      fill: true,
+      sizes: PANEL_IMAGE_SIZES,
+    });
 
-  const expandableKeys: PanelKey[] = [
-    "Weddings",
-    "Private Events",
-    "Birthdays",
-    "Kids Parties",
-    "Baby Shower",
-    "Repass Service",
-  ];
-
-  // Open a panel - called from event handler
-  const handleOpenPanel = useCallback((key: PanelKey) => {
-    // Clear any pending close timer
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-    setOpenKey(key);
-    setRenderKey(key);
-    requestAnimationFrame(() => setIsPanelOpen(true));
-  }, []);
-
-  // Close the panel - called from event handler
-  const handleClosePanel = useCallback(() => {
-    setOpenKey(null);
-    setIsPanelOpen(false);
-    closeTimerRef.current = setTimeout(() => {
-      setRenderKey(null);
-      closeTimerRef.current = null;
-    }, 500);
-  }, []);
-
-  // Toggle panel
-  const handleTogglePanel = useCallback((key: PanelKey) => {
-    if (openKey === key) {
-      handleClosePanel();
-    } else {
-      handleOpenPanel(key);
-    }
-  }, [openKey, handleOpenPanel, handleClosePanel]);
-
-  // Cleanup timer on unmount
-  useEffect(() => {
-    return () => {
-      if (closeTimerRef.current) {
-        clearTimeout(closeTimerRef.current);
-      }
+    return {
+      key: event.title,
+      panelId: panel.panelId,
+      triggerId: panel.triggerId,
+      preload: {
+        src: imageProps.src,
+        srcSet: imageProps.srcSet,
+        sizes: imageProps.sizes,
+      },
+      label: (
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-2 lg:gap-1.5 xl:gap-2">
+          <Icon
+            className={`h-4 w-4 shrink-0 sm:h-5 sm:w-5 lg:h-4 lg:w-4 xl:h-5 xl:w-5 ${iconStyles[event.title]?.color ?? "text-white/80"
+              } ${iconStyles[event.title]?.glow ?? ""} ${iconStyles[event.title]?.glowActive ?? ""
+              }`}
+          />
+          <h3 className="truncate text-xs font-semibold tracking-[0.08em] text-white sm:text-xs sm:tracking-[0.1em] lg:text-[0.7rem] xl:text-sm xl:tracking-[0.12em]">
+            {event.title}
+          </h3>
+        </div>
+      ),
+      chevron: (
+        <ChevronDown className="h-3 w-3 shrink-0 text-white/45 transition group-hover:text-white/65 group-aria-expanded:rotate-180 sm:h-3.5 sm:w-3.5 lg:h-3 lg:w-3 xl:h-4 xl:w-4" />
+      ),
+      body: <PanelBody panel={panel} />,
     };
-  }, []);
+  });
 
   return (
     <section
@@ -224,112 +209,7 @@ export default function EventTypes() {
       className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider -mt-[clamp(76px,12vh,180px)] pb-8 sm:pb-10 pt-[calc(4rem+clamp(76px,12vh,180px))] sm:pt-[calc(5rem+clamp(76px,12vh,180px))]"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-6 lg:gap-2 xl:gap-3">
-          {eventTypes.map((event) => {
-            const Icon = event.icon;
-            const isExpandable = expandableKeys.includes(event.title as PanelKey);
-            const panelKey = isExpandable ? (event.title as PanelKey) : null;
-            const isExpanded = panelKey ? openKey === panelKey : false;
-            const panelMeta = panelKey ? panelContent[panelKey] : null;
-            const panelControls = panelMeta
-              ? `${panelMeta.panelId} ${panelMeta.panelId}-mobile`
-              : undefined;
-
-            return (
-              <div key={event.title} className="flex flex-col">
-                <button
-                  type="button"
-                  aria-expanded={isExpandable ? isExpanded : undefined}
-                  aria-controls={panelControls}
-                  id={panelMeta?.triggerId}
-                  onPointerEnter={() => panelKey && preloadPanelImage(panelKey)}
-                  onFocus={() => panelKey && preloadPanelImage(panelKey)}
-                  onClick={() => {
-                    if (panelKey) {
-                      handleTogglePanel(panelKey);
-                    }
-                  }}
-                  className="overview-button about-card-outline group relative flex min-h-11 min-w-0 items-center justify-between gap-1.5 rounded-md px-2.5 py-3 text-left shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition sm:min-h-12 sm:gap-2 sm:px-3 lg:gap-1.5 lg:px-2 lg:py-2.5 xl:gap-2 xl:px-3"
-                >
-                  <div className="flex min-w-0 items-center gap-1.5 sm:gap-2 lg:gap-1.5 xl:gap-2">
-                    <Icon
-                      className={`h-4 w-4 shrink-0 sm:h-5 sm:w-5 lg:h-4 lg:w-4 xl:h-5 xl:w-5 ${iconStyles[event.title]?.color ?? "text-white/80"
-                        } ${iconStyles[event.title]?.glow ?? ""} ${iconStyles[event.title]?.glowActive ?? ""
-                        }`}
-                    />
-                    <h3 className="truncate text-xs font-semibold tracking-[0.08em] text-white sm:text-xs sm:tracking-[0.1em] lg:text-[0.7rem] xl:text-sm xl:tracking-[0.12em]">
-                      {event.title}
-                    </h3>
-                  </div>
-                  <ChevronDown
-                    className={`h-3 w-3 shrink-0 text-white/45 transition group-hover:text-white/65 sm:h-3.5 sm:w-3.5 lg:h-3 lg:w-3 xl:h-4 xl:w-4 ${isExpanded ? "rotate-180" : ""
-                      }`}
-                  />
-                </button>
-                {renderKey === panelKey && panelMeta ? (
-                  <div
-                    className={`mt-4 overflow-hidden transition-[max-height,opacity,transform] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] md:hidden ${isPanelOpen
-                      ? "max-h-[900px] translate-y-0 opacity-100"
-                      : "max-h-0 -translate-y-1 opacity-0"
-                      }`}
-                    aria-hidden={!isPanelOpen}
-                  >
-                    <div
-                      id={`${panelMeta.panelId}-mobile`}
-                      role="region"
-                      aria-labelledby={panelMeta.triggerId}
-                      className="grid gap-6 rounded-sm border border-white/10 bg-white/5 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] md:grid-cols-2"
-                    >
-                      <div className="relative h-56 w-full overflow-hidden rounded-sm border border-white/10 md:h-72">
-                        <Image
-                          src={panelMeta.imageSrc}
-                          alt={panelMeta.imageAlt}
-                          fill
-                          sizes={PANEL_IMAGE_SIZES}
-                          className="object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                      </div>
-                      <p className="text-sm leading-relaxed text-white/70 whitespace-pre-line">
-                        {panelMeta.bodyText}
-                      </p>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
-        </div>
-        {renderKey ? (
-          <div
-            className={`mt-6 hidden overflow-hidden transition-[max-height,opacity,transform] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)] md:block ${isPanelOpen
-              ? "max-h-[900px] translate-y-0 opacity-100"
-              : "max-h-0 -translate-y-1 opacity-0"
-              }`}
-            aria-hidden={!isPanelOpen}
-          >
-            <div
-              id={panelContent[renderKey].panelId}
-              role="region"
-              aria-labelledby={panelContent[renderKey].triggerId}
-              className="grid gap-6 rounded-sm border border-white/10 bg-white/5 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] md:grid-cols-2"
-            >
-              <div className="relative h-56 w-full overflow-hidden rounded-sm border border-white/10 md:h-72">
-                <Image
-                  src={panelContent[renderKey].imageSrc}
-                  alt={panelContent[renderKey].imageAlt}
-                  fill
-                  sizes={PANEL_IMAGE_SIZES}
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-              </div>
-              <p className="text-sm leading-relaxed text-white/70 whitespace-pre-line">
-                {panelContent[renderKey].bodyText}
-              </p>
-            </div>
-          </div>
-        ) : null}
+        <EventTypesAccordion entries={entries} />
       </div>
     </section>
   );

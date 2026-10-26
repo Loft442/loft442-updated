@@ -1,26 +1,22 @@
 "use client";
 
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import {
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import Masonry from "@/components/Masonry";
 import Reveal from "@/components/Reveal";
-import { galleryItems, type GalleryItemCategory } from "@/lib/galleryItems";
+import type { GalleryItem, GalleryItemCategory } from "@/lib/galleryItems";
 import { useLockBodyScroll, getScrollY } from "@/lib/useIOSSafari";
 
-// Helper to check if we're in browser - doesn't change after mount
-const subscribe = () => () => { };
-const getIsBrowser = () => typeof window !== "undefined";
-const getServerSnapshot = () => false;
+const loadLightbox = () => import("@/components/GalleryLightbox");
+const GalleryLightbox = dynamic(() => import("@/components/GalleryLightbox"), {
+  ssr: false,
+});
 
 type GalleryCategory = "All" | GalleryItemCategory;
 
@@ -37,18 +33,6 @@ const masonryHeights = [560, 480, 640, 520, 720, 440, 680, 500];
 
 const slugify = (value: string) => value.toLowerCase().replace(/\s+/g, "-");
 
-const LIGHTBOX_MAX_WIDTH = 900;
-
-function getSafeAreaInsets() {
-  const style = getComputedStyle(document.documentElement);
-  return {
-    top: parseFloat(style.getPropertyValue("--safe-area-inset-top")) || 0,
-    right: parseFloat(style.getPropertyValue("--safe-area-inset-right")) || 0,
-    bottom: parseFloat(style.getPropertyValue("--safe-area-inset-bottom")) || 0,
-    left: parseFloat(style.getPropertyValue("--safe-area-inset-left")) || 0,
-  };
-}
-
 type MasonryGalleryItem = {
   id: string;
   img: string;
@@ -58,17 +42,16 @@ type MasonryGalleryItem = {
   index: number;
 };
 
-export default function GalleryPage() {
+type GalleryPageProps = {
+  items: GalleryItem[];
+};
+
+export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
   const [activeCategory, setActiveCategory] =
     useState<GalleryCategory>("All");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const touchStartX = useRef<number | null>(null);
   const scrollYRef = useRef(0);
-  const lightboxShellRef = useRef<HTMLDivElement>(null);
-
-  // Use useSyncExternalStore to safely detect browser environment
-  const isBrowser = useSyncExternalStore(subscribe, getIsBrowser, getServerSnapshot);
 
   const filteredItems = useMemo(() => {
     const items =
@@ -77,7 +60,7 @@ export default function GalleryPage() {
         : galleryItems.filter((item) => item.category === activeCategory);
 
     return [...items].reverse();
-  }, [activeCategory]);
+  }, [activeCategory, galleryItems]);
 
   const masonryItems = useMemo(
     () =>
@@ -108,6 +91,10 @@ export default function GalleryPage() {
     setActiveIndex(index);
   }, []);
 
+  const handleClose = useCallback(() => {
+    setActiveIndex(null);
+  }, []);
+
   const handlePrev = useCallback(() => {
     if (!filteredItems.length) {
       return;
@@ -127,82 +114,6 @@ export default function GalleryPage() {
       prev === null ? prev : (prev + 1) % filteredItems.length
     );
   }, [filteredItems.length]);
-
-  useEffect(() => {
-    if (activeIndex === null) {
-      return;
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setActiveIndex(null);
-        return;
-      }
-
-      if (event.key === "ArrowRight") {
-        handleNext();
-      }
-
-      if (event.key === "ArrowLeft") {
-        handlePrev();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [activeIndex, handleNext, handlePrev]);
-
-  useEffect(() => {
-    if (activeIndex === null) return;
-
-    const syncLightboxSize = () => {
-      const shell = lightboxShellRef.current;
-      const viewport = window.visualViewport;
-      if (!shell || !viewport) return;
-
-      const safeArea = getSafeAreaInsets();
-      const isSm = window.matchMedia("(min-width: 640px)").matches;
-      const overlayPadY = isSm ? 48 : 32;
-      const overlayPadX = isSm ? 48 : 32;
-      const maxWidth = Math.min(viewport.width * 0.92, LIGHTBOX_MAX_WIDTH);
-      const height = Math.max(
-        200,
-        viewport.height - overlayPadY - safeArea.top - safeArea.bottom
-      );
-
-      shell.style.maxWidth = `${maxWidth}px`;
-      shell.style.width = `${Math.min(
-        viewport.width - overlayPadX - safeArea.left - safeArea.right,
-        maxWidth
-      )}px`;
-      shell.style.height = `${height}px`;
-      shell.style.maxHeight = `${height}px`;
-    };
-
-    syncLightboxSize();
-
-    const viewport = window.visualViewport;
-    viewport?.addEventListener("resize", syncLightboxSize);
-    viewport?.addEventListener("scroll", syncLightboxSize);
-    window.addEventListener("resize", syncLightboxSize);
-
-    return () => {
-      viewport?.removeEventListener("resize", syncLightboxSize);
-      viewport?.removeEventListener("scroll", syncLightboxSize);
-      window.removeEventListener("resize", syncLightboxSize);
-
-      const shell = lightboxShellRef.current;
-      if (shell) {
-        shell.style.width = "";
-        shell.style.maxWidth = "";
-        shell.style.height = "";
-        shell.style.maxHeight = "";
-      }
-    };
-  }, [activeIndex]);
 
   const handleTabKeyDown = (
     event: ReactKeyboardEvent<HTMLButtonElement>,
@@ -235,31 +146,6 @@ export default function GalleryPage() {
     handleCategoryChange(filterCategories[nextIndex]);
     tabRefs.current[nextIndex]?.focus();
   };
-
-  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-    touchStartX.current = event.touches[0]?.clientX ?? null;
-  };
-
-  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (touchStartX.current === null) {
-      return;
-    }
-
-    const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
-    const delta = touchStartX.current - endX;
-
-    if (Math.abs(delta) > 50) {
-      if (delta > 0) {
-        handleNext();
-      } else {
-        handlePrev();
-      }
-    }
-
-    touchStartX.current = null;
-  };
-
-  const activeItem = activeIndex !== null ? filteredItems[activeIndex] : null;
 
   return (
     <div>
@@ -338,6 +224,8 @@ export default function GalleryPage() {
             id="gallery-panel"
             role="tabpanel"
             aria-labelledby={activeTabId}
+            onPointerOver={loadLightbox}
+            onFocus={loadLightbox}
           >
             {filteredItems.length === 0 ? (
               <Reveal immediate className="flex flex-col items-center justify-center py-24 text-center">
@@ -348,13 +236,11 @@ export default function GalleryPage() {
             ) : (
               <Masonry
                 items={masonryItems}
-                ease="power3.out"
                 duration={0.6}
                 stagger={0.05}
                 animateFrom="none"
                 scaleOnHover
                 hoverScale={0.95}
-                blurToFocus
                 colorShiftOnHover={false}
                 onItemClick={(item: MasonryGalleryItem) => handleOpenGallery(item.index)}
               />
@@ -363,78 +249,15 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {activeItem && isBrowser
-        ? createPortal(
-          <div
-            className="fixed inset-0 z-50 grid place-items-center overscroll-contain bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
-            onClick={() => setActiveIndex(null)}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            <div
-              ref={lightboxShellRef}
-              className="relative flex min-h-0 max-w-[900px] flex-col rounded-sm border border-white/10 bg-black/60 p-[clamp(8px,1.5svh,20px)] shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-black/40">
-                <div className="absolute inset-0 p-[clamp(0px,0.75svh,16px)]">
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={activeItem.src}
-                      alt={activeItem.alt ?? ""}
-                      fill
-                      sizes="(max-width: 640px) 92vw, 900px"
-                      className="object-contain object-center"
-                      style={{ objectFit: 'contain' }}
-                      quality={80}
-                    />
-                  </div>
-                </div>
-                <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                <button
-                  type="button"
-                  onClick={() => setActiveIndex(null)}
-                  aria-label="Close gallery"
-                  className="min-tap-target absolute right-3 top-3 z-20 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-                {filteredItems.length > 1 ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={handlePrev}
-                      aria-label="Previous image"
-                      className="min-tap-target absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
-                    >
-                      <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      aria-label="Next image"
-                      className="min-tap-target absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
-                    >
-                      <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
-                    </button>
-                  </>
-                ) : null}
-              </div>
-              <div className="mt-[clamp(8px,1svh,16px)] flex max-w-full shrink-0 flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
-                <span>{activeItem.category}</span>
-                <span>
-                  {activeIndex !== null ? activeIndex + 1 : 1} /{" "}
-                  {filteredItems.length}
-                </span>
-              </div>
-              <p className="mt-[clamp(4px,0.5svh,8px)] max-w-full shrink-0 text-sm text-white/70">
-                {activeItem.alt}
-              </p>
-            </div>
-          </div>,
-          document.body
-        )
-        : null}
+      {activeIndex !== null ? (
+        <GalleryLightbox
+          items={filteredItems}
+          activeIndex={activeIndex}
+          onClose={handleClose}
+          onPrev={handlePrev}
+          onNext={handleNext}
+        />
+      ) : null}
     </div>
   );
 }

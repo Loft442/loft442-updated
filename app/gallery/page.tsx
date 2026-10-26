@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import GalleryPage from "@/components/GalleryPage";
+import { galleryItems } from "@/lib/galleryItems";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -22,7 +23,7 @@ export default function Gallery() {
         <span className="ambient-glow__layer" />
       </div>
       <div className="divider-glow h-[2px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-      <GalleryPage />
+      <GalleryPage items={galleryItems} />
       <Footer />
     </main>
   );

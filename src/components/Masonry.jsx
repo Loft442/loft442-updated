@@ -2,12 +2,15 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { gsap } from "gsap";
 
 import "./Masonry.css";
 
 const IMAGE_SIZES =
   "(max-width: 400px) 50vw, (max-width: 600px) 33vw, (max-width: 1000px) 25vw, (max-width: 1500px) 20vw, 15vw";
+
+// CSS equivalents of the GSAP eases this grid used to run with.
+const EASE_OUT_QUART = "cubic-bezier(0.25, 1, 0.5, 1)"; // power3.out
+const EASE_OUT_CUBIC = "cubic-bezier(0.33, 1, 0.68, 1)"; // power2.out
 
 const useMedia = (queries, values, defaultValue) => {
   const get = () => {
@@ -48,31 +51,33 @@ const useMeasure = () => {
   return [ref, size];
 };
 
+const MEDIA_QUERIES = [
+  "(min-width:1500px)",
+  "(min-width:1000px)",
+  "(min-width:600px)",
+  "(min-width:400px)",
+];
+const MEDIA_COLUMNS = [5, 4, 3, 2];
+
+// Positions animate with the `translate` property and the intro/hover with
+// `opacity`/`scale`, so the grid only ever composites: no width/height or filter
+// animation and no layout work per frame.
 const Masonry = ({
   items,
-  ease = "power3.out",
+  ease = EASE_OUT_QUART,
   duration = 0.6,
   stagger = 0.05,
   animateFrom = "bottom",
   scaleOnHover = true,
   hoverScale = 0.95,
-  blurToFocus = true,
   colorShiftOnHover = false,
   onItemClick,
 }) => {
-  const columns = useMedia(
-    [
-      "(min-width:1500px)",
-      "(min-width:1000px)",
-      "(min-width:600px)",
-      "(min-width:400px)",
-    ],
-    [5, 4, 3, 2],
-    1
-  );
+  const columns = useMedia(MEDIA_QUERIES, MEDIA_COLUMNS, 1);
 
   const [containerRef, { width }] = useMeasure();
-  const layoutReady = width > 0;
+  const itemRefs = useRef(new Map());
+  const introItemsRef = useRef(null);
 
   const getInitialPosition = (item) => {
     const containerRect = containerRef.current?.getBoundingClientRect();
@@ -129,105 +134,42 @@ const Masonry = ({
     return Math.max(...grid.map((item) => item.y + item.h));
   }, [grid]);
 
-  const hasMounted = useRef(false);
-
+  // Staggered entrance the first time a set of items is laid out. Later layout
+  // changes (resize, column count) glide via the CSS `translate` transition.
   useLayoutEffect(() => {
-    if (!layoutReady || !grid.length) return;
+    if (!grid.length || introItemsRef.current === items) return;
+    introItemsRef.current = items;
+
+    const popInPlace = animateFrom === "none";
 
     grid.forEach((item, index) => {
-      const selector = `[data-key="${item.id}"]`;
-      const animationProps = {
-        x: item.x,
-        y: item.y,
-        width: item.w,
-        height: item.h,
-      };
+      const element = itemRefs.current.get(item.id);
+      if (!element?.animate) return;
 
-      if (!hasMounted.current) {
-        const initialPos = getInitialPosition(item);
-        const popInPlace = animateFrom === "none";
-        const initialState = {
-          opacity: 0,
-          x: initialPos.x,
-          y: initialPos.y,
-          width: item.w,
-          height: item.h,
-          ...(popInPlace && { scale: 0.92 }),
-          ...(blurToFocus && { filter: "blur(10px)" }),
-        };
-
-        gsap.fromTo(selector, initialState, {
-          opacity: 1,
-          ...animationProps,
-          ...(popInPlace && { scale: 1 }),
-          ...(blurToFocus && { filter: "blur(0px)" }),
-          duration: 0.8,
-          ease: "power3.out",
-          delay: index * stagger,
-        });
-      } else {
-        gsap.to(selector, {
-          ...animationProps,
-          duration: duration,
-          ease: ease,
-          overwrite: "auto",
-        });
-      }
+      const from = getInitialPosition(item);
+      element.animate(
+        [
+          {
+            opacity: 0,
+            translate: `${from.x}px ${from.y}px`,
+            ...(popInPlace && { scale: "0.92" }),
+          },
+          {
+            opacity: 1,
+            translate: `${item.x}px ${item.y}px`,
+            ...(popInPlace && { scale: "1" }),
+          },
+        ],
+        {
+          duration: 800,
+          easing: EASE_OUT_QUART,
+          delay: index * stagger * 1000,
+          fill: "backwards",
+        }
+      );
     });
-
-    hasMounted.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [grid, layoutReady, stagger, animateFrom, blurToFocus, duration, ease]);
-
-  useEffect(() => {
-    hasMounted.current = false;
-  }, [items]);
-
-  const handleMouseEnter = (e, item) => {
-    const element = e.currentTarget;
-    const selector = `[data-key="${item.id}"]`;
-
-    if (scaleOnHover) {
-      gsap.to(selector, {
-        scale: hoverScale,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
-
-    if (colorShiftOnHover) {
-      const overlay = element.querySelector(".color-overlay");
-      if (overlay) {
-        gsap.to(overlay, {
-          opacity: 0.3,
-          duration: 0.3,
-        });
-      }
-    }
-  };
-
-  const handleMouseLeave = (e, item) => {
-    const element = e.currentTarget;
-    const selector = `[data-key="${item.id}"]`;
-
-    if (scaleOnHover) {
-      gsap.to(selector, {
-        scale: 1,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
-
-    if (colorShiftOnHover) {
-      const overlay = element.querySelector(".color-overlay");
-      if (overlay) {
-        gsap.to(overlay, {
-          opacity: 0,
-          duration: 0.3,
-        });
-      }
-    }
-  };
+  }, [grid, items, stagger, animateFrom]);
 
   const handleClick = (item, event) => {
     event?.preventDefault?.();
@@ -246,17 +188,33 @@ const Masonry = ({
     <div
       ref={containerRef}
       className="list"
-      style={{ height: containerHeight || undefined }}
+      data-scale-on-hover={scaleOnHover || undefined}
+      data-color-shift={colorShiftOnHover || undefined}
+      style={{
+        height: containerHeight || undefined,
+        "--masonry-hover-scale": hoverScale,
+        "--masonry-move": `${duration}s ${ease}`,
+        "--masonry-hover-ease": EASE_OUT_CUBIC,
+      }}
     >
       {grid.map((item) => {
         return (
           <div
             key={item.id}
+            ref={(element) => {
+              if (element) itemRefs.current.set(item.id, element);
+              else itemRefs.current.delete(item.id);
+            }}
             data-key={item.id}
             className="item-wrapper"
             role="button"
             tabIndex={0}
             aria-label={item.alt ? `Open image: ${item.alt}` : undefined}
+            style={{
+              width: item.w,
+              height: item.h,
+              translate: `${item.x}px ${item.y}px`,
+            }}
             onClick={(event) => handleClick(item, event)}
             onMouseDown={(event) => event.preventDefault()}
             onKeyDown={(event) => {
@@ -265,8 +223,6 @@ const Masonry = ({
                 handleClick(item, event);
               }
             }}
-            onMouseEnter={(e) => handleMouseEnter(e, item)}
-            onMouseLeave={(e) => handleMouseLeave(e, item)}
           >
             <div className="item-img">
               <Image

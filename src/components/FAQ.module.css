@@ -1,0 +1,75 @@
+/* Native <details> accordion with the same motion the old client accordion had.
+   Opening animates via @starting-style. Closing animates where ::details-content
+   can keep the content rendered while it collapses (Chromium 131+, Safari 18.4+,
+   Firefox 143+); older browsers close instantly. */
+
+.summary {
+  list-style: none;
+  transition: padding 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary:focus-visible {
+  outline: none;
+}
+
+.item::details-content {
+  transition: content-visibility 600ms allow-discrete;
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 600ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.item[open] .panel {
+  grid-template-rows: 1fr;
+}
+
+.answer {
+  opacity: 0;
+  transform: translateY(-0.375rem);
+  padding-bottom: 0;
+  transition-property: opacity, transform, padding-bottom;
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: 0ms;
+}
+
+.item[open] .answer {
+  opacity: 1;
+  transform: translateY(0);
+  padding-bottom: 1rem;
+  transition-delay: 75ms;
+}
+
+.item[open] .chevron {
+  transform: rotate(180deg);
+  color: rgb(255 255 255 / 0.85);
+}
+
+@starting-style {
+  .item[open] .panel {
+    grid-template-rows: 0fr;
+  }
+
+  .item[open] .answer {
+    opacity: 0;
+    transform: translateY(-0.375rem);
+    padding-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary,
+  .panel,
+  .answer,
+  .item::details-content {
+    transition: none;
+  }
+}

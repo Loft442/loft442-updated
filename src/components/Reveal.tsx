@@ -1,13 +1,4 @@
-"use client";
-
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-  type TransitionEvent,
-} from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
@@ -17,6 +8,8 @@ type RevealProps = {
   immediate?: boolean;
 };
 
+// Plain markup: RevealOnScroll (mounted once in the root layout) owns the single
+// IntersectionObserver that adds `is-visible` / `reveal-done` to every `.reveal`.
 export default function Reveal({
   children,
   className,
@@ -24,58 +17,12 @@ export default function Reveal({
   mode = "media",
   immediate = false,
 }: RevealProps) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [inView, setInView] = useState(false);
-  const [done, setDone] = useState(false);
-  const visible = immediate || inView;
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node || immediate) {
-      return;
-    }
-
-    if (typeof IntersectionObserver === "undefined") {
-      const frameId = requestAnimationFrame(() => setInView(true));
-      return () => cancelAnimationFrame(frameId);
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.25 }
-    );
-
-    observer.observe(node);
-
-    return () => observer.disconnect();
-  }, [immediate]);
-
-  const handleTransitionEnd = (event: TransitionEvent<HTMLDivElement>) => {
-    if (done) return;
-    if (!["transform", "opacity"].includes(event.propertyName)) return;
-    setDone(true);
-  };
-
-  useEffect(() => {
-    if (!visible || done) return;
-    const timeoutId = window.setTimeout(() => {
-      setDone(true);
-    }, delayMs + 700);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [visible, done, delayMs]);
-
-  const style = { "--reveal-delay": `${delayMs}ms` } as CSSProperties;
+  const style = delayMs
+    ? ({ "--reveal-delay": `${delayMs}ms` } as CSSProperties)
+    : undefined;
   const classes = [
     "reveal",
     mode === "text" ? "reveal--text" : mode === "slide" ? "reveal--slide" : "",
-    visible ? "is-visible" : "",
-    done ? "reveal-done" : "",
     className,
   ]
     .filter(Boolean)
@@ -83,10 +30,10 @@ export default function Reveal({
 
   return (
     <div
-      ref={ref}
       className={classes}
       style={style}
-      onTransitionEnd={handleTransitionEnd}
+      data-reveal-delay={delayMs || undefined}
+      data-reveal-immediate={immediate || undefined}
     >
       {children}
     </div>

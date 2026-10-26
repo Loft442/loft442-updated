@@ -5,11 +5,18 @@
 
 .item-wrapper {
   position: absolute;
-  will-change: transform, width, height, opacity;
+  will-change: translate, scale, opacity;
   padding: 6px;
   cursor: pointer;
   top: 0;
   left: 0;
+  transition:
+    translate var(--masonry-move, 0.6s ease-out),
+    scale 0.3s var(--masonry-hover-ease, ease-out);
+}
+
+.list[data-scale-on-hover] .item-wrapper:hover {
+  scale: var(--masonry-hover-scale, 0.95);
 }
 
 .item-wrapper > .item-img {
@@ -19,4 +26,12 @@
   height: 100%;
   border-radius: 10px;
   box-shadow: 0px 10px 50px -10px rgba(0, 0, 0, 0.2);
+}
+
+.item-wrapper .color-overlay {
+  transition: opacity 0.3s;
+}
+
+.list[data-color-shift] .item-wrapper:hover .color-overlay {
+  opacity: 0.3 !important;
 }

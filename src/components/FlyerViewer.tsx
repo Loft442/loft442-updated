@@ -1,7 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import MagnifierImage from "@/components/MagnifierImage";
 import { Eye, X } from "lucide-react";
 import {
   useCallback,
@@ -14,6 +14,15 @@ import {
 import { createPortal } from "react-dom";
 import { getImageFileName, saveImageFile } from "@/lib/saveImage";
 import { getScrollY, useLockBodyScroll } from "@/lib/useIOSSafari";
+
+// The zoom viewer only matters once the modal opens, so it loads on demand and is
+// warmed as soon as the user shows intent (hover, focus, touch) on the thumbnail.
+const MagnifierImage = dynamic(() => import("@/components/MagnifierImage"), {
+  ssr: false,
+});
+const preloadMagnifier = () => {
+  void import("@/components/MagnifierImage");
+};
 
 const subscribe = () => () => {};
 const getIsBrowser = () => typeof window !== "undefined";
@@ -234,6 +243,9 @@ export default function FlyerViewer({
       type="button"
       aria-label={`View fullscreen: ${alt}`}
       onClick={handleOpen}
+      onPointerEnter={preloadMagnifier}
+      onTouchStart={preloadMagnifier}
+      onFocus={preloadMagnifier}
       onMouseDown={(event) => event.preventDefault()}
       className={thumbnailClasses}
     >
