@@ -22,6 +22,8 @@ import {
   Shirt,
   Wind,
   Sparkles,
+  Sofa,
+  Camera,
   type LucideIcon,
 } from "lucide-react";
 
@@ -50,6 +52,8 @@ const itemIcons: Record<string, LucideIcon> = {
   "Tablecloths (Black / White)": Shirt,
   "9 Banquet Chafing Dishes": CoffeeIcon,
   "Nimbus Low Lying Fog Machine": Wind,
+  "Premium Love Seat (White)": Sofa,
+  "Digital Photo Booth": Camera,
 };
 
 const sharedAmenities = [
@@ -95,12 +99,14 @@ const packages = [
 ];
 
 const addOns = [
+  { service: "Tablecloths (Black / White)", price: "$10" },
   { service: "Uplighting", price: "$150" },
+  { service: "Premium Love Seat (White)", price: "$150" },
   { service: "Server(s)", price: "$250" },
   { service: "Bartender(s)", price: "$250" },
-  { service: "Tablecloths (Black / White)", price: "$10" },
   { service: "9 Banquet Chafing Dishes", price: "$250" },
   { service: "Nimbus Low Lying Fog Machine", price: "$350" },
+  { service: "Digital Photo Booth", price: "$400" },
 ];
 
 export default function PricingPage() {
