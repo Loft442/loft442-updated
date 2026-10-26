@@ -21,6 +21,7 @@ import {
   CoffeeIcon,
   Shirt,
   Wind,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 
@@ -42,6 +43,7 @@ const itemIcons: Record<string, LucideIcon> = {
   "Television Behind Bar": Monitor,
   "14 Ft. Black Granite Bar": GlassWater,
   "6 Hour Rental": Clock,
+  "Courtesy 4 Hour Access For Decor / Set Up": Sparkles,
   "Uplighting": Lightbulb,
   "Server(s)": UserCheck,
   "Bartender(s)": GlassWater,
@@ -62,6 +64,7 @@ const sharedAmenities = [
   "Television Behind Bar",
   "14 Ft. Black Granite Bar",
   "6 Hour Rental",
+  "Courtesy 4 Hour Access For Decor / Set Up",
 ];
 
 const packages = [
