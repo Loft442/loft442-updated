@@ -43,7 +43,7 @@ const stats = [
   {
     icon: MapPin,
     eyebrow: "Located in",
-    value: "New York",
+    value: "Elmont, New York",
   },
 ];
 
