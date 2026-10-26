@@ -67,14 +67,14 @@ export default function Hero() {
           />
         </picture>
       </div>
-      <div className="relative z-10 translate-y-19 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 md:px-10 md:pb-16 md:pt-28 lg:px-12 lg:pb-20 lg:pt-32">
+      <div className="relative z-10 translate-y-19 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 py-16 sm:px-6 sm:py-20 md:px-10 md:py-24 lg:px-12 lg:py-28">
         <div className="max-w-2xl md:max-w-3xl">
-          <div className="text-spotlight inline-block rounded-sm px-4 py-3">
-            <div className="flex flex-col gap-6 sm:gap-8 md:gap-7 lg:gap-8">
-              <p className={`pl-1 text-[0.75rem] uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.45em] ${styles.heroTextStroke}`}>
+          <div className="text-spotlight inline-block rounded-sm px-4 py-4">
+            <div className="flex flex-col gap-5 sm:gap-6">
+              <p className={`text-[0.75rem] uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.45em] ${styles.heroTextStroke}`}>
                 Loft 442
               </p>
-              <h1 className="hero-stagger hero-stagger--1 text-3xl font-semibold tracking-[0.06em] text-white sm:text-4xl sm:tracking-[0.12em] md:text-4xl lg:text-6xl leading-[1.05] md:leading-[1.1]">
+              <h1 className="hero-stagger hero-stagger--1 flex flex-col gap-1.5 text-3xl font-semibold tracking-[0.06em] text-white sm:gap-2 sm:text-4xl sm:tracking-[0.12em] md:text-4xl lg:text-6xl leading-[1.05] md:leading-[1.1]">
                 <span className={`${styles.heroHeadlineLine} block sm:whitespace-nowrap`}>
                   <span className={styles.heroLetterGroup}>{creatingNodes}</span>
                   <span
@@ -90,7 +90,7 @@ export default function Hero() {
                   <span className={styles.heroLetterGroup}>{line3Nodes}</span>
                 </span>
               </h1>
-              <div className="hero-stagger hero-stagger--2 flex flex-col gap-3 md:gap-2">
+              <div className="hero-stagger hero-stagger--2 flex flex-col gap-3">
                 <div className="flex items-center gap-3">
                   <Image
                     src="/images/veteran-icon.svg"
@@ -150,7 +150,7 @@ export default function Hero() {
                   </span>
                 </div>
               </div>
-              <div className="hero-stagger hero-stagger--3 flex flex-col items-start gap-3 sm:gap-4 sm:flex-row md:gap-3">
+              <div className="hero-stagger hero-stagger--3 flex flex-col items-start gap-3 sm:flex-row">
                 <Link
                   href="/gallery"
                   className="no-shadow relative isolate inline-flex h-10 sm:h-11 md:h-10 items-center justify-center cta-button border border-white/60 bg-black px-6 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-white hover:text-white"
