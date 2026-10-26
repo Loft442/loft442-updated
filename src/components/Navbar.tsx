@@ -56,7 +56,7 @@ export default function Navbar() {
   const suppressNavBorder =
     pathname === "/repass" || pathname === "/catering";
 
-  useLockBodyScroll(menuOpen, scrollYRef.current);
+  useLockBodyScroll(menuOpen, scrollYRef);
   const handleNavClick = (
     event: MouseEvent<HTMLAnchorElement>,
     href: string
@@ -110,11 +110,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [menuOpen]);
 
-  useEffect(() => {
-    if (isDesktopNav) {
-      setMenuOpen(false);
-    }
-  }, [isDesktopNav]);
+  // Close the mobile menu when the viewport grows to the desktop nav. Adjusting state
+  // during render on change avoids an extra effect-driven render pass.
+  const [prevIsDesktopNav, setPrevIsDesktopNav] = useState(isDesktopNav);
+  if (isDesktopNav !== prevIsDesktopNav) {
+    setPrevIsDesktopNav(isDesktopNav);
+    if (isDesktopNav) setMenuOpen(false);
+  }
 
   const handleCloseMenu = useCallback(() => {
     setMenuOpen(false);
@@ -149,11 +151,12 @@ export default function Navbar() {
       >
         <Link href="/" className="flex items-center">
           <Image
-            src="/images/loft-logo.svg"
+            src="/images/loft-logo.webp"
             alt="Loft 442 logo"
-            width={480}
-            height={88}
-            sizes="(max-width: 640px) 220px, (max-width: 1024px) 260px, 320px"
+            width={183}
+            height={180}
+            sizes="64px"
+            preload
             className={[
               "w-auto",
               "transition-[height] duration-300 ease-out motion-reduce:transition-none",

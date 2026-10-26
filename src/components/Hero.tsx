@@ -1,7 +1,20 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import styles from "./Hero.module.css";
+
+const bannerProps = { alt: "", fill: true, sizes: "100vw", quality: 85 } as const;
+
+const {
+  props: { srcSet: desktopBanner },
+} = getImageProps({ ...bannerProps, src: "/images/banner-opt.webp" });
+
+const { props: mobileBanner } = getImageProps({
+  ...bannerProps,
+  src: "/images/banner-image-mobile-2.webp",
+  loading: "eager",
+  fetchPriority: "high",
+});
 
 export default function Hero() {
   const letterDelay = 18;
@@ -44,28 +57,15 @@ export default function Hero() {
       className="hero-no-glow relative w-full -mt-19 min-h-[calc(100svh-76px)] overflow-hidden bg-black aspect-9/16 sm:min-h-0 sm:aspect-640/367 md:min-h-[85vh] lg:min-h-[90vh]"
     >
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/images/banner-image-mobile-2.webp"
-          alt="Loft 442 elegant event venue interior"
-          fill
-          priority
-          loading="eager"
-          fetchPriority="high"
-          quality={85}
-          sizes="100vw"
-          className="object-cover object-center sm:hidden"
-        />
-        <Image
-          src="/images/banner-opt.webp"
-          alt="Loft 442 elegant event venue interior"
-          fill
-          priority
-          loading="eager"
-          fetchPriority="high"
-          quality={85}
-          sizes="100vw"
-          className="object-cover object-center hidden sm:block"
-        />
+        {/* One art-directed <picture> so each device downloads only its own banner. */}
+        <picture>
+          <source media="(min-width: 640px)" srcSet={desktopBanner} sizes="100vw" />
+          <img
+            {...mobileBanner}
+            alt="Loft 442 elegant event venue interior"
+            className="object-cover object-center"
+          />
+        </picture>
       </div>
       <div className="relative z-10 translate-y-19 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 md:px-10 md:pb-16 md:pt-28 lg:px-12 lg:pb-20 lg:pt-32">
         <div className="max-w-2xl md:max-w-3xl">
@@ -107,34 +107,54 @@ export default function Hero() {
                 <p className={`text-xs sm:text-sm md:text-sm uppercase tracking-[0.18em] text-white sm:tracking-[0.35em] ${styles.heroTextStroke}`}>
                   Proudly Serving Those Who Served
                 </p>
-                <div
-                  className="flex self-start items-center gap-2 text-[#d4af37] [filter:drop-shadow(0_0_4px_rgba(212,175,55,0.6))]"
-                  role="img"
-                  aria-label="5 star rating"
-                >
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]">
-                    <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
-                  </svg>
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]">
-                    <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
-                  </svg>
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]">
-                    <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
-                  </svg>
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]">
-                    <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
-                  </svg>
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]">
-                    <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
-                  </svg>
+                <div className="flex self-start items-center gap-3">
+                  <div
+                    className="flex items-center gap-2 text-[#d4af37] [filter:drop-shadow(0_0_4px_rgba(212,175,55,0.6))]"
+                    role="img"
+                    aria-label="4.8 star rating"
+                  >
+                    {[0, 1, 2, 3].map((index) => (
+                      <svg
+                        key={index}
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
+                      </svg>
+                    ))}
+                    <span className="relative inline-block h-[20px] w-[20px] md:h-[22px] md:w-[22px]">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="h-full w-full text-white/20"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
+                      </svg>
+                      <span className="absolute inset-0 overflow-hidden" style={{ width: "80%" }}>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]"
+                          aria-hidden="true"
+                        >
+                          <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
+                        </svg>
+                      </span>
+                    </span>
+                  </div>
+                  <span className={`text-base sm:text-lg md:text-base font-medium text-white/90 ${styles.heroTextStroke}`}>
+                    4.8 on Google
+                  </span>
                 </div>
               </div>
               <div className="hero-stagger hero-stagger--3 flex flex-col items-start gap-3 sm:gap-4 sm:flex-row md:gap-3">
                 <Link
                   href="/gallery"
-                  className="cta-glass no-shadow relative isolate inline-flex h-10 sm:h-11 md:h-10 items-center justify-center cta-button border border-white/60 px-6 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-white hover:text-white"
+                  className="no-shadow relative isolate inline-flex h-10 sm:h-11 md:h-10 items-center justify-center cta-button border border-white/60 bg-black px-6 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-white hover:text-white"
                 >
-                  <span className="absolute inset-0 -z-10 rounded-sm bg-white/10 backdrop-blur-xl" />
                   <span className={`relative z-10 ${styles.heroTextStroke}`}>
                     View Gallery
                   </span>

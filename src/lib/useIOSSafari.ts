@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useSyncExternalStore } from "react";
+import { useLayoutEffect, type RefObject } from "react";
 
 export function getScrollY(): number {
     if (typeof window === "undefined") {
@@ -16,39 +16,16 @@ export function getScrollY(): number {
 }
 
 /**
- * Detects if the current browser is iOS Safari.
- * Uses useSyncExternalStore for proper SSR/hydration handling.
- */
-function getIsIOSSafari(): boolean {
-    if (typeof window === "undefined" || typeof navigator === "undefined") {
-        return false;
-    }
-    const ua = navigator.userAgent;
-    const isIOS = /iPad|iPhone|iPod/.test(ua) ||
-        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-    const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-    return isIOS && isSafari;
-}
-
-const subscribe = () => () => { }; // Browser detection doesn't change
-
-export function useIsIOSSafari(): boolean {
-    return useSyncExternalStore(
-        subscribe,
-        getIsIOSSafari,
-        () => false // Server snapshot
-    );
-}
-
-/**
  * Lock body scroll for modals on iOS Safari.
  * Uses position fixed approach to prevent scroll-behind.
+ * Pass the ref the opener saved the scroll position into; it is read when the lock starts,
+ * not during render.
  */
-export function useLockBodyScroll(lock: boolean, scrollY?: number): void {
+export function useLockBodyScroll(lock: boolean, scrollYRef?: RefObject<number>): void {
     useLayoutEffect(() => {
         if (!lock) return;
 
-        const lockedScrollY = scrollY ?? getScrollY();
+        const lockedScrollY = scrollYRef?.current ?? getScrollY();
         const body = document.body;
         const html = document.documentElement;
 
@@ -80,33 +57,12 @@ export function useLockBodyScroll(lock: boolean, scrollY?: number): void {
             body.style.overflow = originalBodyOverflow;
             html.style.overflow = originalHtmlOverflow;
 
-            // Restore scroll position
+            // Restore scroll position instantly. The global smooth scroll-behavior would
+            // otherwise animate from the top back down to the section.
+            const originalScrollBehavior = html.style.scrollBehavior;
+            html.style.scrollBehavior = "auto";
             window.scrollTo(0, lockedScrollY);
+            html.style.scrollBehavior = originalScrollBehavior;
         };
-    }, [lock, scrollY]);
-}
-
-/**
- * Safely observe elements with IntersectionObserver on iOS.
- * Handles iOS Safari quirks with delayed callbacks.
- */
-export function createSafeIntersectionObserver(
-    callback: IntersectionObserverCallback,
-    options?: IntersectionObserverInit
-): IntersectionObserver | null {
-    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
-        return null;
-    }
-
-    // iOS Safari has issues with large rootMargin values
-    // Clamp rootMargin to reasonable values
-    const safeOptions: IntersectionObserverInit = {
-        ...options,
-        // iOS Safari works better with explicit root: null
-        root: options?.root ?? null,
-        // Use threshold array for more reliable callbacks on iOS
-        threshold: options?.threshold ?? [0, 0.1, 0.25, 0.5],
-    };
-
-    return new IntersectionObserver(callback, safeOptions);
+    }, [lock, scrollYRef]);
 }

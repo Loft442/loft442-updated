@@ -20,7 +20,13 @@ export default function RevealOnScroll({ enabled = true }: Props) {
     const prefersReducedData =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-data: reduce)")?.matches;
-    const connection = typeof navigator !== "undefined" ? (navigator as any).connection : undefined;
+    // Network Information API isn't in the DOM typings yet.
+    const connection =
+      typeof navigator !== "undefined"
+        ? (navigator as Navigator & {
+            connection?: { saveData?: boolean; effectiveType?: string };
+          }).connection
+        : undefined;
     const saveData = connection?.saveData === true;
     const effectiveType = connection?.effectiveType;
     const slowConnection = effectiveType === "slow-2g" || effectiveType === "2g";

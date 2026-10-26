@@ -13,10 +13,7 @@ import {
   SITE_URL,
   localBusinessJsonLd,
 } from "@/lib/seo";
-import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -86,7 +83,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(inter.variable, "font-sans", geist.variable)}
+      className={cn(inter.variable, "font-sans")}
     >
       <body className="antialiased">
         <JsonLd data={localBusinessJsonLd()} />

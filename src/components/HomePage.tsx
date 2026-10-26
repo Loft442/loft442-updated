@@ -26,11 +26,11 @@ export default function HomePage() {
       <AvailabilityForm />
       <VideoSection />
       <Features />
-      <FAQ />
       <Testimonials />
       <Suspense fallback={<InstagramSectionSkeleton />}>
         <InstagramSection />
       </Suspense>
+      <FAQ />
       <CTA />
       <LocationSection />
       <Footer />

@@ -15,7 +15,6 @@
   --font-heading: var(--font-inter);
   --hero-no-glow-height: calc(100vw * 367 / 640);
   --hero-no-glow-buffer: 0px;
-  --rail-duration: 120s;
   --motion-start-delay: 16ms;
   /* desktop */
   --mask-fade-horizontal: linear-gradient(to right,
@@ -60,8 +59,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -1471,149 +1470,6 @@ html.reduce-motion .metallic-outline::after {
   transform: translateX(-50%) scaleX(1);
 }
 
-.video-rail {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  align-items: center;
-}
-
-.video-rail--left {
-  justify-content: flex-start;
-}
-
-.video-rail--right {
-  justify-content: flex-end;
-}
-
-.video-rail--scale-left {
-  transform: scale(0.6);
-  transform-origin: right center;
-}
-
-.video-rail--scale-right {
-  transform: scale(0.6);
-  transform-origin: left center;
-}
-
-.video-rail__motion,
-.video-rail__track {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.video-rail__motion {
-  display: inline-flex;
-  width: max-content;
-  animation-name: loft-rail-left;
-  animation-duration: var(--rail-duration, 12s);
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-play-state: running;
-
-  /* REMOVE contain entirely */
-  contain: none;
-}
-
-.video-rail__item {
-  flex: 0 0 auto;
-  /* REMOVE contain entirely */
-  contain: none;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.video-rail__item>span img,
-.video-rail__item img {
-  opacity: 0;
-  transition: opacity 200ms ease;
-}
-
-.video-rail__item.is-loaded>span img,
-.video-rail__item.is-loaded img {
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce), (prefers-reduced-data: reduce) {
-
-  .video-rail__item>span img,
-  .video-rail__item img {
-    transition: none;
-    opacity: 1;
-  }
-}
-
-.video-rail--reverse .video-rail__motion {
-  animation-name: loft-rail-right;
-}
-
-@keyframes loft-rail-left {
-  0% {
-    transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0);
-  }
-
-  100% {
-    transform: translate3d(-50%, 0, 0);
-    -webkit-transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes loft-rail-right {
-  0% {
-    transform: translate3d(-50%, 0, 0);
-    -webkit-transform: translate3d(-50%, 0, 0);
-  }
-
-  100% {
-    transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0);
-  }
-}
-
-/* WebKit-specific keyframes for Safari/Mac */
-@-webkit-keyframes loft-rail-left {
-  0% {
-    -webkit-transform: translate3d(0, 0, 0);
-  }
-
-  100% {
-    -webkit-transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@-webkit-keyframes loft-rail-right {
-  0% {
-    -webkit-transform: translate3d(-50%, 0, 0);
-  }
-
-  100% {
-    -webkit-transform: translate3d(0, 0, 0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce), (prefers-reduced-data: reduce) {
-  .video-rail__motion {
-    animation-duration: 18s;
-    /* slow, but still alive */
-  }
-}
-
-@media (max-width: 640px) {
-  .video-rail {
-    --rail-duration: 35s;
-  }
-}
-
-@media (min-width: 641px) {
-  .video-rail {
-    --rail-duration: 60s;
-  }
-}
-
 .gallery-shine {
   pointer-events: none;
   position: absolute;
@@ -1687,27 +1543,6 @@ html.reduce-motion .metallic-outline::after {
     transform: none;
   }
 
-}
-
-@media (prefers-reduced-motion: reduce), (prefers-reduced-data: reduce) {
-  :root {
-    --rail-duration: 18s;
-    /* only for reduced-motion users */
-  }
-}
-
-@media (max-width: 768px) {
-  :root {
-    --rail-duration: 100s;
-    /* mobile: slower */
-  }
-}
-
-@media (max-width: 480px) {
-  :root {
-    --rail-duration: 100s;
-    /* small phones: slower */
-  }
 }
 
 @media (max-width: 768px),

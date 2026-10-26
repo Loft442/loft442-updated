@@ -12,8 +12,9 @@ const securityHeaders = [
       "base-uri 'self'",
       "object-src 'none'",
       "frame-ancestors 'self'",
-      // Images (your site + Instagram/Behold CDNs + Google static)
-      "img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://behold.pictures https://*.behold.pictures https://maps.gstatic.com https://maps.google.com",
+      // Images (your site + Instagram CDN + Google static)
+      // A leading "*." already matches subdomains at any depth; "*.*." is invalid CSP.
+      "img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://maps.gstatic.com https://maps.google.com",
       // Video (Instagram Reels)
       "media-src 'self' https://*.cdninstagram.com https://*.fbcdn.net",
       // Scripts (Google Maps + Instagram embed if used)
@@ -42,10 +43,16 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["lucide-react"],
   },
   images: {
-    qualities: [75, 85, 90, 100],
-    formats: ["image/webp"],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    qualities: [75, 80, 85],
+    formats: ["image/avif", "image/webp"],
+    // The largest source image is 1920px wide, so wider variants only waste bytes.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Instagram feed images, resized so grid tiles don't download full originals.
+    remotePatterns: [
+      { protocol: "https", hostname: "**.cdninstagram.com" },
+      { protocol: "https", hostname: "**.fbcdn.net" },
+    ],
   },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];

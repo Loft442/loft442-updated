@@ -25,29 +25,25 @@ export default function Reveal({
   immediate = false,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [inView, setInView] = useState(false);
   const [done, setDone] = useState(false);
+  const visible = immediate || inView;
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) {
+    if (!node || immediate) {
       return;
     }
 
-    if (immediate) {
-      setVisible(true);
-      return;
-    }
-
-    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
-      setVisible(true);
-      return;
+    if (typeof IntersectionObserver === "undefined") {
+      const frameId = requestAnimationFrame(() => setInView(true));
+      return () => cancelAnimationFrame(frameId);
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisible(true);
+          setInView(true);
           observer.unobserve(entry.target);
         }
       },

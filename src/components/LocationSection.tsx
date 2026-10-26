@@ -70,8 +70,6 @@ export default function LocationSection() {
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
-                  priority={false}
-                  loading="eager"
                 />
               </div>
 

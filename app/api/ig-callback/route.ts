@@ -28,6 +28,19 @@ function text(body: string, status = 200) {
   });
 }
 
+function fail(reason: string) {
+  console.error(`[ig-callback] ${reason}`);
+  return text("Connection failed", 500);
+}
+
+async function readJson<T>(res: Response): Promise<T | null> {
+  try {
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(req: Request) {
   const code = new URL(req.url).searchParams.get("code");
   if (!code) {
@@ -51,28 +64,16 @@ export async function GET(req: Request) {
         body,
       },
     );
-
-    const shortText = await shortRes.text();
     if (!shortRes.ok) {
-      console.log(shortText);
-      return text("Connection failed", 500);
+      return fail(`Code exchange responded with ${shortRes.status}`);
     }
 
-    let shortData: ShortTokenPayload;
-    try {
-      shortData = JSON.parse(shortText) as ShortTokenPayload;
-    } catch {
-      console.log(shortText);
-      return text("Connection failed", 500);
-    }
-
-    const nested = shortData.data?.[0];
-    const shortToken = shortData.access_token ?? nested?.access_token;
-    const userId = shortData.user_id ?? nested?.user_id;
-
+    const shortData = await readJson<ShortTokenPayload>(shortRes);
+    const nested = shortData?.data?.[0];
+    const shortToken = shortData?.access_token ?? nested?.access_token;
+    const userId = shortData?.user_id ?? nested?.user_id;
     if (!shortToken) {
-      console.log(shortText);
-      return text("Connection failed", 500);
+      return fail("Code exchange response missing access_token");
     }
 
     const longUrl = new URL("https://graph.instagram.com/access_token");
@@ -81,53 +82,37 @@ export async function GET(req: Request) {
     longUrl.searchParams.set("access_token", shortToken);
 
     const longRes = await fetch(longUrl);
-    const longText = await longRes.text();
     if (!longRes.ok) {
-      console.log(longText);
-      return text("Connection failed", 500);
+      return fail(`Long-lived exchange responded with ${longRes.status}`);
     }
 
-    let longData: LongTokenPayload;
-    try {
-      longData = JSON.parse(longText) as LongTokenPayload;
-    } catch {
-      console.log(longText);
-      return text("Connection failed", 500);
-    }
-
-    if (!longData.access_token) {
-      console.log(longText);
-      return text("Connection failed", 500);
+    const longData = await readJson<LongTokenPayload>(longRes);
+    if (!longData?.access_token) {
+      return fail("Long-lived exchange response missing access_token");
     }
 
     if (!sanityWriteClient) {
-      console.log("Sanity write client is not configured");
-      return text("Connection failed", 500);
+      return fail("Sanity write client is not configured");
     }
 
-    try {
-      const now = new Date();
-      const expiresAt = new Date(
-        now.getTime() + (longData.expires_in ?? 0) * 1000,
-      ).toISOString();
+    const now = new Date();
+    const expiresAt = new Date(
+      now.getTime() + (longData.expires_in ?? 0) * 1000,
+    ).toISOString();
 
-      await sanityWriteClient.createOrReplace({
-        _id: TOKEN_DOC_ID,
-        _type: TOKEN_DOC_TYPE,
-        token: longData.access_token,
-        refreshedAt: now.toISOString(),
-        expiresAt,
-      });
-    } catch (error) {
-      console.log(error);
-      return text("Connection failed", 500);
-    }
+    await sanityWriteClient.createOrReplace({
+      _id: TOKEN_DOC_ID,
+      _type: TOKEN_DOC_TYPE,
+      token: longData.access_token,
+      refreshedAt: now.toISOString(),
+      expiresAt,
+    });
 
     console.log(`Instagram token saved for user ${userId}`);
 
     return text("Connected! You can close this page.");
   } catch (error) {
-    console.log(error);
+    console.error("[ig-callback] Unexpected error", error instanceof Error ? error.message : error);
     return text("Connection failed", 500);
   }
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import { ChevronDown, Gift, Heart, HeartHandshake, PartyPopper, Sparkles } from "lucide-react";
 
 const eventTypes = [
@@ -148,6 +149,20 @@ const panelContent: Record<
   },
 };
 
+const PANEL_IMAGE_SIZES = "(min-width: 768px) 40vw, 100vw";
+
+// Warm a panel's image on hover/focus so it is ready when the panel opens,
+// instead of downloading every panel image during the first page load.
+function preloadPanelImage(key: PanelKey) {
+  const { props } = getImageProps({
+    src: panelContent[key].imageSrc,
+    alt: "",
+    fill: true,
+    sizes: PANEL_IMAGE_SIZES,
+  });
+  preload(props.src, { as: "image", imageSrcSet: props.srcSet, imageSizes: props.sizes });
+}
+
 export default function EventTypes() {
   const [openKey, setOpenKey] = useState<PanelKey | null>(null);
   const [renderKey, setRenderKey] = useState<PanelKey | null>(null);
@@ -209,19 +224,6 @@ export default function EventTypes() {
       className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider -mt-[clamp(76px,12vh,180px)] pb-8 sm:pb-10 pt-[calc(4rem+clamp(76px,12vh,180px))] sm:pt-[calc(5rem+clamp(76px,12vh,180px))]"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="sr-only" aria-hidden="true">
-          {Object.values(panelContent).map((panel) => (
-            <Image
-              key={panel.panelId}
-              src={panel.imageSrc}
-              alt=""
-              width={800}
-              height={560}
-              sizes="(min-width: 768px) 40vw, 100vw"
-              loading="eager"
-            />
-          ))}
-        </div>
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-6 lg:gap-2 xl:gap-3">
           {eventTypes.map((event) => {
             const Icon = event.icon;
@@ -240,6 +242,8 @@ export default function EventTypes() {
                   aria-expanded={isExpandable ? isExpanded : undefined}
                   aria-controls={panelControls}
                   id={panelMeta?.triggerId}
+                  onPointerEnter={() => panelKey && preloadPanelImage(panelKey)}
+                  onFocus={() => panelKey && preloadPanelImage(panelKey)}
                   onClick={() => {
                     if (panelKey) {
                       handleTogglePanel(panelKey);
@@ -281,7 +285,7 @@ export default function EventTypes() {
                           src={panelMeta.imageSrc}
                           alt={panelMeta.imageAlt}
                           fill
-                          sizes="(min-width: 768px) 40vw, 100vw"
+                          sizes={PANEL_IMAGE_SIZES}
                           className="object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
@@ -315,7 +319,7 @@ export default function EventTypes() {
                   src={panelContent[renderKey].imageSrc}
                   alt={panelContent[renderKey].imageAlt}
                   fill
-                  sizes="(min-width: 768px) 40vw, 100vw"
+                  sizes={PANEL_IMAGE_SIZES}
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />

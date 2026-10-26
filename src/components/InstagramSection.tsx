@@ -1,10 +1,8 @@
-import { Clapperboard, Instagram, Layers } from "lucide-react";
+import Image from "next/image";
+import { ArrowUpRight, Instagram } from "lucide-react";
+import InstagramGrid from "@/components/InstagramGrid";
 import Reveal from "@/components/Reveal";
-import {
-  getInstagramFeed,
-  INSTAGRAM_PROFILE_URL,
-  type InstagramPost,
-} from "@/lib/instagram";
+import { getInstagramFeed, INSTAGRAM_PROFILE_URL, MEDIA_LIMIT } from "@/lib/instagram";
 
 const GOLD_RING =
   "linear-gradient(135deg, rgba(245,230,168,0.9), rgba(212,175,55,0.8), rgba(184,150,46,0.9))";
@@ -41,50 +39,6 @@ function FollowButton({ href }: { href: string }) {
   );
 }
 
-function PostTile({ post }: { post: InstagramPost }) {
-  const caption = post.caption.trim();
-  const label = post.isReel ? "Reel" : post.mediaType === "CAROUSEL_ALBUM" ? "Album" : "Post";
-  const alt = caption ? caption.slice(0, 120) : `Loft 442 Instagram ${label.toLowerCase()}`;
-
-  return (
-    <a
-      href={post.permalink}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`View ${label.toLowerCase()} on Instagram`}
-      className="group relative block aspect-square overflow-hidden rounded-sm border border-white/10 bg-white/5 transition-colors hover:border-[#d4af37]/50 focus-visible:border-[#d4af37] focus-visible:outline-none"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={post.imageUrl}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        referrerPolicy="no-referrer"
-        className="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-105"
-      />
-
-      {post.isReel ? (
-        <Clapperboard
-          className="absolute right-2 top-2 h-4 w-4 text-white [filter:drop-shadow(0_1px_3px_rgba(0,0,0,0.8))]"
-          aria-hidden="true"
-        />
-      ) : post.mediaType === "CAROUSEL_ALBUM" ? (
-        <Layers
-          className="absolute right-2 top-2 h-4 w-4 text-white [filter:drop-shadow(0_1px_3px_rgba(0,0,0,0.8))]"
-          aria-hidden="true"
-        />
-      ) : null}
-
-      {caption && (
-        <div className="pointer-events-none absolute inset-0 hidden items-end bg-gradient-to-t from-black/85 via-black/30 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 sm:flex">
-          <p className="line-clamp-3 text-xs leading-relaxed text-white/90">{caption}</p>
-        </div>
-      )}
-    </a>
-  );
-}
-
 export default async function InstagramSection() {
   const feed = await getInstagramFeed();
   if (!feed) return null;
@@ -114,15 +68,11 @@ export default async function InstagramSection() {
             >
               <span className="block rounded-full bg-black p-[3px]">
                 {profile.profilePictureUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={profile.profilePictureUrl}
                     alt={`${profile.name || profile.username} profile picture`}
                     width={96}
                     height={96}
-                    loading="lazy"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
                     className="h-20 w-20 rounded-full object-cover sm:h-24 sm:w-24"
                   />
                 ) : (
@@ -162,13 +112,21 @@ export default async function InstagramSection() {
 
         {posts.length > 0 && (
           <Reveal mode="media">
-            <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
-              {posts.map((post) => (
-                <PostTile key={post.id} post={post} />
-              ))}
-            </div>
+            <InstagramGrid posts={posts} />
           </Reveal>
         )}
+
+        <div className="mt-10 flex justify-center">
+          <a
+            href={profileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-sm border border-white/20 bg-white/5 px-5 py-3 text-[0.65rem] uppercase tracking-[0.35em] text-white/80 transition-[border-color,background-color,color,box-shadow,transform,opacity] duration-300 ease-out motion-reduce:transition-none hover:-translate-y-px hover:border-[#d4af37]/50 hover:bg-white/10 hover:text-white hover:shadow-[0_0_20px_rgba(212,175,55,0.15)]"
+          >
+            <span className="opacity-90">View more on Instagram</span>
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -190,7 +148,7 @@ export function InstagramSectionSkeleton() {
           </div>
         </div>
         <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
-          {Array.from({ length: 9 }).map((_, index) => (
+          {Array.from({ length: MEDIA_LIMIT }).map((_, index) => (
             <div key={index} className="aspect-square rounded-sm bg-white/5" />
           ))}
         </div>

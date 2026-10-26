@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 # Directory containing the images
-folder = os.path.dirname(os.path.abspath(__file__))
+folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", "images", "Carousel")
 
 # Scale factor for both width and height
 scale_factor = 0.5

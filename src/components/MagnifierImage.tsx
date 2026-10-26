@@ -129,6 +129,20 @@ export default function MagnifierImage({
   const [showMobileHint, setShowMobileHint] = useState(true);
   const [isTouchActive, setIsTouchActive] = useState(false);
 
+  // Reset layout and touch state when the mode or image changes. Adjusting state during
+  // render (instead of in an effect) avoids an extra render pass.
+  const layoutKey = `${magnifierEnabled}|${src}`;
+  const [prevLayoutKey, setPrevLayoutKey] = useState(layoutKey);
+  if (layoutKey !== prevLayoutKey) {
+    setPrevLayoutKey(layoutKey);
+    setLayoutReady(false);
+    if (magnifierEnabled) {
+      setTouchScale(MIN_TOUCH_SCALE);
+      setTouchTranslate({ x: 0, y: 0 });
+      setShowMobileHint(true);
+    }
+  }
+
   const touchGestureRef = useRef({
     initialDistance: 0,
     initialScale: MIN_TOUCH_SCALE,
@@ -530,7 +544,6 @@ export default function MagnifierImage({
   useLayoutEffect(() => {
     if (!magnifierEnabled) {
       layoutReadyRef.current = false;
-      setLayoutReady(false);
       lastLayoutRef.current = null;
       return;
     }
@@ -541,10 +554,12 @@ export default function MagnifierImage({
     if (!img || !pane || !gridRoot) return;
 
     layoutReadyRef.current = false;
-    setLayoutReady(false);
     lastLayoutRef.current = null;
 
     if (syncPaneSize()) {
+      // Measured the DOM synchronously in a layout effect; showing the pane in the same
+      // frame is what keeps it from flashing at the wrong size.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       markLayoutReady();
     }
 
@@ -576,14 +591,6 @@ export default function MagnifierImage({
       layoutReadyRef.current = false;
     };
   }, [magnifierEnabled, src, syncPaneSize, queueSyncPaneSize, markLayoutReady]);
-
-  useEffect(() => {
-    if (magnifierEnabled) {
-      setTouchScale(MIN_TOUCH_SCALE);
-      setTouchTranslate({ x: 0, y: 0 });
-      setShowMobileHint(true);
-    }
-  }, [magnifierEnabled, src]);
 
   useEffect(() => {
     if (magnifierEnabled) return;

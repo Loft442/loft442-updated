@@ -9,13 +9,21 @@ import styles from "./Carousel.module.css";
 export default function Carousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true },
-    [AutoScroll({ speed: 1.4, startDelay: 0, stopOnInteraction: false })]
+    [AutoScroll({ speed: 1.4, startDelay: 0, stopOnInteraction: false, playOnInit: false })]
   );
 
+  // Only animate while the carousel is on screen, so it isn't burning frames below the fold.
   useEffect(() => {
     const auto = emblaApi?.plugins()?.autoScroll;
-    if (!auto) return;
-    auto.play();
+    const root = emblaApi?.rootNode();
+    if (!auto || !root) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) auto.play();
+      else auto.stop();
+    });
+    observer.observe(root);
+    return () => observer.disconnect();
   }, [emblaApi]);
 
   // List of images in public/images
@@ -53,7 +61,6 @@ export default function Carousel() {
                 height={320}
                 className="h-full w-full object-cover"
                 sizes="(max-width: 640px) 160px, 240px"
-                priority={idx === 0}
                 draggable={false}
               />
             </div>

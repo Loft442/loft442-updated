@@ -72,7 +72,7 @@ export default function FlyerViewer({
     getServerSnapshot
   );
 
-  useLockBodyScroll(open, scrollYRef.current);
+  useLockBodyScroll(open, scrollYRef);
 
   const handleOpen = useCallback(() => {
     scrollYRef.current = getScrollY();
@@ -243,7 +243,7 @@ export default function FlyerViewer({
           alt={alt}
           fill
           priority
-          quality={90}
+          quality={80}
           sizes={imageSizes}
           className="object-contain object-center"
         />

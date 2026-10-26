@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# separate local project folder (already excluded from lint and tsconfig)
+/loft442/
+
+# Claude Code session worktrees
+/.claude/worktrees/

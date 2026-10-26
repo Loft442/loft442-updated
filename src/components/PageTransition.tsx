@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type AnimationEvent, type ReactNode } from "react";
+import { useState, type AnimationEvent, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 type PageTransitionProps = {
@@ -11,9 +11,12 @@ export default function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
   const [done, setDone] = useState(false);
 
-  useEffect(() => {
+  // Replay the enter animation on each route change.
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
     setDone(false);
-  }, [pathname]);
+  }
 
   const handleAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
     if (event.animationName !== "pageEnter") return;

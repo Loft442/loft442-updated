@@ -1,10 +1,17 @@
-import { unstable_cache } from "next/cache";
 import { sanityWriteClient } from "@/lib/sanityWriteClient";
 
 const GRAPH_URL = "https://graph.instagram.com";
 const API_VERSION = "v23.0";
-const REQUEST_TIMEOUT_MS = 5000;
-const MEDIA_LIMIT = 9;
+const REQUEST_TIMEOUT_MS = 8000;
+export const MEDIA_LIMIT = 12;
+// Pull a full page so older pinned posts can still be found.
+const FETCH_LIMIT = 50;
+
+// The API does not expose pins. Keep this in sync with the profile's pinned posts, in order.
+const PINNED_SHORTCODES = ["DTt_yUADFDI", "DPwpQ5SErHm", "DVKioLVjJj5"];
+
+// Posts left off the site, e.g. reels whose API thumbnail is a blank first frame.
+const HIDDEN_SHORTCODES = ["DaykY-UBG-t"];
 
 export const INSTAGRAM_CACHE_TAG = "instagram";
 export const INSTAGRAM_REVALIDATE_SECONDS = 3600;
@@ -16,12 +23,21 @@ const TOKEN_DOC_TYPE = "instagramToken";
 
 export type InstagramMediaType = "IMAGE" | "VIDEO" | "CAROUSEL_ALBUM";
 
+export type InstagramMedia = {
+  type: "IMAGE" | "VIDEO";
+  url: string;
+  posterUrl: string | null;
+  /** Instagram withheld the file (usually copyrighted audio). Play it on Instagram instead. */
+  requiresInstagram?: boolean;
+};
+
 export type InstagramPost = {
   id: string;
   caption: string;
   mediaType: InstagramMediaType;
   isReel: boolean;
   imageUrl: string;
+  media: InstagramMedia[];
   permalink: string;
   timestamp: string;
 };
@@ -56,15 +72,20 @@ type GraphProfile = {
   media_count?: number;
 };
 
-type GraphMedia = {
-  id?: string;
-  caption?: string;
+type GraphChild = {
   media_type?: string;
-  media_product_type?: string;
   media_url?: string;
   thumbnail_url?: string;
+};
+
+type GraphMedia = GraphChild & {
+  id?: string;
+  caption?: string;
+  media_product_type?: string;
+  is_shared_to_feed?: boolean;
   permalink?: string;
   timestamp?: string;
+  children?: { data?: GraphChild[] };
 };
 
 async function readStoredToken(): Promise<StoredToken | null> {
@@ -75,19 +96,23 @@ async function readStoredToken(): Promise<StoredToken | null> {
   );
 }
 
-const getCachedAccessToken = unstable_cache(
-  async (): Promise<string | null> => {
-    try {
-      const stored = await readStoredToken();
-      if (stored?.token) return stored.token;
-    } catch (error) {
-      console.error("[instagram] Failed to read stored token", error);
-    }
-    return process.env.INSTAGRAM_ACCESS_TOKEN || null;
-  },
-  ["instagram-access-token"],
-  { revalidate: INSTAGRAM_REVALIDATE_SECONDS, tags: [INSTAGRAM_CACHE_TAG] },
-);
+async function getAccessToken(): Promise<string | null> {
+  const envToken = process.env.INSTAGRAM_ACCESS_TOKEN || null;
+
+  // Local .env must win so a leftover Sanity/test token cannot keep serving the wrong account.
+  if (process.env.NODE_ENV !== "production" && envToken) {
+    return envToken;
+  }
+
+  try {
+    const stored = await readStoredToken();
+    if (stored?.token) return stored.token;
+  } catch (error) {
+    console.error("[instagram] Failed to read stored token", error);
+  }
+
+  return envToken;
+}
 
 async function graphGet<T>(path: string, params: Record<string, string>): Promise<T> {
   const url = new URL(`${GRAPH_URL}/${API_VERSION}/${path}`);
@@ -97,7 +122,9 @@ async function graphGet<T>(path: string, params: Record<string, string>): Promis
 
   const response = await fetch(url, {
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    next: { revalidate: INSTAGRAM_REVALIDATE_SECONDS, tags: [INSTAGRAM_CACHE_TAG] },
+    ...(process.env.NODE_ENV === "production"
+      ? { next: { revalidate: INSTAGRAM_REVALIDATE_SECONDS, tags: [INSTAGRAM_CACHE_TAG] } }
+      : { cache: "no-store" }),
   });
 
   if (!response.ok) {
@@ -107,12 +134,52 @@ async function graphGet<T>(path: string, params: Record<string, string>): Promis
   return (await response.json()) as T;
 }
 
+function toMedia(item: GraphChild): InstagramMedia | null {
+  if (item.media_type === "VIDEO") {
+    if (item.media_url) {
+      return { type: "VIDEO", url: item.media_url, posterUrl: item.thumbnail_url ?? null };
+    }
+    // Copyrighted audio: Instagram omits media_url and only returns a still.
+    return item.thumbnail_url
+      ? { type: "IMAGE", url: item.thumbnail_url, posterUrl: null, requiresInstagram: true }
+      : null;
+  }
+  return item.media_url
+    ? { type: "IMAGE", url: item.media_url, posterUrl: null }
+    : item.thumbnail_url
+      ? { type: "IMAGE", url: item.thumbnail_url, posterUrl: null }
+      : null;
+}
+
+function stillUrl(item: GraphChild): string | null {
+  // media_url on a video is an mp4. An <img> pointed at it renders blank.
+  if (item.media_type === "VIDEO") return item.thumbnail_url ?? null;
+  return item.media_url || item.thumbnail_url || null;
+}
+
+function coverUrl(item: GraphMedia): string | null {
+  const own = stillUrl(item);
+  if (own) return own;
+  const child = item.children?.data?.find((entry) => stillUrl(entry));
+  return child ? stillUrl(child) : null;
+}
+
+function shortcode(permalink: string | undefined): string | null {
+  return permalink?.match(/\/(?:p|reel|tv)\/([^/?#]+)/)?.[1] ?? null;
+}
+
 function normalizePost(item: GraphMedia): InstagramPost | null {
   const mediaType = item.media_type as InstagramMediaType | undefined;
   if (!item.id || !item.permalink || !mediaType) return null;
 
-  const imageUrl = mediaType === "VIDEO" ? item.thumbnail_url : item.media_url;
-  if (!imageUrl) return null;
+  // Keep the slot even when Instagram omits the file, so a missing post or reel
+  // is not replaced by the next item and the posted order stays intact.
+  const imageUrl = coverUrl(item) ?? "";
+
+  const sources = mediaType === "CAROUSEL_ALBUM" ? item.children?.data ?? [] : [item];
+  const media = sources
+    .map(toMedia)
+    .filter((entry): entry is InstagramMedia => entry !== null);
 
   return {
     id: item.id,
@@ -120,6 +187,17 @@ function normalizePost(item: GraphMedia): InstagramPost | null {
     mediaType,
     isReel: item.media_product_type === "REELS" || mediaType === "VIDEO",
     imageUrl,
+    media:
+      media.length > 0
+        ? media
+        : [
+            {
+              type: "IMAGE",
+              url: imageUrl,
+              posterUrl: null,
+              requiresInstagram: mediaType === "VIDEO" || !imageUrl,
+            },
+          ],
     permalink: item.permalink,
     timestamp: item.timestamp ?? "",
   };
@@ -127,7 +205,7 @@ function normalizePost(item: GraphMedia): InstagramPost | null {
 
 export async function getInstagramFeed(): Promise<InstagramFeed | null> {
   try {
-    const accessToken = await getCachedAccessToken();
+    const accessToken = await getAccessToken();
     if (!accessToken) return null;
 
     const [profile, media] = await Promise.all([
@@ -138,18 +216,67 @@ export async function getInstagramFeed(): Promise<InstagramFeed | null> {
       }),
       graphGet<{ data?: GraphMedia[] }>("me/media", {
         fields:
-          "id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp",
-        limit: String(MEDIA_LIMIT),
+          "id,caption,media_type,media_product_type,is_shared_to_feed,media_url,thumbnail_url,permalink,timestamp",
+        limit: String(FETCH_LIMIT),
         access_token: accessToken,
       }),
     ]);
 
     if (!profile.username) return null;
 
-    const posts = (media.data ?? [])
+    // Reels hidden from the profile grid only live in the Reels tab, so skip them here too.
+    const onGrid = [...(media.data ?? [])]
+      .filter(
+        (item) =>
+          item.is_shared_to_feed !== false &&
+          !HIDDEN_SHORTCODES.includes(shortcode(item.permalink) ?? ""),
+      )
+      .sort(
+        (a, b) => Date.parse(b.timestamp ?? "") - Date.parse(a.timestamp ?? ""),
+      );
+
+    // Mirror the profile: pinned posts first, then everything else newest first.
+    const pinned = PINNED_SHORTCODES.map((code) =>
+      onGrid.find((item) => shortcode(item.permalink) === code),
+    ).filter((item): item is GraphMedia => item !== undefined);
+    const rest = onGrid.filter((item) => !pinned.includes(item));
+    const newest = [...pinned, ...rest].slice(0, MEDIA_LIMIT);
+
+    const withCovers = await Promise.all(
+      newest.map(async (item) => {
+        if (!item.id) return item;
+        let next = item;
+
+        if (item.media_type === "VIDEO" && !item.thumbnail_url) {
+          try {
+            const detail = await graphGet<{ thumbnail_url?: string }>(item.id, {
+              fields: "thumbnail_url",
+              access_token: accessToken,
+            });
+            if (detail.thumbnail_url) next = { ...next, thumbnail_url: detail.thumbnail_url };
+          } catch (error) {
+            console.error("[instagram] Failed to load video thumbnail", error);
+          }
+        }
+
+        if (next.media_type !== "CAROUSEL_ALBUM") return next;
+
+        try {
+          const children = await graphGet<{ data?: GraphChild[] }>(`${item.id}/children`, {
+            fields: "media_type,media_url,thumbnail_url",
+            access_token: accessToken,
+          });
+          return { ...next, children };
+        } catch (error) {
+          console.error("[instagram] Failed to load album slides", error);
+          return next;
+        }
+      }),
+    );
+
+    const posts = withCovers
       .map(normalizePost)
-      .filter((post): post is InstagramPost => post !== null)
-      .slice(0, MEDIA_LIMIT);
+      .filter((post): post is InstagramPost => post !== null);
 
     return {
       profile: {

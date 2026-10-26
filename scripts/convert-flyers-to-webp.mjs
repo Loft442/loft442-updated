@@ -2,7 +2,10 @@ import sharp from "sharp";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../public/images/Flyer"
+);
 
 const flyers = [
   {

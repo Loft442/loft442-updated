@@ -1,6 +1,6 @@
 import Reveal from "@/components/Reveal";
 
-const GOOGLE_RATING = 4.7;
+const GOOGLE_RATING = 4.8;
 
 type Review = {
   name: string;

@@ -101,7 +101,7 @@ export default function GalleryPage() {
   }, []);
 
   // Use iOS-safe body scroll locking
-  useLockBodyScroll(activeIndex !== null, scrollYRef.current);
+  useLockBodyScroll(activeIndex !== null, scrollYRef);
 
   const handleOpenGallery = useCallback((index: number) => {
     scrollYRef.current = getScrollY();
@@ -386,7 +386,7 @@ export default function GalleryPage() {
                       sizes="(max-width: 640px) 92vw, 900px"
                       className="object-contain object-center"
                       style={{ objectFit: 'contain' }}
-                      quality={90}
+                      quality={80}
                     />
                   </div>
                 </div>
