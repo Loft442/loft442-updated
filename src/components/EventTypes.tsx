@@ -184,8 +184,10 @@ export default function EventTypes() {
         srcSet: imageProps.srcSet,
         sizes: imageProps.sizes,
       },
+      // Keys: these elements cross the server/client boundary inside an array, so React
+      // validates them like list children.
       label: (
-        <div className="flex min-w-0 items-center gap-1.5 sm:gap-2 lg:gap-1.5 xl:gap-2">
+        <div key="label" className="flex min-w-0 items-center gap-1.5 sm:gap-2 lg:gap-1.5 xl:gap-2">
           <Icon
             className={`h-4 w-4 shrink-0 sm:h-5 sm:w-5 lg:h-4 lg:w-4 xl:h-5 xl:w-5 ${iconStyles[event.title]?.color ?? "text-white/80"
               } ${iconStyles[event.title]?.glow ?? ""} ${iconStyles[event.title]?.glowActive ?? ""
@@ -197,9 +199,9 @@ export default function EventTypes() {
         </div>
       ),
       chevron: (
-        <ChevronDown className="h-3 w-3 shrink-0 text-white/45 transition group-hover:text-white/65 group-aria-expanded:rotate-180 sm:h-3.5 sm:w-3.5 lg:h-3 lg:w-3 xl:h-4 xl:w-4" />
+        <ChevronDown key="chevron" className="h-3 w-3 shrink-0 text-white/45 transition group-hover:text-white/65 group-aria-expanded:rotate-180 sm:h-3.5 sm:w-3.5 lg:h-3 lg:w-3 xl:h-4 xl:w-4" />
       ),
-      body: <PanelBody panel={panel} />,
+      body: <PanelBody key="body" panel={panel} />,
     };
   });
 

@@ -8,7 +8,7 @@ type Props = {
   enabled?: boolean;
 };
 
-const PENDING_SELECTOR = ".reveal:not(.is-visible):not(.reveal-done):not([data-reveal-bound])";
+const PENDING_SELECTOR = ".reveal:not(.is-visible):not(.reveal-done)";
 
 function getReduceMotion() {
   const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
@@ -73,10 +73,15 @@ export default function RevealOnScroll({ enabled = true }: Props) {
           }
         );
 
+    // Track bound elements outside the DOM: streamed sections can be bound before React
+    // hydrates them, and an added attribute would cause a hydration mismatch.
+    const bound = new WeakSet<HTMLElement>();
+
     const bindPending = () => {
       const nodes = document.querySelectorAll<HTMLElement>(PENDING_SELECTOR);
       nodes.forEach((el) => {
-        el.dataset.revealBound = "";
+        if (bound.has(el)) return;
+        bound.add(el);
         if (reduceMotion) {
           el.classList.add("is-visible", "reveal-done");
         } else if (el.dataset.revealImmediate !== undefined) {
@@ -112,9 +117,6 @@ export default function RevealOnScroll({ enabled = true }: Props) {
       if (frame !== null) cancelAnimationFrame(frame);
       mo.disconnect();
       io?.disconnect();
-      document
-        .querySelectorAll<HTMLElement>("[data-reveal-bound]")
-        .forEach((el) => delete el.dataset.revealBound);
     };
   }, [enabled]);
 
