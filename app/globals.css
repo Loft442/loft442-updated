@@ -6,8 +6,10 @@
 
 :root {
   color-scheme: dark;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Dark site theme. html and the hero paint --background, so a light value here flashes
+     white before the hero image loads. */
+  --background: #070708;
+  --foreground: #f5f5f5;
   --muted: oklch(0.97 0 0);
   --border: oklch(0.922 0 0);
   --accent: oklch(0.97 0 0);
