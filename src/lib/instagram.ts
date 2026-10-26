@@ -128,7 +128,11 @@ async function graphGet<T>(path: string, params: Record<string, string>): Promis
   });
 
   if (!response.ok) {
-    throw new Error(`Instagram API ${path} responded with ${response.status}`);
+    const body = (await response.json().catch(() => null)) as
+      | { error?: { message?: string; code?: number } }
+      | null;
+    const detail = body?.error ? `: ${body.error.message} (code ${body.error.code})` : "";
+    throw new Error(`Instagram API ${path} responded with ${response.status}${detail}`);
   }
 
   return (await response.json()) as T;
