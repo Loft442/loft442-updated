@@ -141,15 +141,30 @@ export default function GalleryLightbox({
         <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-black/40">
           <div className="absolute inset-0 p-[clamp(0px,0.75svh,16px)]">
             <div className="relative h-full w-full">
-              <Image
-                src={activeItem.src}
-                alt={activeItem.alt ?? ""}
-                fill
-                sizes="(max-width: 640px) 92vw, 900px"
-                className="object-contain object-center"
-                style={{ objectFit: 'contain' }}
-                quality={80}
-              />
+              {activeItem.type === "video" ? (
+                <video
+                  key={activeItem.src}
+                  src={activeItem.src}
+                  poster={activeItem.poster}
+                  controls
+                  autoPlay
+                  muted
+                  playsInline
+                  preload="metadata"
+                  aria-label={activeItem.alt}
+                  className="absolute inset-0 h-full w-full object-contain object-center"
+                />
+              ) : (
+                <Image
+                  src={activeItem.src}
+                  alt={activeItem.alt ?? ""}
+                  fill
+                  sizes="(max-width: 640px) 92vw, 900px"
+                  className="object-contain object-center"
+                  style={{ objectFit: 'contain' }}
+                  quality={80}
+                />
+              )}
             </div>
           </div>
           <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />

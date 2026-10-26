@@ -1,10 +1,14 @@
 export type GalleryItemCategory = "Weddings" | "Private Events" | "Birthdays" | "Kids Parties" | "Baby Shower";
 
 export type GalleryItem = {
-  id: number;
+  id: number | string;
   src: string;
   alt: string;
   category: GalleryItemCategory;
+  /** Defaults to "image". Videos come from client uploads in the Studio. */
+  type?: "image" | "video";
+  /** Cover image for videos. */
+  poster?: string;
 };
 
 export const galleryItems: GalleryItem[] = [

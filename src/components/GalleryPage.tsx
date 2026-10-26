@@ -37,6 +37,8 @@ type MasonryGalleryItem = {
   id: string;
   img: string;
   alt: string;
+  type: "image" | "video";
+  poster?: string;
   url: string;
   height: number;
   index: number;
@@ -68,6 +70,8 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
         id: String(item.id),
         img: item.src,
         alt: item.alt,
+        type: item.type ?? "image",
+        poster: item.poster,
         url: "",
         height: masonryHeights[index % masonryHeights.length],
         index,

@@ -1,10 +1,18 @@
 import type { NextConfig } from "next";
 
-const securityHeaders = [
+const baseHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=31536000; includeSubDomains; preload",
+  },
+];
+
+const siteHeaders = [
+  ...baseHeaders,
   {
     key: "Content-Security-Policy",
     value: [
@@ -12,11 +20,11 @@ const securityHeaders = [
       "base-uri 'self'",
       "object-src 'none'",
       "frame-ancestors 'self'",
-      // Images (your site + Instagram CDN + Google static)
+      // Images (your site + Instagram CDN + Sanity gallery uploads + Google static)
       // A leading "*." already matches subdomains at any depth; "*.*." is invalid CSP.
-      "img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://maps.gstatic.com https://maps.google.com",
-      // Video (Instagram Reels)
-      "media-src 'self' https://*.cdninstagram.com https://*.fbcdn.net",
+      "img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://cdn.sanity.io https://maps.gstatic.com https://maps.google.com",
+      // Video (Instagram Reels + Sanity gallery uploads)
+      "media-src 'self' https://*.cdninstagram.com https://*.fbcdn.net https://cdn.sanity.io",
       // Scripts (Google Maps + Instagram embed if used)
       "script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://maps.gstatic.com https://www.instagram.com",
       // Styles (Tailwind/inline styles + Google)
@@ -27,9 +35,28 @@ const securityHeaders = [
       "connect-src 'self' https://maps.googleapis.com https://maps.gstatic.com",
     ].join("; "),
   },
+];
+
+// Sanity Studio talks to the Sanity API (HTTPS + live-update websockets), loads
+// asset previews from the Sanity CDN, and uses blob: workers and previews.
+const studioHeaders = [
+  ...baseHeaders,
   {
-    key: "Strict-Transport-Security",
-    value: "max-age=31536000; includeSubDomains; preload",
+    key: "Content-Security-Policy",
+    value: [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'self'",
+      "img-src 'self' data: blob: https://*.sanity.io https://*.sanity-cdn.com https://lh3.googleusercontent.com https://avatars.githubusercontent.com",
+      "media-src 'self' blob: https://*.sanity.io https://*.sanity-cdn.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.sanity-cdn.com",
+      "style-src 'self' 'unsafe-inline' https://*.sanity-cdn.com",
+      "font-src 'self' data: https://*.sanity-cdn.com",
+      "worker-src 'self' blob:",
+      "frame-src 'self' https://*.sanity.io",
+      "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://*.sanity-cdn.com",
+    ].join("; "),
   },
 ];
 
@@ -52,10 +79,18 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "**.cdninstagram.com" },
       { protocol: "https", hostname: "**.fbcdn.net" },
+      // Client gallery uploads from Sanity Studio.
+      { protocol: "https", hostname: "cdn.sanity.io" },
     ],
   },
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    // Browsers enforce every CSP header they receive, so /studio must be excluded
+    // from the site policy rather than given a second, looser one.
+    return [
+      { source: "/((?!studio(?:/|$)).*)", headers: siteHeaders },
+      { source: "/studio", headers: studioHeaders },
+      { source: "/studio/:path*", headers: studioHeaders },
+    ];
   },
 };
 

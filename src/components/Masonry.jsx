@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import { Play } from "lucide-react";
 
 import "./Masonry.css";
 
@@ -209,7 +210,11 @@ const Masonry = ({
             className="item-wrapper"
             role="button"
             tabIndex={0}
-            aria-label={item.alt ? `Open image: ${item.alt}` : undefined}
+            aria-label={
+              item.alt
+                ? `${item.type === "video" ? "Play video" : "Open image"}: ${item.alt}`
+                : undefined
+            }
             style={{
               width: item.w,
               height: item.h,
@@ -225,15 +230,46 @@ const Masonry = ({
             }}
           >
             <div className="item-img">
-              <Image
-                src={item.img}
-                alt={item.alt ?? ""}
-                fill
-                sizes={IMAGE_SIZES}
-                quality={75}
-                loading="lazy"
-                className="object-cover object-center"
-              />
+              {item.type === "video" ? (
+                <>
+                  {item.poster ? (
+                    <Image
+                      src={item.poster}
+                      alt={item.alt ?? ""}
+                      fill
+                      sizes={IMAGE_SIZES}
+                      quality={75}
+                      loading="lazy"
+                      className="object-cover object-center"
+                    />
+                  ) : (
+                    // No cover image: show the video's first frame.
+                    <video
+                      src={`${item.img}#t=0.1`}
+                      muted
+                      playsInline
+                      preload="metadata"
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover object-center"
+                    />
+                  )}
+                  <span className="pointer-events-none absolute inset-0 grid place-items-center">
+                    <span className="rounded-full border border-white/40 bg-black/50 p-3 text-white backdrop-blur-sm">
+                      <Play className="h-5 w-5 translate-x-px fill-white" aria-hidden="true" />
+                    </span>
+                  </span>
+                </>
+              ) : (
+                <Image
+                  src={item.img}
+                  alt={item.alt ?? ""}
+                  fill
+                  sizes={IMAGE_SIZES}
+                  quality={75}
+                  loading="lazy"
+                  className="object-cover object-center"
+                />
+              )}
               {colorShiftOnHover && (
                 <div
                   className="color-overlay"
