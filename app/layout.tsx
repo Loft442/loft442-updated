@@ -5,6 +5,7 @@ import NavbarVisibility from "@/components/NavbarVisibility";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import InstagramFloatingButton from "@/components/InstagramFloatingButton";
 import JsonLd from "@/components/JsonLd";
+import GoogleAdsTag from "@/components/GoogleAdsTag";
 import { inter } from "@/lib/fonts";
 import {
   DEFAULT_OG_IMAGE,
@@ -86,6 +87,7 @@ export default function RootLayout({
       className={cn(inter.variable, "font-sans")}
     >
       <body className="antialiased">
+        <GoogleAdsTag />
         <JsonLd data={localBusinessJsonLd()} />
         <NavbarVisibility />
         <RevealOnScroll />

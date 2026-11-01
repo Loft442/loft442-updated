@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import Footer from "@/components/Footer";
 import PartyTypeSelect from "@/components/ui/PartyTypeSelect";
+import { trackSendRequestConversion } from "@/lib/googleAds";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -204,6 +205,8 @@ export default function SchedulePage() {
       if (!response.ok || !data?.ok) {
         throw new Error("Request failed");
       }
+
+      trackSendRequestConversion();
 
       setForm({
         firstName: "",
