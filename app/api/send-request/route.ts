@@ -1,7 +1,14 @@
 export const runtime = "nodejs";
 
+import { after } from "next/server";
 import { Resend } from "resend";
 import EventRequestNotification from "@/emails/EventRequestNotification";
+import {
+  flushPostHogLogs,
+  logEventRequestEmailConfigured,
+  logEventRequestEmailFailed,
+  logEventRequestEmailSent,
+} from "../../../instrumentation";
 
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,6 +58,12 @@ const getClientIp = (request: Request) => {
     request.headers.get("x-real-ip") ||
     "unknown"
   );
+};
+
+const flushPostHogLogsAfterResponse = () => {
+  after(async () => {
+    await flushPostHogLogs();
+  });
 };
 
 export async function POST(request: Request) {
@@ -161,6 +174,9 @@ export async function POST(request: Request) {
 
   if (!RESEND_API_KEY || !LEADS_TO_EMAIL) {
     console.error("[send-request] RESEND_API_KEY or LEADS_TO_EMAIL is not configured");
+    if (logEventRequestEmailConfigured()) {
+      flushPostHogLogsAfterResponse();
+    }
     return Response.json({ ok: false, error: "Email service not configured." }, { status: 500 });
   }
 
@@ -205,12 +221,21 @@ ${messageText}
 
     if (error) {
       console.error("[send-request] Resend returned an error:", error.name, error.message);
+      if (logEventRequestEmailFailed()) {
+        flushPostHogLogsAfterResponse();
+      }
       return Response.json({ ok: false, error: "Email send failed." }, { status: 500 });
     }
 
+    if (logEventRequestEmailSent()) {
+      flushPostHogLogsAfterResponse();
+    }
     return Response.json({ ok: true, id: data?.id });
   } catch (sendError) {
     console.error("[send-request] Exception while sending email:", sendError);
+    if (logEventRequestEmailFailed()) {
+      flushPostHogLogsAfterResponse();
+    }
     return Response.json({ ok: false, error: "Email send failed." }, { status: 500 });
   }
 }

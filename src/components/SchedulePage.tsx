@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import posthog from "posthog-js";
 import Reveal from "@/components/Reveal";
 import Footer from "@/components/Footer";
 import PartyTypeSelect from "@/components/ui/PartyTypeSelect";
@@ -214,6 +215,9 @@ export default function SchedulePage() {
       }
 
       trackSendRequestConversion();
+      posthog.capture("event_request_submitted", {
+        party_type: form.partyType,
+      });
 
       setForm({
         firstName: "",

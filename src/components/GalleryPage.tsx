@@ -8,6 +8,7 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
+import posthog from "posthog-js";
 import Masonry from "@/components/Masonry";
 import Reveal from "@/components/Reveal";
 import type { GalleryItem, GalleryItemCategory } from "@/lib/galleryItems";
@@ -83,17 +84,31 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
 
   // Reset active index when category changes (in event handler, not effect)
   const handleCategoryChange = useCallback((category: GalleryCategory) => {
+    if (category === activeCategory) {
+      return;
+    }
+
+    posthog.capture("gallery_category_selected", { category });
     setActiveCategory(category);
     setActiveIndex(null);
-  }, []);
+  }, [activeCategory]);
 
   // Use iOS-safe body scroll locking
   useLockBodyScroll(activeIndex !== null, scrollYRef);
 
   const handleOpenGallery = useCallback((index: number) => {
+    const item = filteredItems[index];
+    if (!item) {
+      return;
+    }
+
+    posthog.capture("gallery_item_opened", {
+      category: item.category,
+      content_type: item.type ?? "image",
+    });
     scrollYRef.current = getScrollY();
     setActiveIndex(index);
-  }, []);
+  }, [filteredItems]);
 
   const handleClose = useCallback(() => {
     setActiveIndex(null);

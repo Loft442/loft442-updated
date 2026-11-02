@@ -32,9 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# vercel / netlify local state
+.vercel
+.netlify
 
 # vercel
-.vercel
 
 # typescript
 *.tsbuildinfo
@@ -45,3 +49,4 @@ next-env.d.ts
 
 # Claude Code session worktrees
 /.claude/worktrees/
+.env.local

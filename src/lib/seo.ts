@@ -6,7 +6,7 @@ export const SITE_NAME = "LOFT 442";
 export const SITE_DESCRIPTION =
   "LOFT 442 is a veteran-owned event venue designed for elegant weddings, corporate events, repass gatherings, and private celebrations in Elmont, NY.";
 export const SITE_EMAIL = "events@loft442.com";
-export const SITE_PHONE = "+1-555-123-4420";
+export const SITE_PHONE = "+1-347-579-6578";
 export const SITE_INSTAGRAM = "https://www.instagram.com/loft.442/";
 
 export const SITE_ADDRESS = {
