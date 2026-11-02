@@ -1,8 +1,12 @@
 const GOOGLE_ADS_ID_PATTERN = /^AW-\d+$/;
+const GA4_ID_PATTERN = /^G-[A-Z0-9]+$/;
 const CONVERSION_LABEL_PATTERN = /^[A-Za-z0-9_-]+$/;
 
 /** Google tag for the Loft 442 Ads account (conversion tracking id 17363960945). */
 const DEFAULT_GOOGLE_ADS_ID = "AW-17363960945";
+
+/** Google Analytics 4 measurement ID for loft442.com. */
+const DEFAULT_GA4_MEASUREMENT_ID = "G-FE6GS4M5Z9";
 
 /**
  * Website conversion "Book appointment".
@@ -21,6 +25,12 @@ export function getGoogleAdsId() {
   const configured = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim() ?? "";
   if (!configured) return DEFAULT_GOOGLE_ADS_ID;
   return GOOGLE_ADS_ID_PATTERN.test(configured) ? configured : "";
+}
+
+export function getGa4MeasurementId() {
+  const configured = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID?.trim() ?? "";
+  if (!configured) return DEFAULT_GA4_MEASUREMENT_ID;
+  return GA4_ID_PATTERN.test(configured) ? configured : "";
 }
 
 export function trackSendRequestConversion() {

@@ -1,14 +1,21 @@
 import Script from "next/script";
-import { getGoogleAdsId } from "@/lib/googleAds";
+import { getGa4MeasurementId, getGoogleAdsId } from "@/lib/googleAds";
 
 export default function GoogleAdsTag() {
-  const id = getGoogleAdsId();
-  if (!id) return null;
+  const adsId = getGoogleAdsId();
+  const ga4Id = getGa4MeasurementId();
+  const primaryId = adsId || ga4Id;
+  if (!primaryId) return null;
+
+  const configCalls = [adsId, ga4Id]
+    .filter(Boolean)
+    .map((id) => `gtag('config', '${id}');`)
+    .join("\n");
 
   return (
     <>
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${primaryId}`}
         strategy="afterInteractive"
       />
       <Script id="google-ads-gtag" strategy="afterInteractive">
@@ -16,7 +23,7 @@ export default function GoogleAdsTag() {
 function gtag(){dataLayer.push(arguments);}
 window.gtag = gtag;
 gtag('js', new Date());
-gtag('config', '${id}');`}
+${configCalls}`}
       </Script>
     </>
   );
