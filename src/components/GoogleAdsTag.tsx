@@ -1,15 +1,27 @@
 import Script from "next/script";
-import { getGa4MeasurementId, getGoogleAdsId } from "@/lib/googleAds";
+import {
+  getGa4MeasurementId,
+  getGoogleAdsId,
+  getPhoneConversionConfig,
+} from "@/lib/googleAds";
 
 export default function GoogleAdsTag() {
   const adsId = getGoogleAdsId();
   const ga4Id = getGa4MeasurementId();
+  const phoneConversion = getPhoneConversionConfig();
   const primaryId = adsId || ga4Id;
   if (!primaryId) return null;
 
-  const configCalls = [adsId, ga4Id]
+  const configCalls = [
+    adsId ? `gtag('config', '${adsId}');` : "",
+    ga4Id ? `gtag('config', '${ga4Id}');` : "",
+    phoneConversion
+      ? `gtag('config', '${phoneConversion.sendTo}', {
+  'phone_conversion_number': '${phoneConversion.phoneNumber}'
+});`
+      : "",
+  ]
     .filter(Boolean)
-    .map((id) => `gtag('config', '${id}');`)
     .join("\n");
 
   return (

@@ -8,6 +8,10 @@ const DEFAULT_GOOGLE_ADS_ID = "AW-17363960945";
 /** Google Analytics 4 measurement ID for loft442.com. */
 const DEFAULT_GA4_MEASUREMENT_ID = "G-FE6GS4M5Z9";
 
+/** Website call conversion: AW id + label from Google Ads. */
+const DEFAULT_PHONE_CONVERSION_SEND_TO = "AW-17363960945/qWXZCMDUprAdEPGI5NdA";
+const DEFAULT_PHONE_CONVERSION_NUMBER = "(347) 579-6578";
+
 /**
  * Website conversion "Book appointment".
  * Google's event snippet sends this event; the account has no AW conversion label.
@@ -31,6 +35,20 @@ export function getGa4MeasurementId() {
   const configured = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID?.trim() ?? "";
   if (!configured) return DEFAULT_GA4_MEASUREMENT_ID;
   return GA4_ID_PATTERN.test(configured) ? configured : "";
+}
+
+export function getPhoneConversionConfig() {
+  const sendTo =
+    process.env.NEXT_PUBLIC_GOOGLE_ADS_PHONE_CONVERSION_SEND_TO?.trim() ||
+    DEFAULT_PHONE_CONVERSION_SEND_TO;
+  const phoneNumber =
+    process.env.NEXT_PUBLIC_GOOGLE_ADS_PHONE_CONVERSION_NUMBER?.trim() ||
+    DEFAULT_PHONE_CONVERSION_NUMBER;
+
+  if (!/^AW-\d+\/[A-Za-z0-9_-]+$/.test(sendTo)) return null;
+  if (!phoneNumber) return null;
+
+  return { sendTo, phoneNumber };
 }
 
 export function trackSendRequestConversion() {
