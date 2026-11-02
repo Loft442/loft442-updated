@@ -25,6 +25,7 @@ type FieldName =
   | "partyType"
   | "phone"
   | "email"
+  | "hearAboutUs"
   | "message";
 
 const requiredFields: FieldName[] = [
@@ -33,6 +34,7 @@ const requiredFields: FieldName[] = [
   "partyType",
   "phone",
   "email",
+  "hearAboutUs",
 ];
 
 const FIELD_MAX_LENGTH: Record<FieldName, number> = {
@@ -41,6 +43,7 @@ const FIELD_MAX_LENGTH: Record<FieldName, number> = {
   partyType: 60,
   phone: 20,
   email: 254,
+  hearAboutUs: 60,
   message: 1000,
 };
 
@@ -101,6 +104,7 @@ export default function SchedulePage() {
     partyType: "",
     phone: "",
     email: "",
+    hearAboutUs: "",
     message: "",
   });
   const [touched, setTouched] = useState<Record<FieldName, boolean>>({
@@ -109,6 +113,7 @@ export default function SchedulePage() {
     partyType: false,
     phone: false,
     email: false,
+    hearAboutUs: false,
     message: false,
   });
   const [submitAttempted, setSubmitAttempted] = useState(false);
@@ -139,6 +144,7 @@ export default function SchedulePage() {
       partyType: form.partyType ? "" : "Required",
       phone: phoneError,
       email: emailError,
+      hearAboutUs: form.hearAboutUs.trim() ? "" : "Required",
       message: "",
     };
   }, [form]);
@@ -195,6 +201,7 @@ export default function SchedulePage() {
           partyType: form.partyType,
           phone: form.phone.trim(),
           email: form.email.trim(),
+          hearAboutUs: form.hearAboutUs.trim(),
           message: form.message.trim(),
           website: honeypot,
         }),
@@ -214,6 +221,7 @@ export default function SchedulePage() {
         partyType: "",
         phone: "",
         email: "",
+        hearAboutUs: "",
         message: "",
       });
       setTouched({
@@ -222,6 +230,7 @@ export default function SchedulePage() {
         partyType: false,
         phone: false,
         email: false,
+        hearAboutUs: false,
         message: false,
       });
       setSubmitAttempted(false);
@@ -485,6 +494,34 @@ export default function SchedulePage() {
                   errorId="partyType-error"
                   reserveErrorSpace
                 />
+
+                <label className={formLabelClass}>
+                  How Did You Hear About Us
+                  <input
+                    type="text"
+                    maxLength={FIELD_MAX_LENGTH.hearAboutUs}
+                    placeholder="Instagram, Google, friend, etc."
+                    value={form.hearAboutUs}
+                    onChange={(event) =>
+                      updateField("hearAboutUs", event.target.value)
+                    }
+                    onBlur={() => markTouched("hearAboutUs")}
+                    aria-invalid={Boolean(fieldError("hearAboutUs"))}
+                    aria-describedby="hearAboutUs-error"
+                    className={`${baseInputClass} ${
+                      fieldError("hearAboutUs") ? errorInputClass : ""
+                    }`}
+                  />
+                  <span
+                    id="hearAboutUs-error"
+                    aria-live="polite"
+                    className={`${errorTextClass} ${
+                      fieldError("hearAboutUs") ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    {fieldError("hearAboutUs")}
+                  </span>
+                </label>
 
                 <div className="flex flex-col gap-4">
                   <label className={formLabelClass}>

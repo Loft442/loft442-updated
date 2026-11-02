@@ -14,8 +14,10 @@ const MAX_FIELD_LENGTH = {
   partyType: 60,
   phone: 20,
   email: 254,
+  hearAboutUs: 60,
   message: 1000,
 } as const;
+
 // NOTE: In-memory store is reset on every cold-start in serverless environments (e.g. Vercel).
 // For production-grade rate limiting, replace this with a Redis/Upstash store.
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
@@ -27,6 +29,7 @@ type RequestPayload = {
   partyType?: string;
   phone?: string;
   email?: string;
+  hearAboutUs?: string;
   message?: string;
   website?: string;
 };
@@ -102,6 +105,7 @@ export async function POST(request: Request) {
   const email = clean(payload.email);
   const message = clean(payload.message);
   const partyType = clean(payload.partyType);
+  const hearAboutUs = clean(payload.hearAboutUs);
 
   const lengthViolations = [
     ["firstName", firstName.length, MAX_FIELD_LENGTH.firstName],
@@ -109,6 +113,7 @@ export async function POST(request: Request) {
     ["partyType", partyType.length, MAX_FIELD_LENGTH.partyType],
     ["phone", phone.length, MAX_FIELD_LENGTH.phone],
     ["email", email.length, MAX_FIELD_LENGTH.email],
+    ["hearAboutUs", hearAboutUs.length, MAX_FIELD_LENGTH.hearAboutUs],
     ["message", message.length, MAX_FIELD_LENGTH.message],
   ].filter(([, length, max]) => length > max);
 
@@ -130,6 +135,7 @@ export async function POST(request: Request) {
     ["partyType", partyType],
     ["phone", phone],
     ["email", email],
+    ["hearAboutUs", hearAboutUs],
   ].filter(([, value]) => !value || !String(value).trim());
 
   if (missing.length > 0) {
@@ -170,6 +176,7 @@ Email: ${email}
 Phone: ${phone}
 Type of Event: ${partyType || "Unknown"}
 Date: ${dateLabel}
+How Did You Hear About Us: ${hearAboutUs}
 
 Message:
 ${messageText}
@@ -190,6 +197,7 @@ ${messageText}
         phone,
         partyType: partyType || "Unknown",
         dateLabel,
+        hearAboutUs,
         messageText,
       }),
       text: emailText, // fallback for clients that can't render HTML

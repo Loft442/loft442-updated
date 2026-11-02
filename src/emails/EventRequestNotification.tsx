@@ -19,6 +19,7 @@ type Props = {
   phone: string;
   partyType: string;
   dateLabel: string;
+  hearAboutUs: string;
   messageText: string;
 };
 
@@ -161,6 +162,7 @@ export default function EventRequestNotification({
   phone,
   partyType,
   dateLabel,
+  hearAboutUs,
   messageText,
 }: Props) {
   const safeMessage = messageText?.trim() ? messageText.trim() : "None";
@@ -240,6 +242,18 @@ export default function EventRequestNotification({
                       <Icon>✉️</Icon>EMAIL
                     </Text>
                     <Text style={styles.valueMuted}>{email}</Text>
+                  </Section>
+                </Column>
+              </Row>
+
+              {/* Row 4 (full width) */}
+              <Row style={styles.gridRow}>
+                <Column style={{ width: "100%" }}>
+                  <Section style={styles.fieldCard}>
+                    <Text style={styles.label}>
+                      <Icon>📣</Icon>HOW DID YOU HEAR ABOUT US
+                    </Text>
+                    <Text style={styles.value}>{hearAboutUs}</Text>
                   </Section>
                 </Column>
               </Row>
