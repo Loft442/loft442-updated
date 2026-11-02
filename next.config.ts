@@ -22,17 +22,17 @@ const siteHeaders = [
       "frame-ancestors 'self'",
       // Images (your site + Instagram CDN + Sanity gallery uploads + Google static)
       // A leading "*." already matches subdomains at any depth; "*.*." is invalid CSP.
-      "img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://cdn.sanity.io https://maps.gstatic.com https://maps.google.com https://www.googletagmanager.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com",
+      "img-src 'self' data: blob: https://*.cdninstagram.com https://*.fbcdn.net https://cdn.sanity.io https://maps.gstatic.com https://maps.google.com https://www.googletagmanager.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://*.google-analytics.com https://*.googletagmanager.com https://google.com",
       // Video (Instagram Reels + Sanity gallery uploads)
       "media-src 'self' https://*.cdninstagram.com https://*.fbcdn.net https://cdn.sanity.io",
       // Scripts (Google Maps + Instagram embed if used)
-      "script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://maps.gstatic.com https://www.instagram.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com",
+      "script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://maps.gstatic.com https://www.instagram.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://*.googletagmanager.com https://www.gstatic.com",
       // Styles (Tailwind/inline styles + Google)
       "style-src 'self' 'unsafe-inline'",
       // Frames for embeds
       "frame-src 'self' https://www.google.com https://maps.google.com https://www.instagram.com https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net",
       // Network calls (if any client-side fetches)
-      "connect-src 'self' https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com",
+      "connect-src 'self' https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://*.googletagmanager.com https://ad.doubleclick.net https://*.g.doubleclick.net https://google.com",
     ].join("; "),
   },
 ];
