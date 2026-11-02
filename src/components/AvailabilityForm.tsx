@@ -100,7 +100,18 @@ export default function AvailabilityForm() {
                   <User className="reference-row__icon" aria-hidden="true" />
                   <span className="reference-row__label">{row.name}</span>
                   <span className="reference-row__divider" aria-hidden="true" />
-                  <span className="reference-row__value reference-row__value--contact">{row.phone}</span>
+                  {row.phone === "(347) 579-6578" ? (
+                    <a
+                      href="tel:+13475796578"
+                      className="reference-row__value reference-row__value--contact"
+                    >
+                      {row.phone}
+                    </a>
+                  ) : (
+                    <span className="reference-row__value reference-row__value--contact">
+                      {row.phone}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
