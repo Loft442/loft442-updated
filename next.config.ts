@@ -31,8 +31,10 @@ const siteHeaders = [
       "style-src 'self' 'unsafe-inline'",
       // Frames for embeds
       "frame-src 'self' https://www.google.com https://maps.google.com https://www.instagram.com https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net",
-      // Network calls (if any client-side fetches)
-      "connect-src 'self' https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://*.googletagmanager.com https://ad.doubleclick.net https://*.g.doubleclick.net https://google.com https://*.posthog.com https://*.i.posthog.com",
+      // Network calls (if any client-side fetches). GA4 posts page views to the bare
+      // analytics.google.com host, which "*.analytics.google.com" does not cover.
+      // Netlify's injected RUM script (/.netlify/scripts/rum) reports to nsvcs.net.
+      "connect-src 'self' https://maps.googleapis.com https://maps.gstatic.com https://www.googletagmanager.com https://www.google.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://*.googletagmanager.com https://ad.doubleclick.net https://*.g.doubleclick.net https://google.com https://*.posthog.com https://*.i.posthog.com https://ingesteer.services-prod.nsvcs.net",
       "worker-src 'self' blob:",
     ].join("; "),
   },

@@ -18,6 +18,17 @@ if (!projectToken || !host) {
     api_host: host,
     defaults: "2026-01-30",
     capture_exceptions: true,
+    // Android in-app browsers (Instagram/Facebook) throw this from their own native
+    // bridge after the WebView is torn down; it never comes from site code.
+    before_send: (event) => {
+      if (event?.event !== "$exception") return event;
+      const exceptions: { value?: string }[] =
+        event.properties?.$exception_list ?? [];
+      const isWebViewBridgeNoise = exceptions.some((exception) =>
+        exception.value?.includes("Java object is gone"),
+      );
+      return isWebViewBridgeNoise ? null : event;
+    },
     debug: process.env.NODE_ENV === "development",
   });
 }
