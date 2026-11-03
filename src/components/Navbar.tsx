@@ -125,17 +125,18 @@ export default function Navbar() {
   const showScrollDivider = isScrolled && !suppressNavBorder && !menuOpen;
 
   return (
-    <header
-      className={[
-        "fixed inset-x-0 top-0 z-50 w-full overflow-x-hidden",
-        "transition-[background-color] duration-300 ease-out motion-reduce:transition-none",
-        menuOpen
-          ? "bg-black/90 backdrop-blur-md"
-          : isScrolled
-            ? "bg-black/70 backdrop-blur-md"
-            : "bg-transparent",
-      ].join(" ")}
-    >
+    <header className="fixed inset-x-0 top-0 z-50 w-full overflow-x-clip isolate [transform:translateZ(0)]">
+      {/* The blur layer always exists and only fades, so WebKit never rebuilds the
+          header's compositing layer mid-scroll (which let content paint above it). */}
+      <div
+        aria-hidden
+        className={[
+          "pointer-events-none absolute inset-0 -z-10 backdrop-blur-md",
+          "transition-opacity duration-300 ease-out motion-reduce:transition-none",
+          menuOpen ? "bg-black/90" : "bg-black/70",
+          menuOpen || isScrolled ? "opacity-100" : "opacity-0",
+        ].join(" ")}
+      />
       {showScrollDivider ? (
         <div
           aria-hidden

@@ -32,21 +32,24 @@
   display: inline-block;
 }
 
+.heroWord {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .heroLetter {
   display: inline-block;
   opacity: 0;
-  transform: translateX(-0.45em);
+  transform: translate3d(-0.45em, 0, 0);
   animation: heroLetterIn 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   animation-delay: calc(var(--letter-delay, 0ms) + var(--hero-delay, 0ms) + var(--motion-start-delay, 0ms));
-  will-change: opacity, transform;
 }
 
 .heroCtaReveal {
   opacity: 0;
-  transform: translateY(6px);
+  transform: translate3d(0, 6px, 0);
   animation: heroCtaReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   animation-delay: calc(360ms + var(--motion-start-delay, 0ms));
-  will-change: opacity, transform;
 }
 
 .venueUnderline::after {
@@ -76,20 +79,19 @@
   width: 0;
   animation: venueUnderlineReveal 340ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   animation-delay: calc(var(--motion-start-delay, 0ms) + 460ms);
-  will-change: width;
 }
 
 @keyframes heroLetterIn {
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes heroCtaReveal {
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -156,8 +158,7 @@
       -0.6px -0.6px 0 rgba(0, 0, 0, 0.98),
       0.6px 0.6px 0 rgba(0, 0, 0, 0.98),
       -0.6px 0.6px 0 rgba(0, 0, 0, 0.98),
-      0.6px -0.6px 0 rgba(0, 0, 0, 0.98),
-      0 0 18px rgba(0, 0, 0, 0.98);
+      0.6px -0.6px 0 rgba(0, 0, 0, 0.98);
   }
 
   .heroTextStroke {
@@ -169,7 +170,6 @@
       -0.5px -0.5px 0 rgba(0, 0, 0, 0.95),
       0.5px 0.5px 0 rgba(0, 0, 0, 0.95),
       -0.5px 0.5px 0 rgba(0, 0, 0, 0.95),
-      0.5px -0.5px 0 rgba(0, 0, 0, 0.95),
-      0 0 16px rgba(0, 0, 0, 0.96);
+      0.5px -0.5px 0 rgba(0, 0, 0, 0.95);
   }
 }

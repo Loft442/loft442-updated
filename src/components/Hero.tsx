@@ -20,20 +20,32 @@ export default function Hero() {
   const letterDelay = 18;
 
   const renderLetters = (text: string, startIndex: number) => {
-    const chars = Array.from(text);
-    const nodes = chars.map((char, index) => (
-      <span
-        key={`${startIndex + index}`}
-        className={styles.heroLetter}
-        style={
-          { "--letter-delay": `${(startIndex + index) * letterDelay}ms` } as CSSProperties
-        }
-      >
-        {char === " " ? "\u00A0" : char}
-      </span>
-    ));
+    let index = startIndex;
+    const renderChar = (char: string) => {
+      const charIndex = index++;
+      return (
+        <span
+          key={charIndex}
+          className={styles.heroLetter}
+          style={{ "--letter-delay": `${charIndex * letterDelay}ms` } as CSSProperties}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      );
+    };
 
-    return { nodes, nextIndex: startIndex + chars.length };
+    // Letters of one word stay in a nowrap group so narrow phones never break mid-word.
+    const nodes = text.split(/( )/).filter(Boolean).map((part) =>
+      part === " " ? (
+        renderChar(part)
+      ) : (
+        <span key={`w${index}`} className={styles.heroWord}>
+          {Array.from(part).map(renderChar)}
+        </span>
+      )
+    );
+
+    return { nodes, nextIndex: index };
   };
 
   let letterIndex = 0;
