@@ -49,7 +49,7 @@ export default async function InstagramSection() {
   return (
     <section
       id="instagram"
-      className="section-glow section-divider border-t border-white/10 py-16 sm:py-20"
+      className="section-glow section-divider border-t border-white/10 py-12 sm:py-20"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal mode="text" className="spotlight mb-10">
@@ -136,7 +136,7 @@ export function InstagramSectionSkeleton() {
   return (
     <section
       aria-hidden="true"
-      className="section-divider border-t border-white/10 py-16 sm:py-20"
+      className="section-divider border-t border-white/10 py-12 sm:py-20"
     >
       <div className="mx-auto max-w-6xl animate-pulse px-4 sm:px-6">
         <div className="mb-10 flex flex-col items-center gap-6 sm:flex-row">

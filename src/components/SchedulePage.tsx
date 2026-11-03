@@ -247,7 +247,7 @@ export default function SchedulePage() {
   };
 
   return (
-    <main className="ambient-surface scheduling-page bg-black pt-[76px] text-white">
+    <main className="ambient-surface scheduling-page bg-black pt-nav text-white">
       <div className="ambient-glow" aria-hidden="true">
         <span className="ambient-glow__layer" />
       </div>

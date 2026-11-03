@@ -236,7 +236,7 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
         </div>
       </section>
 
-      <section className="section-divider border-t border-white/10 bg-black pb-20 pt-10">
+      <section className="section-divider border-t border-white/10 bg-black pb-20 pt-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div
             key={activeCategory}

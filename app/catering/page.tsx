@@ -31,7 +31,7 @@ const cateringServiceJsonLd = serviceJsonLd({
 
 export default function Catering() {
   return (
-    <main className="ambient-surface bg-black pt-[77px] text-white">
+    <main className="ambient-surface bg-black pt-nav text-white">
       <JsonLd data={cateringServiceJsonLd} />
       <div className="ambient-glow" aria-hidden="true">
         <span className="ambient-glow__layer" />

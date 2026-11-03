@@ -87,7 +87,7 @@ export default function Features() {
           </Reveal>
         </div>
       </section>
-      <section className="section-glow section-divider border-t border-white/10 py-16 sm:py-20">
+      <section className="section-glow section-divider border-t border-white/10 py-12 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal className="grid items-center gap-10 md:grid-cols-[1fr_1.05fr] md:items-stretch">
             <div className={`relative h-full ${styles.qualityColumnLeft} ${styles.qualityReveal} ${styles.featureText}`}>

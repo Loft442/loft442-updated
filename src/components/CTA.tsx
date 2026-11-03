@@ -4,7 +4,7 @@ export default function CTA() {
   return (
     <section
       id="contact"
-      className="section-glow contact-glow section-divider border-t border-white/10 py-16 sm:py-20"
+      className="section-glow contact-glow section-divider border-t border-white/10 py-12 sm:py-20"
     >
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
         <div className="spotlight inline-block rounded-sm px-4 py-3">

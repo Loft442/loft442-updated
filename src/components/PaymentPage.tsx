@@ -210,7 +210,7 @@ export default function PaymentPage() {
         </div>
       </section>
 
-      <section className="section-divider border-t border-white/10 bg-black py-16 sm:py-20">
+      <section className="section-divider border-t border-white/10 bg-black py-12 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
             <Reveal className="text-spotlight rounded-sm border border-white/10 bg-white/8 p-5 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-6">

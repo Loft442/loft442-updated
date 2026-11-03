@@ -50,7 +50,7 @@ export default function LocationSection() {
   }, []);
 
   return (
-    <section className="section-glow section-divider border-t border-white/10 py-16 sm:py-20">
+    <section className="section-glow section-divider border-t border-white/10 py-12 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid items-center gap-10 md:grid-cols-[1.1fr_0.9fr]">
           {/* Map container with fixed aspect ratio to prevent CLS */}

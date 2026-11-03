@@ -66,7 +66,7 @@ export default function Hero() {
 
   return (
     <section
-      className="hero-no-glow relative w-full -mt-19 min-h-[calc(100svh-76px)] overflow-hidden bg-black aspect-9/16 sm:min-h-0 sm:aspect-640/367 md:min-h-[85vh] lg:min-h-[90vh]"
+      className="hero-no-glow relative w-full min-h-[calc(100svh-var(--nav-offset)-4rem)] overflow-hidden bg-black aspect-9/16 sm:min-h-0 sm:aspect-640/367 md:min-h-[85vh] lg:min-h-[90vh]"
     >
       <div className="absolute inset-0 z-0">
         {/* One art-directed <picture> so each device downloads only its own banner. */}
@@ -79,7 +79,7 @@ export default function Hero() {
           />
         </picture>
       </div>
-      <div className="relative z-10 translate-y-19 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 py-16 sm:px-6 sm:py-20 md:px-10 md:py-24 lg:px-12 lg:py-28">
+      <div className="relative z-10 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 py-16 sm:px-6 sm:py-20 md:px-10 md:py-24 lg:px-12 lg:py-28">
         <div className="max-w-2xl md:max-w-3xl">
           <div className="text-spotlight inline-block rounded-sm px-4 py-4">
             <div className="flex flex-col gap-5 sm:gap-6">

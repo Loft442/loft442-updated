@@ -18,7 +18,7 @@ export const metadata = buildMetadata({
 
 export default function Pricing() {
   return (
-    <main className="ambient-surface bg-black pt-[76px] text-white">
+    <main className="ambient-surface bg-black pt-nav text-white">
       <div className="ambient-glow" aria-hidden="true">
         <span className="ambient-glow__layer" />
       </div>

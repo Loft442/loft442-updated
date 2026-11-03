@@ -82,7 +82,7 @@ function StarRow({ rating }: { rating: number }) {
 
 export default function Testimonials() {
   return (
-    <section className="section-glow section-divider border-t border-white/10 py-16 sm:py-20">
+    <section className="section-glow section-divider border-t border-white/10 py-12 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal mode="text" className="spotlight mb-10 max-w-2xl">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">

@@ -105,7 +105,7 @@ export default function FAQ() {
   const hiddenFaqs = faqs.slice(VISIBLE_COUNT);
 
   return (
-    <section className="faq section-glow section-divider border-t border-white/10 py-16 sm:py-20">
+    <section className="faq section-glow section-divider border-t border-white/10 py-12 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="spotlight mb-10 max-w-2xl">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">FAQ</p>

@@ -125,7 +125,7 @@ export default function Navbar() {
   const showScrollDivider = isScrolled && !suppressNavBorder && !menuOpen;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 w-full overflow-x-clip isolate [transform:translateZ(0)]">
+    <header className="fixed inset-x-0 top-0 z-50 w-full overflow-x-clip isolate pt-safe pl-safe pr-safe [transform:translateZ(0)]">
       {/* The blur layer always exists and only fades, so WebKit never rebuilds the
           header's compositing layer mid-scroll (which let content paint above it). */}
       <div
@@ -145,12 +145,12 @@ export default function Navbar() {
       ) : null}
       <div
         className={[
-          "relative mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6",
-          "transition-[padding] duration-300 ease-out motion-reduce:transition-none",
-          isHome && isScrolled ? "py-1.5" : "py-2",
+          "relative mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6",
+          "transition-[height] duration-300 ease-out motion-reduce:transition-none",
+          isHome && isScrolled ? "h-(--nav-h-compact)" : "h-(--nav-h)",
         ].join(" ")}
       >
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex shrink-0 items-center">
           <Image
             src="/images/loft-logo.webp"
             alt="Loft 442 logo"
@@ -161,7 +161,7 @@ export default function Navbar() {
             className={[
               "w-auto",
               "transition-[height] duration-300 ease-out motion-reduce:transition-none",
-              isHome && isScrolled ? "h-[46px]" : "h-[60px]",
+              isHome && isScrolled ? "h-10 md:h-[46px]" : "h-12 md:h-[60px]",
             ].join(" ")}
           />
         </Link>
@@ -211,7 +211,7 @@ export default function Navbar() {
           id="mobile-nav"
           className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
             menuOpen
-              ? "max-h-[min(26rem,calc(100dvh-5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom)))] opacity-100"
+              ? "max-h-[min(26rem,calc(100dvh-var(--nav-offset)-env(safe-area-inset-bottom)))] opacity-100"
               : "max-h-0 opacity-0"
           }`}
         >

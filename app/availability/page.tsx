@@ -22,7 +22,7 @@ export const metadata = buildMetadata({
 
 export default function AvailabilityPage() {
   return (
-    <main className="ambient-surface bg-black pt-[76px] text-white">
+    <main className="ambient-surface bg-black pt-nav text-white">
       <div className="ambient-glow" aria-hidden="true">
         <span className="ambient-glow__layer" />
       </div>
@@ -58,7 +58,7 @@ export default function AvailabilityPage() {
         </div>
       </section>
 
-      <section className="section-divider border-t border-white/10 py-10 sm:py-12">
+      <section className="section-divider border-t border-white/10 py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal mode="text">
             <AvailabilityCalendar />
@@ -66,7 +66,7 @@ export default function AvailabilityPage() {
         </div>
       </section>
 
-      <section className="section-divider border-t border-white/10 pb-20 pt-10 sm:pb-24">
+      <section className="section-divider border-t border-white/10 pb-20 pt-12 sm:pb-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal mode="text">
             <div className="rounded-sm border border-white/10 bg-white/6 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.38)] backdrop-blur sm:p-8">

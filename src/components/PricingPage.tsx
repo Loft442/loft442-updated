@@ -112,7 +112,7 @@ const addOns = [
 export default function PricingPage() {
   return (
     <>
-      <section className="pricing-page section-glow section-divider relative border-t border-white/10 pb-14 pt-6 sm:pb-16 sm:pt-8">
+      <section className="pricing-page section-glow section-divider relative border-t border-white/10 pb-12 pt-6 sm:pb-16 sm:pt-8">
         <span
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
@@ -210,7 +210,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="pricing-page section-divider border-t border-white/10 py-14 sm:py-16">
+      <section className="pricing-page section-divider border-t border-white/10 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal mode="text" className="rounded-sm border border-white/10 bg-white/6 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.38)] backdrop-blur sm:p-8">
             <div className="flex flex-wrap items-end justify-between gap-3">
