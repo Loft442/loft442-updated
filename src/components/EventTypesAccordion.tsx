@@ -1,13 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { preload } from "react-dom";
 
 export type EventTypeEntry = {
   key: string;
   panelId: string;
   triggerId: string;
-  preload: { src: string; srcSet?: string; sizes?: string };
   label: ReactNode;
   chevron: ReactNode;
   body: ReactNode;
@@ -15,8 +13,10 @@ export type EventTypeEntry = {
 
 const PANEL_TRANSITION =
   "overflow-hidden transition-[max-height,opacity,transform] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)]";
+// Spans both mobile grid columns so the open panel is full width, not squeezed into one cell.
+const MOBILE_PANEL = "col-span-2 mt-2 md:hidden";
 const PANEL_CARD =
-  "grid gap-6 rounded-sm border border-white/10 bg-white/5 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] md:grid-cols-2";
+  "rounded-sm border border-white/10 bg-white/5 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)]";
 
 // Open/close state for EventTypes. Every label, icon and panel body arrives as
 // server-rendered markup; this only decides which panel is mounted and animated.
@@ -66,14 +66,6 @@ export default function EventTypesAccordion({ entries }: { entries: EventTypeEnt
     };
   }, []);
 
-  const preloadImage = (entry: EventTypeEntry) => {
-    preload(entry.preload.src, {
-      as: "image",
-      imageSrcSet: entry.preload.srcSet,
-      imageSizes: entry.preload.sizes,
-    });
-  };
-
   const renderEntry = renderKey ? entries.find((entry) => entry.key === renderKey) : null;
   const panelState = isPanelOpen
     ? "max-h-[900px] translate-y-0 opacity-100"
@@ -81,16 +73,16 @@ export default function EventTypesAccordion({ entries }: { entries: EventTypeEnt
 
   return (
     <>
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-6 lg:gap-2 xl:gap-3">
+      {/* On mobile each entry's wrapper dissolves (`contents`) so its panel becomes its own
+          full-width grid row; dense flow keeps the button pairs together above it. */}
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2 max-md:grid-flow-row-dense sm:gap-3 md:grid-cols-3 lg:grid-cols-6 lg:gap-2 xl:gap-3">
         {entries.map((entry) => (
-          <div key={entry.key} className="flex flex-col">
+          <div key={entry.key} className="contents md:flex md:flex-col">
             <button
               type="button"
               aria-expanded={openKey === entry.key}
               aria-controls={`${entry.panelId} ${entry.panelId}-mobile`}
               id={entry.triggerId}
-              onPointerEnter={() => preloadImage(entry)}
-              onFocus={() => preloadImage(entry)}
               onClick={() => handleTogglePanel(entry.key)}
               className="overview-button about-card-outline group relative flex min-h-11 min-w-0 items-center justify-between gap-1.5 rounded-md px-2.5 py-3 text-left shadow-[0_16px_48px_rgba(0,0,0,0.4)] transition sm:min-h-12 sm:gap-2 sm:px-3 lg:gap-1.5 lg:px-2 lg:py-2.5 xl:gap-2 xl:px-3"
             >
@@ -99,7 +91,7 @@ export default function EventTypesAccordion({ entries }: { entries: EventTypeEnt
             </button>
             {renderKey === entry.key ? (
               <div
-                className={`mt-4 md:hidden ${PANEL_TRANSITION} ${panelState}`}
+                className={`${MOBILE_PANEL} ${PANEL_TRANSITION} ${panelState}`}
                 aria-hidden={!isPanelOpen}
               >
                 <div

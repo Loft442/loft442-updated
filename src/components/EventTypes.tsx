@@ -1,4 +1,3 @@
-import Image, { getImageProps } from "next/image";
 import { ChevronDown, Gift, Heart, HeartHandshake, PartyPopper, Sparkles } from "lucide-react";
 import EventTypesAccordion, { type EventTypeEntry } from "@/components/EventTypesAccordion";
 
@@ -81,56 +80,42 @@ const iconStyles: Record<
 const panelContent: Record<
   string,
   {
-    imageSrc: string;
     bodyText: string;
     panelId: string;
     triggerId: string;
-    imageAlt: string;
   }
 > = {
   Weddings: {
-    imageSrc: "/images/feuture_0000_weding.webp",
-    imageAlt: "Weddings at Loft 442",
     panelId: "event-panel-weddings",
     triggerId: "event-weddings",
     bodyText:
       "A stunning and versatile space for your special day, accommodating both intimate gatherings and grand celebrations. With elegant decor, state-of-the-art facilities, and customizable layouts, we ensure a seamless experience from ceremony to reception. Our dedicated team provides exceptional service, assisting with every detail to create a memorable atmosphere tailored to your vision. Enjoy convenient amenities, ample parking, and a prime location, making your wedding not just an event, but a cherished memory.",
   },
   "Private Events": {
-    imageSrc: "/images/feuture_0002_c event.webp",
-    imageAlt: "Private events at Loft 442",
     panelId: "event-panel-private-events",
     triggerId: "event-private-events",
     bodyText:
       "We are expertly designed to cater to corporate events, providing a sophisticated and versatile space for meetings, conferences, and corporate gatherings. Equipped with state-of-the-art technology and customizable layouts, we ensure a seamless experience for your attendees. Our dedicated team is committed to delivering exceptional service, from planning to execution, allowing you to focus on your event's success.\n\nWith convenient amenities and a prime location, our venue is the ideal choice for any corporate occasion.",
   },
   Birthdays: {
-    imageSrc: "/images/feuture_0003_birthday.webp",
-    imageAlt: "Birthdays at Loft 442",
     panelId: "event-panel-birthdays",
     triggerId: "event-birthdays",
     bodyText:
       "Celebrate your special day in style with our premier venue hall services, designed to make every birthday unforgettable. Our spacious and elegantly decorated halls can accommodate gatherings of all sizes, providing a perfect backdrop for your celebration. We ensure a seamless experience tailored to your preferences.\n\nLet our dedicated team handle the details, so you can focus on creating cherished memories with your loved ones.",
   },
   "Kids Parties": {
-    imageSrc: "/images/feuture_0001_kids party.webp",
-    imageAlt: "Kids parties at Loft 442",
     panelId: "event-panel-kids-parties",
     triggerId: "event-kids-parties",
     bodyText:
       "Our elegantly designed hall accommodates various group sizes, ensuring a comfortable and memorable experience for your guests. With state-of-the-art facilities, customizable layouts, and dedicated event planning support, we strive to make every celebration seamless and extraordinary.  \n\nChoose Celebrations for an unforgettable venue that transforms your vision into reality.",
   },
   "Baby Shower": {
-    imageSrc: "/images/feuture_0004_baby shower.webp",
-    imageAlt: "Baby shower at Loft 442",
     panelId: "event-panel-baby-shower",
     triggerId: "event-baby-shower",
     bodyText:
       "Our elegantly designed hall accommodates various group sizes, ensuring a comfortable and memorable experience for your guests. With state-of-the-art facilities, customizable layouts, and dedicated event planning support, we strive to make every celebration seamless and extraordinary. \n\nChoose Celebrations for an unforgettable venue that transforms your vision into reality.",
   },
   "Repass Service": {
-    imageSrc: "/images/feuture_0002_c event.webp",
-    imageAlt: "Repass services at Loft 442",
     panelId: "event-panel-repass-service",
     triggerId: "event-repass-service",
     bodyText:
@@ -138,25 +123,11 @@ const panelContent: Record<
   },
 };
 
-const PANEL_IMAGE_SIZES = "(min-width: 768px) 40vw, 100vw";
-
 function PanelBody({ panel }: { panel: (typeof panelContent)[string] }) {
   return (
-    <>
-      <div className="relative h-56 w-full overflow-hidden rounded-sm border border-white/10 md:h-72">
-        <Image
-          src={panel.imageSrc}
-          alt={panel.imageAlt}
-          fill
-          sizes={PANEL_IMAGE_SIZES}
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-      </div>
-      <p className="text-sm leading-relaxed text-white/70 whitespace-pre-line">
-        {panel.bodyText}
-      </p>
-    </>
+    <p className="text-sm leading-relaxed text-white/70 whitespace-pre-line">
+      {panel.bodyText}
+    </p>
   );
 }
 
@@ -166,24 +137,11 @@ export default function EventTypes() {
   const entries: EventTypeEntry[] = eventTypes.map((event) => {
     const Icon = event.icon;
     const panel = panelContent[event.title];
-    // Lets the island warm a panel's image on hover/focus so it is ready when the
-    // panel opens, instead of downloading every panel image during first load.
-    const { props: imageProps } = getImageProps({
-      src: panel.imageSrc,
-      alt: "",
-      fill: true,
-      sizes: PANEL_IMAGE_SIZES,
-    });
 
     return {
       key: event.title,
       panelId: panel.panelId,
       triggerId: panel.triggerId,
-      preload: {
-        src: imageProps.src,
-        srcSet: imageProps.srcSet,
-        sizes: imageProps.sizes,
-      },
       // Keys: these elements cross the server/client boundary inside an array, so React
       // validates them like list children.
       label: (
