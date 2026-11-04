@@ -18,12 +18,12 @@ export default function HomePage() {
       <Hero />
       <AboutSection />
       <EventTypes />
-      <VideoSection />
+      <AvailabilityForm />
       <StandardSection />
       <TributeSection />
       <Testimonials />
       <FAQ />
-      <AvailabilityForm />
+      <VideoSection />
       <LocationSection />
       <Footer />
     </main>

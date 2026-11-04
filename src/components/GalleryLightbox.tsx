@@ -36,6 +36,7 @@ export default function GalleryLightbox({
   onNext,
 }: GalleryLightboxProps) {
   const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
   const lightboxShellRef = useRef<HTMLDivElement>(null);
   const activeItem = items[activeIndex];
 
@@ -63,10 +64,16 @@ export default function GalleryLightbox({
   }, [onClose, onNext, onPrev]);
 
   useEffect(() => {
+    const startedPortrait = window.innerHeight >= window.innerWidth;
+
     const syncLightboxSize = () => {
       const shell = lightboxShellRef.current;
       const viewport = window.visualViewport;
       if (!shell || !viewport) return;
+
+      // Keep the frame as it was when opened if the phone is rotated.
+      const isPortrait = window.innerHeight >= window.innerWidth;
+      if (isPortrait !== startedPortrait) return;
 
       const safeArea = getSafeAreaInsets();
       const isSm = window.matchMedia("(min-width: 640px)").matches;
@@ -102,7 +109,9 @@ export default function GalleryLightbox({
   }, []);
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-    touchStartX.current = event.touches[0]?.clientX ?? null;
+    const touch = event.touches[0];
+    touchStartX.current = touch?.clientX ?? null;
+    touchStartY.current = touch?.clientY ?? null;
   };
 
   const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
@@ -110,11 +119,14 @@ export default function GalleryLightbox({
       return;
     }
 
-    const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
-    const delta = touchStartX.current - endX;
+    const touch = event.changedTouches[0];
+    const deltaX = touchStartX.current - (touch?.clientX ?? touchStartX.current);
+    const deltaY = (touchStartY.current ?? 0) - (touch?.clientY ?? touchStartY.current ?? 0);
 
-    if (Math.abs(delta) > 50) {
-      if (delta > 0) {
+    // Only treat clearly horizontal gestures as swipes, so vertical scrolls
+    // and taps never change the image.
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+      if (deltaX > 0) {
         onNext();
       } else {
         onPrev();
@@ -122,13 +134,14 @@ export default function GalleryLightbox({
     }
 
     touchStartX.current = null;
+    touchStartY.current = null;
   };
 
   if (!activeItem) return null;
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 grid place-items-center overscroll-contain bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-50 grid place-items-center touch-pan-y overscroll-contain bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}

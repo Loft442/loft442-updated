@@ -14,7 +14,7 @@ type FeatureBlockProps = {
 
 function FeatureBlock({ id, eyebrow, title, children, image, imageFirst = false, titleClassName = "display-md" }: FeatureBlockProps) {
   return (
-    <section id={id} className="scroll-mt-28 md:scroll-mt-32 section-pad border-t border-[var(--line)]">
+    <section id={id} className={`scroll-mt-28 md:scroll-mt-32 section-pad ${id === "about" ? "" : "border-t border-[var(--line)]"}`}>
       <div className="mx-auto max-w-6xl px-6">
         <Reveal className="grid items-center gap-12 md:grid-cols-2 md:gap-16 lg:gap-24">
           <div className={`flex flex-col gap-7 ${imageFirst ? "md:order-2" : ""}`}>
