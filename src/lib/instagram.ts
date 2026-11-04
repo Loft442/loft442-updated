@@ -1,5 +1,3 @@
-import { sanityWriteClient } from "@/lib/sanityWriteClient";
-
 const GRAPH_URL = "https://graph.instagram.com";
 const API_VERSION = "v23.0";
 const REQUEST_TIMEOUT_MS = 8000;
@@ -16,10 +14,6 @@ const HIDDEN_SHORTCODES = ["DaykY-UBG-t"];
 export const INSTAGRAM_CACHE_TAG = "instagram";
 export const INSTAGRAM_REVALIDATE_SECONDS = 3600;
 export const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/loft.442/";
-
-// IDs containing a dot are private in Sanity, even on public datasets.
-const TOKEN_DOC_ID = "secrets.instagramToken";
-const TOKEN_DOC_TYPE = "instagramToken";
 
 export type InstagramMediaType = "IMAGE" | "VIDEO" | "CAROUSEL_ALBUM";
 
@@ -57,12 +51,6 @@ export type InstagramFeed = {
   posts: InstagramPost[];
 };
 
-type StoredToken = {
-  token?: string;
-  refreshedAt?: string;
-  expiresAt?: string;
-};
-
 type GraphProfile = {
   username?: string;
   name?: string;
@@ -88,30 +76,8 @@ type GraphMedia = GraphChild & {
   children?: { data?: GraphChild[] };
 };
 
-async function readStoredToken(): Promise<StoredToken | null> {
-  if (!sanityWriteClient) return null;
-  return sanityWriteClient.fetch<StoredToken | null>(
-    `*[_id == $id][0]{ token, refreshedAt, expiresAt }`,
-    { id: TOKEN_DOC_ID },
-  );
-}
-
 async function getAccessToken(): Promise<string | null> {
-  const envToken = process.env.INSTAGRAM_ACCESS_TOKEN || null;
-
-  // Local .env must win so a leftover Sanity/test token cannot keep serving the wrong account.
-  if (process.env.NODE_ENV !== "production" && envToken) {
-    return envToken;
-  }
-
-  try {
-    const stored = await readStoredToken();
-    if (stored?.token) return stored.token;
-  } catch (error) {
-    console.error("[instagram] Failed to read stored token", error);
-  }
-
-  return envToken;
+  return process.env.INSTAGRAM_ACCESS_TOKEN || null;
 }
 
 async function graphGet<T>(path: string, params: Record<string, string>): Promise<T> {
@@ -306,64 +272,15 @@ export type RefreshResult =
   | { status: "skipped"; reason: string }
   | { status: "error"; reason: string };
 
-const MIN_REFRESH_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-
 export async function refreshAccessToken(): Promise<RefreshResult> {
-  if (!sanityWriteClient) {
-    return { status: "error", reason: "SANITY_API_WRITE_TOKEN or Sanity project is not configured" };
+  // A refreshed token cannot be written back into the host environment from this route.
+  // Calling Instagram's refresh endpoint would rotate the token and then discard it.
+  if (!process.env.INSTAGRAM_ACCESS_TOKEN) {
+    return { status: "error", reason: "INSTAGRAM_ACCESS_TOKEN is not configured" };
   }
 
-  let stored: StoredToken | null = null;
-  try {
-    stored = await readStoredToken();
-  } catch {
-    return { status: "error", reason: "Could not read stored token" };
-  }
-
-  const currentToken = stored?.token || process.env.INSTAGRAM_ACCESS_TOKEN;
-  if (!currentToken) {
-    return { status: "error", reason: "No Instagram access token configured" };
-  }
-
-  if (stored?.refreshedAt) {
-    const age = Date.now() - new Date(stored.refreshedAt).getTime();
-    if (age < MIN_REFRESH_AGE_MS) {
-      return { status: "skipped", reason: "Token was refreshed recently" };
-    }
-  }
-
-  try {
-    const url = new URL(`${GRAPH_URL}/refresh_access_token`);
-    url.searchParams.set("grant_type", "ig_refresh_token");
-    url.searchParams.set("access_token", currentToken);
-
-    const response = await fetch(url, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    });
-    if (!response.ok) {
-      return { status: "error", reason: `Refresh responded with ${response.status}` };
-    }
-
-    const body = (await response.json()) as { access_token?: string; expires_in?: number };
-    if (!body.access_token) {
-      return { status: "error", reason: "Refresh response missing access_token" };
-    }
-
-    const now = new Date();
-    const expiresAt = new Date(now.getTime() + (body.expires_in ?? 0) * 1000).toISOString();
-
-    await sanityWriteClient.createOrReplace({
-      _id: TOKEN_DOC_ID,
-      _type: TOKEN_DOC_TYPE,
-      token: body.access_token,
-      refreshedAt: now.toISOString(),
-      expiresAt,
-    });
-
-    return { status: "refreshed", expiresAt };
-  } catch (error) {
-    console.error("[instagram] Token refresh failed", error);
-    return { status: "error", reason: "Token refresh request failed" };
-  }
+  return {
+    status: "skipped",
+    reason: "Token is read from INSTAGRAM_ACCESS_TOKEN and is not stored in Sanity",
+  };
 }

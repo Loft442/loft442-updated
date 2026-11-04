@@ -62,8 +62,8 @@ function Avatar({ src, alt, href, label }: { src: string | null; alt: string; hr
 }
 
 // Live feed from the Instagram Graph API (cached for an hour, see src/lib/instagram.ts).
-// If the feed is unavailable (no token configured, API outage), the section still shows
-// the handle and a follow link rather than disappearing.
+// The token is INSTAGRAM_ACCESS_TOKEN. If it is missing or the API fails, the section
+// still shows the handle and a follow link rather than disappearing.
 export default async function InstagramSection() {
   const feed = await getInstagramFeed();
   const profile = feed?.profile;
