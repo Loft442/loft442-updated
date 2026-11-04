@@ -19,16 +19,18 @@ const GalleryLightbox = dynamic(() => import("@/components/GalleryLightbox"), {
   ssr: false,
 });
 
-type GalleryCategory = "All" | GalleryItemCategory;
+type GalleryCategory = "All" | "Weddings" | "Private Events" | "Birthdays" | "Baby Showers";
 
-const categories: GalleryItemCategory[] = [
-  "Weddings",
-  "Private Events",
-  "Birthdays",
-  "Kids Parties",
-  "Baby Shower",
-];
-const filterCategories: GalleryCategory[] = ["All", ...categories];
+// Gallery tabs map onto the category values stored with each photo (and in Sanity).
+// Keep in sync with sanity/galleryCategories.ts. "Kids Parties" is a retired value,
+// shown under Birthdays.
+const categoryFilters: Record<Exclude<GalleryCategory, "All">, GalleryItemCategory[]> = {
+  Weddings: ["Weddings"],
+  "Private Events": ["Private Events"],
+  Birthdays: ["Birthdays", "Kids Parties"],
+  "Baby Showers": ["Baby Shower"],
+};
+const filterCategories: GalleryCategory[] = ["All", "Weddings", "Private Events", "Birthdays", "Baby Showers"];
 
 const masonryHeights = [560, 480, 640, 520, 720, 440, 680, 500];
 
@@ -60,7 +62,7 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
     const items =
       activeCategory === "All"
         ? galleryItems
-        : galleryItems.filter((item) => item.category === activeCategory);
+        : galleryItems.filter((item) => categoryFilters[activeCategory].includes(item.category));
 
     return [...items].reverse();
   }, [activeCategory, galleryItems]);
@@ -168,42 +170,23 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
 
   return (
     <div>
-      <section className="section-glow section-divider relative border-t border-white/10 pb-0 pt-6 sm:pt-8">
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
-        />
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="spotlight rounded-sm px-4 py-3">
-            <Reveal mode="text" className="flex flex-col gap-4">
-              <p className="text-xs uppercase tracking-[0.4em] text-white">
-                Loft 442
-              </p>
-              <h1 className="text-spotlight relative inline-block text-3xl font-semibold tracking-[0.32em] text-white sm:text-4xl md:text-5xl">
-                <span
-                  className="pointer-events-none absolute -inset-x-12 -inset-y-8 z-0 blur-3xl"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse at center, rgba(200,200,210,0.85) 0%, transparent 65%)",
-                  }}
-                  aria-hidden="true"
-                />
-                <span className="relative z-10">GALLERY</span>
-              </h1>
-              <p className="max-w-2xl text-sm text-white/70">
-                Explore LOFT 442 across events and setups.
-              </p>
-            </Reveal>
-          </div>
+      <section className="border-t border-[var(--line)] pb-4 pt-16 sm:pt-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <Reveal mode="text" className="flex flex-col items-center gap-6 text-center">
+            <p className="eyebrow">Loft 442</p>
+            <h1 className="display-xl">The Gallery</h1>
+            <span className="hairline" aria-hidden="true" />
+            <p className="lede max-w-xl">Moments from celebrations at Loft 442.</p>
+          </Reveal>
         </div>
       </section>
 
-      <section className="section-divider border-t border-white/10 bg-black">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-6 sm:px-6 sm:py-8">
+      <section>
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 py-10">
           <div
             role="tablist"
             aria-label="Gallery categories"
-            className="flex flex-wrap justify-center gap-3"
+            className="flex flex-wrap justify-center gap-x-8 gap-y-2"
           >
             {filterCategories.map((category, index) => {
               const isActive = category === activeCategory;
@@ -223,9 +206,9 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => handleCategoryChange(category)}
                   onKeyDown={(event) => handleTabKeyDown(event, index)}
-                  className={`relative min-h-11 rounded-sm border border-white/10 bg-white/5 px-5 py-2 text-[0.65rem] uppercase tracking-[0.2em] text-white/60 transition duration-200 ease-out hover:border-white/30 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:tracking-[0.35em] after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${isActive
-                    ? "border-white/40 text-white shadow-[0_0_25px_rgba(255,255,255,0.18)] after:opacity-100"
-                    : ""
+                  className={`relative min-h-11 px-1 py-2 text-[0.7rem] uppercase tracking-[0.3em] transition-colors duration-300 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-1 after:h-px after:origin-center after:bg-gold after:transition-transform after:duration-300 after:content-[''] ${isActive
+                    ? "text-gold-light after:scale-x-100"
+                    : "text-white/55 after:scale-x-0 hover:text-[var(--ivory)]"
                     }`}
                 >
                   {category}
@@ -236,7 +219,7 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
         </div>
       </section>
 
-      <section className="section-divider border-t border-white/10 bg-black pb-20 pt-12">
+      <section className="pb-24 pt-4">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div
             key={activeCategory}

@@ -27,7 +27,7 @@ export default function FaqShowMore({ primary, children }: FaqShowMoreProps) {
 
   return (
     <>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col">
         {primary}
 
         <div
@@ -38,22 +38,22 @@ export default function FaqShowMore({ primary, children }: FaqShowMoreProps) {
             showAll ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
           }`}
         >
-          <div className="min-h-0 flex flex-col gap-3">{children}</div>
+          <div className="min-h-0 flex flex-col">{children}</div>
         </div>
       </div>
-      <div className="mt-6 flex justify-center">
+      <div className="mt-10 flex justify-start">
         <button
           type="button"
           onClick={handleToggleShowAll}
           aria-expanded={showAll}
-          className="inline-flex items-center gap-2 rounded-sm border border-white/20 bg-white/5 px-5 py-3 text-[0.65rem] uppercase tracking-[0.35em] text-white/80 transition-[border-color,background-color,color,box-shadow,transform,opacity] duration-300 ease-out motion-reduce:transition-none hover:-translate-y-px hover:border-[#d4af37]/50 hover:bg-white/10 hover:text-white hover:shadow-[0_0_20px_rgba(212,175,55,0.15)]"
+          className="inline-flex items-center gap-2 border border-[var(--line-strong)] px-6 py-3 text-[0.7rem] uppercase tracking-[0.3em] text-white/75 transition-colors duration-300 ease-out motion-reduce:transition-none hover:border-gold hover:text-gold-light"
         >
           <span
             className={`transition-opacity duration-300 motion-reduce:transition-none ${
               showAll ? "opacity-100" : "opacity-90"
             }`}
           >
-            {showAll ? "View less" : "View more"}
+            {showAll ? "Fewer questions" : "More questions"}
           </span>
           <ChevronDown
             className={`h-4 w-4 transition-transform duration-300 ease-out motion-reduce:transition-none ${

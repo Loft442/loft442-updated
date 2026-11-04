@@ -3,10 +3,9 @@ import "./globals.css";
 import PageTransition from "@/components/PageTransition";
 import NavbarVisibility from "@/components/NavbarVisibility";
 import RevealOnScroll from "@/components/RevealOnScroll";
-import InstagramFloatingButton from "@/components/InstagramFloatingButton";
 import JsonLd from "@/components/JsonLd";
 import GoogleAdsTag from "@/components/GoogleAdsTag";
-import { inter } from "@/lib/fonts";
+import { gilda, inter } from "@/lib/fonts";
 import {
   DEFAULT_OG_IMAGE,
   SITE_DESCRIPTION,
@@ -27,8 +26,8 @@ export const metadata: Metadata = {
     "LOFT 442",
     "event venue Elmont NY",
     "wedding venue Nassau County",
-    "repass venue",
-    "event catering",
+    "wedding venue Long Island",
+    "private event venue Nassau County",
     "private event space",
     "corporate event venue",
     "Long Island event venue",
@@ -48,7 +47,7 @@ export const metadata: Metadata = {
         url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: `${SITE_NAME} — Luxury Event Venue in Elmont, NY`,
+        alt: `${SITE_NAME} | Luxury Event Venue in Elmont, NY`,
       },
     ],
   },
@@ -84,7 +83,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(inter.variable, "font-sans")}
+      className={cn(inter.variable, gilda.variable, "font-sans")}
     >
       <body className="antialiased">
         <GoogleAdsTag />
@@ -92,7 +91,6 @@ export default function RootLayout({
         <NavbarVisibility />
         <RevealOnScroll />
         <PageTransition>{children}</PageTransition>
-        <InstagramFloatingButton />
       </body>
     </html>
   );

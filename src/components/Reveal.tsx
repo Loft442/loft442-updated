@@ -29,7 +29,10 @@ export default function Reveal({
     .join(" ");
 
   return (
+    // RevealOnScroll adds is-visible/reveal-done outside React, sometimes before a
+    // streamed section (e.g. Instagram) hydrates; that class difference is expected.
     <div
+      suppressHydrationWarning
       className={classes}
       style={style}
       data-reveal-delay={delayMs || undefined}

@@ -46,6 +46,22 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 
 Access Sanity Studio at [http://localhost:3000/studio](http://localhost:3000/studio)
 
+## Uploading Photos & Videos to the Gallery
+
+1. Go to `/studio` on the live site (e.g. `https://loft442.com/studio`) and sign in with your Sanity account.
+2. The **Upload** tab opens first. It has one column per gallery section: **Weddings, Private Events, Birthdays and Baby Showers** (the same tabs as the website's gallery).
+3. Optionally type a **Description for this batch**; otherwise one is filled in automatically (e.g. "Wedding celebration at Loft 442").
+4. Drag photos and videos onto the drop zone under the right column (or click it to choose files). Uploads run three at a time; failed ones can be retried.
+5. New uploads are saved as drafts under **Waiting to publish**. They are not on the website until you click **Publish** (or **Publish all**). Use **Delete** to discard one. Individual descriptions or categories can be edited from the **Structure → Gallery** list before publishing.
+6. To **move** a photo to another category or **delete** it from the website, open **On the website** at the bottom of its column, then use **Move to…** or **Delete**. This works for every photo, including the site's original ones.
+
+First-time setup: the site's original gallery photos were built into the code. The Upload page shows an **Import existing photos** button until they have been copied into Sanity (one click, done once). After that, Sanity is the single source for the gallery; the built-in list is only used if Sanity can't be reached.
+
+Notes:
+- Anyone uploading needs a Sanity account invited to the project (Sanity → Manage → Members). The *Editor* role can upload and publish.
+- Published items appear on `/gallery` within about a minute when the Sanity webhook is set up (POST to `/api/revalidate-gallery`, signed with `SANITY_REVALIDATE_SECRET`, filter `_type in ["galleryItem", "galleryImport"]`). Without the webhook they appear within an hour.
+- Keep videos short (under about 100 MB) so they load quickly for visitors.
+
 ## Project Structure
 
 - `/app` - Next.js 16 app directory with pages and API routes

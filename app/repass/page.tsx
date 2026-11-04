@@ -4,9 +4,9 @@ import RepassPage from "@/components/RepassPage";
 import { absoluteUrl, buildMetadata, serviceJsonLd } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Repass Services in Elmont, NY",
+  title: "Repass & Celebration of Life Receptions in Elmont, NY",
   description:
-    "LOFT 442 offers a warm, private, and elegant repass venue in Elmont, NY for families throughout Nassau County, Queens, Brooklyn, and Long Island. Schedule a tour or check availability today.",
+    "Repass and celebration of life receptions at LOFT 442 in Elmont, NY: a calm, private and dignified space for families throughout Nassau County, Queens, Brooklyn and Long Island.",
   path: "/repass",
   image: "/images/Flyer/loft442-repass-flyer.webp",
   keywords: [
@@ -22,20 +22,17 @@ export const metadata = buildMetadata({
 });
 
 const repassServiceJsonLd = serviceJsonLd({
-  name: "Repass Services at LOFT 442",
+  name: "Repass & Celebration of Life Receptions at LOFT 442",
   description:
-    "Private repass venue in Elmont, NY with tables, chairs, bar area, sound equipment, and flexible layout options for families honoring their loved ones.",
+    "A private repass venue in Elmont, NY with a flexible layout, seating, bar and sound for families gathering to honor a loved one.",
   serviceType: "Repass venue",
   url: absoluteUrl("/repass"),
 });
 
 export default function Repass() {
   return (
-    <main className="ambient-surface bg-black pt-nav text-white">
+    <main className="bg-[var(--background)] pt-nav text-white">
       <JsonLd data={repassServiceJsonLd} />
-      <div className="ambient-glow" aria-hidden="true">
-        <span className="ambient-glow__layer" />
-      </div>
       <RepassPage />
       <Footer />
     </main>

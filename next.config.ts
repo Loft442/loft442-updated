@@ -86,6 +86,14 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.sanity.io" },
     ],
   },
+  async redirects() {
+    // The booking/payment mock-ups were retired; inquiries go through /schedule.
+    // Mirrored in public/_redirects for the Netlify edge.
+    return [
+      { source: "/booking", destination: "/schedule", permanent: true },
+      { source: "/payment", destination: "/schedule", permanent: true },
+    ];
+  },
   async headers() {
     // Browsers enforce every CSP header they receive, so /studio must be excluded
     // from the site policy rather than given a second, looser one.

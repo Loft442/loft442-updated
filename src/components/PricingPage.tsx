@@ -1,62 +1,8 @@
-import Reveal from "@/components/Reveal";
 import Image from "next/image";
-import Link from "next/link";
-import {
-  Armchair,
-  Circle,
-  Square,
-  Tv,
-  Music2,
-  Image as ImageIcon,
-  Refrigerator,
-  Flame,
-  Snowflake,
-  Droplets,
-  Wine,
-  Monitor,
-  GlassWater,
-  Clock,
-  Lightbulb,
-  UserCheck,
-  CoffeeIcon,
-  Shirt,
-  Wind,
-  Sparkles,
-  Sofa,
-  Camera,
-  type LucideIcon,
-} from "lucide-react";
+import Reveal from "@/components/Reveal";
+import Button from "@/components/ui/Button";
 
-const itemIcons: Record<string, LucideIcon> = {
-  "50 Clear Chiavari Chairs": Armchair,
-  "100 Clear Chiavari Chairs": Armchair,
-  "5 Round / Cocktail Tables": Circle,
-  "10 Round / Cocktail Tables": Circle,
-  "3 Rectangular Tables": Square,
-  "6 Rectangle Tables": Square,
-  "(2) 75 Inch Multi Media TVs": Tv,
-  "DJ Equipment / Speakers": Music2,
-  "Backdrop Banner Photo Section": ImageIcon,
-  "Stand Up Refrigerator": Refrigerator,
-  "Stand Up Food Warmer": Flame,
-  "Ice Bin": Snowflake,
-  "Bar Sink": Droplets,
-  "Prelit Shelving for Liquor": Wine,
-  "Television Behind Bar": Monitor,
-  "14 Ft. Black Granite Bar": GlassWater,
-  "6 Hour Rental": Clock,
-  "Courtesy 4 Hour Access For Decor / Set Up": Sparkles,
-  "Uplighting": Lightbulb,
-  "Server(s)": UserCheck,
-  "Bartender(s)": GlassWater,
-  "Tablecloths (Black / White)": Shirt,
-  "9 Banquet Chafing Dishes": CoffeeIcon,
-  "Nimbus Low Lying Fog Machine": Wind,
-  "Premium Love Seat (White)": Sofa,
-  "Digital Photo Booth": Camera,
-};
-
-const sharedAmenities = [
+const included = [
   "(2) 75 Inch Multi Media TVs",
   "DJ Equipment / Speakers",
   "Backdrop Banner Photo Section",
@@ -73,88 +19,68 @@ const sharedAmenities = [
 
 const packages = [
   {
-    name: "Essential Package",
-    price: "$3,700",
-    peopleMax: "50 People Max",
+    name: "The Essential",
+    price: "3,700",
+    guests: "Up to 50 guests",
+    summary: "An intimate setting for dinners, showers and close-knit celebrations.",
     imageSrc: "/images/essential.webp",
-    imageAlt: "Essential package event setup",
-    items: [
-      "50 Clear Chiavari Chairs",
-      "5 Round / Cocktail Tables",
-      "3 Rectangular Tables",
-    ],
+    imageAlt: "The Essential package: an intimate table setting at Loft 442",
+    items: ["50 clear Chiavari chairs", "5 round or cocktail tables", "3 rectangular tables"],
   },
   {
-    name: "Grand Package",
-    price: "$4,200",
-    peopleMax: "125 People Max",
+    name: "The Grand",
+    price: "4,200",
+    guests: "Up to 125 guests",
+    summary: "The full loft, arranged for weddings, receptions and landmark evenings.",
     imageSrc: "/images/grand.webp",
-    imageAlt: "Grand package event setup",
-    items: [
-      "100 Clear Chiavari Chairs",
-      "10 Round / Cocktail Tables",
-      "6 Rectangle Tables",
-    ],
+    imageAlt: "The Grand package: the full Loft 442 salon set for a reception",
+    items: ["100 clear Chiavari chairs", "10 round or cocktail tables", "6 rectangular tables"],
   },
 ];
 
-const addOns = [
-  { service: "Tablecloths (Black / White)", price: "$10" },
-  { service: "Uplighting", price: "$150" },
-  { service: "Premium Love Seat (White)", price: "$150" },
-  { service: "Server(s)", price: "$250" },
-  { service: "Bartender(s)", price: "$250" },
-  { service: "9 Banquet Chafing Dishes", price: "$250" },
-  { service: "Nimbus Low Lying Fog Machine", price: "$350" },
-  { service: "Digital Photo Booth", price: "$400" },
+const enhancements = [
+  "Uplighting",
+  "Premium white love seat",
+  "Professional server",
+  "Professional bartender",
+  "Banquet chafing service (nine dishes)",
+  "Low-lying fog",
+  "Digital photo booth",
 ];
+
+function Price({ amount }: { amount: string }) {
+  return (
+    <span className="text-gold-accent font-serif text-5xl font-light">
+      <span className="mr-1 align-top text-xl">$</span>
+      {amount}
+    </span>
+  );
+}
 
 export default function PricingPage() {
   return (
     <>
-      <section className="pricing-page section-glow section-divider relative border-t border-white/10 pb-12 pt-6 sm:pb-16 sm:pt-8">
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-xl"
-        />
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="spotlight rounded-sm px-4 py-3">
-            <Reveal mode="text" className="flex flex-col gap-4">
-              <p className="text-xs uppercase tracking-[0.4em] text-white">Loft 442</p>
-              <h1 className="text-spotlight relative inline-block text-3xl font-semibold tracking-[0.32em] text-white sm:text-4xl md:text-5xl">
-                <span className="pointer-events-none absolute -inset-x-12 -inset-y-8 z-0 blur-3xl" style={{ background: "radial-gradient(ellipse at center, rgba(200,200,210,0.85) 0%, transparent 65%)" }} aria-hidden="true" />
-                <span className="relative z-10">PRICING</span>
-              </h1>
-              <p className="max-w-2xl text-sm text-white/70">
-                Choose the package that fits your event, then customize with additional
-                services to create your ideal experience.
-              </p>
-            </Reveal>
-          </div>
+      <section className="pricing-page border-t border-[var(--line)] pb-20 pt-16 sm:pb-28 sm:pt-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <Reveal mode="text" className="flex flex-col items-center gap-6 text-center">
+            <p className="eyebrow">Loft 442</p>
+            <h1 className="display-xl">Packages &amp; Experiences</h1>
+            <span className="hairline" aria-hidden="true" />
+            <p className="lede max-w-2xl">
+              Two collections, each with exclusive use of the loft and our team in attendance. Begin
+              with the setting that suits your guest list, then refine it with curated enhancements.
+            </p>
+          </Reveal>
 
-          <div className="mt-6 grid gap-6 sm:mt-8 lg:grid-cols-2">
+          <div className="mt-20 grid gap-px bg-[var(--line)] lg:grid-cols-2">
             {packages.map((pkg, index) => (
               <Reveal
                 key={pkg.name}
                 mode="slide"
                 delayMs={index * 120}
-                className="text-spotlight rounded-sm border border-white/10 bg-white/8 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] backdrop-blur sm:p-8"
+                className="flex flex-col bg-[var(--background)] p-8 sm:p-12"
               >
-                <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-5">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.35em] text-[#d9be62] sm:text-sm">
-                      {pkg.name}
-                    </p>
-                    <p className="mt-2 text-xs uppercase tracking-[0.3em] text-white">
-                      {pkg.peopleMax}
-                    </p>
-                  </div>
-                  <p className="text-3xl font-semibold tracking-[0.06em] text-white sm:text-4xl">
-                    {pkg.price}
-                  </p>
-                </div>
-
-                <div className="relative mt-5 aspect-[118/75] overflow-hidden rounded-sm border border-white/10">
+                <div className="relative aspect-[118/75] overflow-hidden">
                   <Image
                     src={pkg.imageSrc}
                     alt={pkg.imageAlt}
@@ -162,99 +88,81 @@ export default function PricingPage() {
                     sizes="(min-width: 1024px) 45vw, 100vw"
                     className="object-cover"
                   />
+                  <div className="pointer-events-none absolute inset-4 border border-white/15" aria-hidden="true" />
                 </div>
 
-                <ul className="mt-6 space-y-3 text-sm text-white sm:text-base">
-                  {pkg.items.map((item) => {
-                    const Icon = itemIcons[item];
-                    return (
-                      <li key={item} className="flex items-center gap-3">
-                        {Icon ? (
-                          <Icon className="h-4 w-4 shrink-0 text-[#d4af37]" />
-                        ) : (
-                          <span className="mt-[0.45rem] h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
-                        )}
-                        <span>{item}</span>
-                      </li>
-                    );
-                  })}
+                <div className="mt-10 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--line)] pb-8">
+                  <div className="flex flex-col gap-3">
+                    <p className="eyebrow">{pkg.guests}</p>
+                    <h2 className="display-md">{pkg.name}</h2>
+                  </div>
+                  <Price amount={pkg.price} />
+                </div>
+
+                <p className="mt-8 text-[0.95rem] leading-relaxed text-white/70">{pkg.summary}</p>
+
+                <ul className="mt-6 flex flex-col gap-3 text-[0.95rem] text-white/80">
+                  {pkg.items.map((item) => (
+                    <li key={item} className="flex items-baseline gap-4">
+                      <span className="h-px w-4 shrink-0 translate-y-[-0.3em] bg-gold" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
                 </ul>
               </Reveal>
             ))}
           </div>
 
-          <Reveal
-            mode="text"
-            delayMs={120}
-            className="about-card-outline group relative mt-6 rounded-sm p-4 shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition sm:p-5"
-          >
-            <p className="text-xs uppercase tracking-[0.35em] text-[#d9be62] sm:text-sm">
-              Both Packages Include
-            </p>
-            <ul className="mt-3 grid gap-3 text-sm text-white sm:grid-cols-2 sm:text-base">
-              {sharedAmenities.map((amenity) => {
-                const Icon = itemIcons[amenity];
-                return (
-                  <li key={amenity} className="flex items-center gap-3">
-                    {Icon ? (
-                      <Icon className="h-4 w-4 shrink-0 text-[#d4af37]" />
-                    ) : (
-                      <span className="mt-[0.45rem] h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
-                    )}
-                    <span>{amenity}</span>
-                  </li>
-                );
-              })}
+          <Reveal mode="text" delayMs={120} className="mt-px border border-[var(--line)] p-8 sm:p-12">
+            <p className="eyebrow">Every Event Includes</p>
+            <ul className="mt-8 grid gap-x-12 gap-y-4 text-[0.95rem] text-white/80 sm:grid-cols-2">
+              {included.map((item) => (
+                <li key={item} className="flex items-baseline gap-4 border-b border-[var(--line)] pb-4">
+                  <span className="h-px w-4 shrink-0 translate-y-[-0.3em] bg-gold" aria-hidden="true" />
+                  {item}
+                </li>
+              ))}
             </ul>
           </Reveal>
         </div>
       </section>
 
-      <section className="pricing-page section-divider border-t border-white/10 py-12 sm:py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal mode="text" className="rounded-sm border border-white/10 bg-white/6 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.38)] backdrop-blur sm:p-8">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <h2 className="text-xl uppercase tracking-[0.28em] text-white sm:text-2xl">
-                Additional Services
-              </h2>
-              <p className="text-[0.62rem] uppercase tracking-[0.32em] text-white">
-                Available as add-ons
-              </p>
-            </div>
-
-            <div className="mt-6 divide-y divide-white/10 rounded-sm border border-white/10 bg-black/40">
-              {addOns.map((item) => {
-                const Icon = itemIcons[item.service];
-                return (
-                  <div
-                    key={item.service}
-                    className="flex items-center justify-between gap-4 px-4 py-3 text-sm text-white sm:px-5 sm:text-base"
-                  >
-                    <span className="flex items-center gap-3">
-                      {Icon && <Icon className="h-4 w-4 shrink-0 text-[#d4af37]" />}
-                      {item.service}
-                    </span>
-                    <span className="font-medium tracking-[0.04em] text-white">{item.price}</span>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/schedule"
-                className="inline-flex h-11 items-center justify-center rounded-sm border border-[#d4af37] px-5 text-[0.65rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-[#f5e6a8] hover:bg-[#d4af37]/15 hover:text-white hover:shadow-[0_0_24px_rgba(212,175,55,0.3)]"
-              >
-                Start planning
-              </Link>
-              <Link
-                href="/gallery"
-                className="inline-flex h-11 items-center justify-center rounded-sm border border-white/20 px-5 text-[0.65rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-white/50 hover:bg-white/10 hover:text-white"
-              >
-                View Gallery
-              </Link>
-            </div>
+      <section className="pricing-page border-t border-[var(--line)] section-pad">
+        <div className="mx-auto grid max-w-6xl gap-14 px-6 md:grid-cols-[1fr_1.4fr] md:gap-20">
+          <Reveal mode="text" className="flex flex-col gap-6">
+            <p className="eyebrow">Curated Enhancements</p>
+            <h2 className="display-lg">Refine the evening</h2>
+            <p className="lede">
+              Thoughtful additions, arranged by our team and available with either collection.
+            </p>
           </Reveal>
+
+          <Reveal mode="text" delayMs={120}>
+            <ul className="border-t border-[var(--line)]">
+              {enhancements.map((item) => (
+                <li
+                  key={item}
+                  className="flex items-baseline gap-4 border-b border-[var(--line)] py-5 text-[0.95rem] text-white/80"
+                >
+                  <span className="h-px w-4 shrink-0 translate-y-[-0.3em] bg-gold" aria-hidden="true" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+
+        <div className="mx-auto mt-20 flex max-w-6xl flex-col items-center gap-6 px-6 text-center">
+          <p className="lede max-w-xl">
+            The best way to experience Loft 442 is in person. We would be delighted to show you
+            the space.
+          </p>
+          <div className="flex flex-col items-center gap-4 sm:flex-row">
+            <Button href="/schedule" className="w-full sm:w-64">Request a Tour</Button>
+            <Button href="/gallery" variant="ghost" className="w-full sm:w-64">
+              View the Gallery
+            </Button>
+          </div>
         </div>
       </section>
     </>

@@ -1,10 +1,9 @@
 import { Suspense } from "react";
 import AvailabilityForm from "@/components/AvailabilityForm";
 import BookingBanner from "@/components/BookingBanner";
-import CTA from "@/components/CTA";
 import EventTypes from "@/components/EventTypes";
 import FAQ from "@/components/FAQ";
-import Features from "@/components/Features";
+import { AboutSection, StandardSection, TributeSection } from "@/components/Features";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import InstagramSection, {
@@ -16,22 +15,20 @@ import VideoSection from "@/components/VideoSection";
 
 export default function HomePage() {
   return (
-    <main className="ambient-surface bg-black pt-nav text-white">
-      <div className="ambient-glow" aria-hidden="true">
-        <span className="ambient-glow__layer" />
-      </div>
+    <main className="bg-[var(--background)] pt-nav text-white">
       <BookingBanner />
       <Hero />
+      <AboutSection />
       <EventTypes />
-      <AvailabilityForm />
       <VideoSection />
-      <Features />
+      <StandardSection />
+      <TributeSection />
       <Testimonials />
       <Suspense fallback={<InstagramSectionSkeleton />}>
         <InstagramSection />
       </Suspense>
       <FAQ />
-      <CTA />
+      <AvailabilityForm />
       <LocationSection />
       <Footer />
     </main>

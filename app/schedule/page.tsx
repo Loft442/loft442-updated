@@ -2,9 +2,9 @@ import SchedulePage from "@/components/SchedulePage";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Plan Your Event",
+  title: "Request a Tour",
   description:
-    "Select your preferred date and tell LOFT 442 about your event. Our team will follow up to confirm availability for weddings, repass gatherings, corporate events, and private celebrations.",
+    "Request a private tour of LOFT 442. Select your preferred date and our team will follow up to confirm availability for weddings, milestone celebrations and private events.",
   path: "/schedule",
   keywords: [
     "schedule event LOFT 442",
@@ -12,7 +12,7 @@ export const metadata = buildMetadata({
     "event availability request",
     "book event Elmont NY",
     "plan wedding venue",
-    "plan repass venue",
+    "private event venue Nassau County",
   ],
 });
 

@@ -260,7 +260,7 @@ export default function FlyerViewer({
           className="object-contain object-center"
         />
         <div className="absolute inset-0 flex items-center justify-center bg-transparent transition duration-300 ease-out group-hover:bg-black/40">
-          <span className="flex items-center gap-2 rounded-sm border border-white/40 bg-black/50 px-4 py-2 text-[0.6rem] uppercase tracking-[0.35em] text-white opacity-0 transition duration-300 ease-out group-hover:opacity-100">
+          <span className="flex items-center gap-2 rounded-sm border border-white/40 bg-black/50 px-4 py-2 text-[0.7rem] uppercase tracking-[0.35em] text-white opacity-0 transition duration-300 ease-out group-hover:opacity-100">
             <Eye className="h-3.5 w-3.5" />
             View
           </span>
@@ -270,7 +270,7 @@ export default function FlyerViewer({
   );
 
   const actionButtonClass =
-    "inline-flex h-11 w-full items-center justify-center rounded-sm border border-[#d4af37] px-6 text-[0.65rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-[#f5e6a8] hover:bg-[#d4af37]/15 hover:text-white hover:shadow-[0_0_24px_rgba(212,175,55,0.3)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
+    "inline-flex h-11 w-full items-center justify-center rounded-sm border border-gold px-6 text-[0.7rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-gold-light hover:bg-gold/15 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
 
   const downloadLink = (
     <a

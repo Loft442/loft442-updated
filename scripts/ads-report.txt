@@ -1,0 +1,1076 @@
+GOOGLE ADS READ-ONLY REPORT
+Account: LOFT 442 / customers/4828865735 / loft442.com
+Pulled: 2026-11-01 (local)
+Ranges: LAST_30_DAYS; 90-day window segments.date BETWEEN '2026-08-03' AND '2026-11-01'
+
+ACCOUNT
+name,NOT AVAILABLE,id,4828865735,currency,USD,tz,America/New_York,optimization_score,0.8954812,auto_tagging,true,conversion_tracking,CONVERSION_TRACKING_MANAGED_BY_SELF,conversion_tracking_id,17363960945
+
+1. CAMPAIGNS
+settings_csv: name,type,status,serving,daily_budget_usd,bid_strategy,target,google_search,search_partners,display,partner_search,geo_positive,geo_negative,budget_shared
+The Premier Loft,SMART,PAUSED,SERVING,11.00,TARGET_SPEND,none,true,true,true,false,PRESENCE,PRESENCE,false
+Website traffic-Search-1,SEARCH,ENABLED,SERVING,10.00,MAXIMIZE_CONVERSIONS,none,true,true,true,false,PRESENCE,PRESENCE,false
+Leads-Performance Max-1,PERFORMANCE_MAX,ENABLED,SERVING,30.00,MAXIMIZE_CONVERSIONS,none,true,true,true,false,PRESENCE,PRESENCE,false
+final_url_expansion: NOT AVAILABLE (field campaign.url_expansion_opt_out unrecognized in this API version)
+
+locations_csv: campaign,negative,geo_id,location
+The Premier Loft,false,21139,Connecticut,United States
+The Premier Loft,false,21164,New Jersey,United States
+The Premier Loft,false,1023191,New York,New York,United States
+The Premier Loft,false,1023413,Suffolk County,New York,United States
+The Premier Loft,false,9058760,Nassau County,New York,United States
+Website traffic-Search-1,false,1022762,Brooklyn,New York,United States
+Website traffic-Search-1,false,9004318,11003,New York,United States
+Website traffic-Search-1,false,9004466,11580,New York,United States
+Website traffic-Search-1,false,9058754,Kings County,New York,United States
+Website traffic-Search-1,false,9058760,Nassau County,New York,United States
+Website traffic-Search-1,false,9058770,Queens County,New York,United States
+Website traffic-Search-1,false,9067609,Manhattan,New York,United States
+Leads-Performance Max-1,false,9058760,Nassau County,New York,United States
+Leads-Performance Max-1,false,9058770,Queens County,New York,United States
+
+languages_csv: campaign,language
+Website traffic-Search-1,English (en)
+Leads-Performance Max-1,English (en)
+
+ad_schedule: NOT AVAILABLE / none set (0 rows)
+
+goals_csv: campaign,category,origin,biddable
+Website traffic-Search-1,PAGE_VIEW,GOOGLE_HOSTED,
+Website traffic-Search-1,PHONE_CALL_LEAD,WEBSITE,true
+Website traffic-Search-1,PHONE_CALL_LEAD,CALL_FROM_ADS,true
+Website traffic-Search-1,BOOK_APPOINTMENT,WEBSITE,true
+Website traffic-Search-1,GET_DIRECTIONS,GOOGLE_HOSTED,
+Website traffic-Search-1,CONTACT,GOOGLE_HOSTED,
+Website traffic-Search-1,CONTACT,CALL_FROM_ADS,true
+Website traffic-Search-1,CONTACT,UNKNOWN,
+Website traffic-Search-1,ENGAGEMENT,GOOGLE_HOSTED,
+Website traffic-Search-1,ENGAGEMENT,UNKNOWN,
+Website traffic-Search-1,STORE_VISIT,STORE,
+Leads-Performance Max-1,PAGE_VIEW,GOOGLE_HOSTED,
+Leads-Performance Max-1,PHONE_CALL_LEAD,WEBSITE,true
+Leads-Performance Max-1,PHONE_CALL_LEAD,CALL_FROM_ADS,true
+Leads-Performance Max-1,BOOK_APPOINTMENT,WEBSITE,true
+Leads-Performance Max-1,GET_DIRECTIONS,GOOGLE_HOSTED,
+Leads-Performance Max-1,CONTACT,GOOGLE_HOSTED,
+Leads-Performance Max-1,CONTACT,CALL_FROM_ADS,
+Leads-Performance Max-1,CONTACT,UNKNOWN,
+Leads-Performance Max-1,ENGAGEMENT,GOOGLE_HOSTED,
+Leads-Performance Max-1,ENGAGEMENT,UNKNOWN,
+Leads-Performance Max-1,STORE_VISIT,STORE,
+
+metrics_30_csv: name,impr,clicks,ctr,avg_cpc,cost,conv,conv_rate,cost_per_conv,search_is,is_lost_budget,is_lost_rank,top_impr_rate,abs_top_impr_rate
+The Premier Loft,0,0,,,0.00,0,,,,,,,
+Website traffic-Search-1,3006,250,8.32%,1.17,291.80,15,6.00%,19.45,11.40%,28.42%,60.18%,76.27%,18.87%
+Leads-Performance Max-1,492724,737,0.15%,1.26,931.51,57,1.54%,16.34,10.23%,22.20%,67.57%,,
+
+metrics_90_csv: name,impr,clicks,ctr,avg_cpc,cost,conv,conv_rate,cost_per_conv,search_is,is_lost_budget,is_lost_rank,top_impr_rate,abs_top_impr_rate
+The Premier Loft,0,0,,,0.00,0,,,,,,,
+Website traffic-Search-1,11486,873,7.60%,1.07,936.97,35.848065,4.11%,26.14,15.25%,25.81%,58.94%,69.92%,17.73%
+Leads-Performance Max-1,1228074,1798,0.15%,1.35,2426.97,190.751935,0.59%,12.72,10.13%,20.19%,69.67%,,
+
+2. CONVERSIONS
+actions_csv: id,name,status,type,category,origin,primary_for_goal,include_in_conversions,counting,call_seconds
+7218933803,"Smart campaign ad clicks to call",ENABLED,SMART_CAMPAIGN_AD_CLICKS_TO_CALL,CONTACT,CALL_FROM_ADS,true,false,MANY_PER_CLICK,60
+7218934016,"Local actions - Directions",ENABLED,GOOGLE_HOSTED,GET_DIRECTIONS,GOOGLE_HOSTED,true,false,MANY_PER_CLICK,60
+7218934040,"Smart campaign map clicks to call",ENABLED,SMART_CAMPAIGN_MAP_CLICKS_TO_CALL,CONTACT,GOOGLE_HOSTED,true,false,MANY_PER_CLICK,60
+7218934046,"Clicks to call",ENABLED,GOOGLE_HOSTED,CONTACT,GOOGLE_HOSTED,true,false,MANY_PER_CLICK,60
+7218937142,"Calls from Smart Campaign Ads",ENABLED,SMART_CAMPAIGN_TRACKED_CALLS,PHONE_CALL_LEAD,CALL_FROM_ADS,true,true,ONE_PER_CLICK,30
+7219049899,"Smart campaign map directions",ENABLED,SMART_CAMPAIGN_MAP_DIRECTIONS,GET_DIRECTIONS,GOOGLE_HOSTED,true,false,MANY_PER_CLICK,60
+7219055893,"Book appointment",ENABLED,GOOGLE_ANALYTICS_4_CUSTOM,BOOK_APPOINTMENT,WEBSITE,true,true,ONE_PER_CLICK,60
+7219261806,"www.loft442.com (web) purchase",HIDDEN,GOOGLE_ANALYTICS_4_PURCHASE,PURCHASE,WEBSITE,false,false,MANY_PER_CLICK,60
+7262127800,"Local actions - Other engagements",ENABLED,GOOGLE_HOSTED,ENGAGEMENT,GOOGLE_HOSTED,true,false,MANY_PER_CLICK,60
+7262156102,"Local actions - Website visits",ENABLED,GOOGLE_HOSTED,PAGE_VIEW,GOOGLE_HOSTED,true,false,MANY_PER_CLICK,60
+7270774036,"Calls from ads",ENABLED,AD_CALL,PHONE_CALL_LEAD,CALL_FROM_ADS,true,true,ONE_PER_CLICK,5
+7499924849,"Local actions - Menu views",ENABLED,GOOGLE_HOSTED,PAGE_VIEW,GOOGLE_HOSTED,true,false,MANY_PER_CLICK,60
+7578055330,"Store visits",ENABLED,STORE_VISITS,STORE_VISIT,STORE,true,false,MANY_PER_CLICK,60
+7670743119,"Calls from ads (1)",ENABLED,AD_CALL,CONTACT,CALL_FROM_ADS,false,false,ONE_PER_CLICK,60
+7885924928,"Call ((347) 579-6578)",ENABLED,WEBSITE_CALL,PHONE_CALL_LEAD,WEBSITE,true,true,ONE_PER_CLICK,5
+
+by_campaign_30_csv: campaign,action,category,conversions,all_conversions,value
+Website traffic-Search-1,"Local actions - Website visits",PAGE_VIEW,0,33,0
+Website traffic-Search-1,"Calls from Smart Campaign Ads",PHONE_CALL_LEAD,8,8,0
+Website traffic-Search-1,"Calls from ads",PHONE_CALL_LEAD,7,7,7
+Website traffic-Search-1,"Local actions - Directions",GET_DIRECTIONS,0,15,0
+Website traffic-Search-1,"Clicks to call",CONTACT,0,7,0
+Website traffic-Search-1,"Local actions - Other engagements",ENGAGEMENT,0,210,0
+Website traffic-Search-1,"Store visits",STORE_VISIT,0,6,0
+Leads-Performance Max-1,"Local actions - Menu views",PAGE_VIEW,0,1,0
+Leads-Performance Max-1,"Local actions - Website visits",PAGE_VIEW,0,48,0
+Leads-Performance Max-1,"Calls from Smart Campaign Ads",PHONE_CALL_LEAD,11,11,0
+Leads-Performance Max-1,"Calls from ads",PHONE_CALL_LEAD,6,6,6
+Leads-Performance Max-1,"Local actions - Directions",GET_DIRECTIONS,0,67,0
+Leads-Performance Max-1,"Clicks to call",CONTACT,0,5,0
+Leads-Performance Max-1,"Local actions - Other engagements",ENGAGEMENT,0,718,0
+Leads-Performance Max-1,"Store visits",STORE_VISIT,40,40,40
+
+by_campaign_90_csv: campaign,action,category,conversions,all_conversions,value
+Website traffic-Search-1,"Local actions - Menu views",PAGE_VIEW,0,2,0
+Website traffic-Search-1,"Local actions - Website visits",PAGE_VIEW,0,152,0
+Website traffic-Search-1,"Calls from Smart Campaign Ads",PHONE_CALL_LEAD,13.998531,13.998531,0
+Website traffic-Search-1,"Calls from ads",PHONE_CALL_LEAD,21.849534,21.849534,21.849534
+Website traffic-Search-1,"Local actions - Directions",GET_DIRECTIONS,0,75,0
+Website traffic-Search-1,"Clicks to call",CONTACT,0,33,0
+Website traffic-Search-1,"Local actions - Other engagements",ENGAGEMENT,0,782,0
+Website traffic-Search-1,"Store visits",STORE_VISIT,0,19.4,0
+Leads-Performance Max-1,"Local actions - Menu views",PAGE_VIEW,0,1,0
+Leads-Performance Max-1,"Local actions - Website visits",PAGE_VIEW,0,149,0
+Leads-Performance Max-1,"Calls from Smart Campaign Ads",PHONE_CALL_LEAD,16.001469,16.001469,0
+Leads-Performance Max-1,"Calls from ads",PHONE_CALL_LEAD,18.150466,18.150466,18.150466
+Leads-Performance Max-1,"Local actions - Directions",GET_DIRECTIONS,0,206,0
+Leads-Performance Max-1,"Clicks to call",CONTACT,0,22,0
+Leads-Performance Max-1,"Local actions - Other engagements",ENGAGEMENT,0,1917,0
+Leads-Performance Max-1,"Store visits",STORE_VISIT,156.6,156.6,156.6
+
+3. KEYWORDS (Search, 30 days)
+csv: campaign,ad_group,keyword,match,status,qs,creative_qs,landing_qs,pred_ctr,impr,clicks,cost,conv
+Website traffic-Search-1,Ad group 1,"venue rentals",BROAD,ENABLED,,,,,262,27,39.28,1.5
+Website traffic-Search-1,Ad group 1,"event space rental",PHRASE,ENABLED,6,BELOW_AVERAGE,ABOVE_AVERAGE,AVERAGE,233,19,36.10,1
+Website traffic-Search-1,Ad group 1,"party halls",BROAD,ENABLED,3,BELOW_AVERAGE,AVERAGE,BELOW_AVERAGE,376,32,34.95,2
+Website traffic-Search-1,Ad group 1,"event space rental",BROAD,ENABLED,6,BELOW_AVERAGE,ABOVE_AVERAGE,AVERAGE,338,35,25.50,0.5
+Website traffic-Search-1,Ad group 1,"nyc event venues",BROAD,PAUSED,,,,,158,16,21.60,0
+Website traffic-Search-1,Ad group 1,"find a venue",BROAD,PAUSED,,,,,134,11,20.35,1
+Website traffic-Search-1,Ad group 1,"event spaces near me",BROAD,ENABLED,6,BELOW_AVERAGE,ABOVE_AVERAGE,AVERAGE,260,19,19.23,4
+Website traffic-Search-1,Ad group 1,"event space",PHRASE,ENABLED,5,BELOW_AVERAGE,ABOVE_AVERAGE,BELOW_AVERAGE,118,9,17.88,2
+Website traffic-Search-1,Ad group 1,"venues in near me",BROAD,ENABLED,,,,,92,7,9.86,0
+Website traffic-Search-1,Ad group 1,"party venues near me",BROAD,ENABLED,6,BELOW_AVERAGE,ABOVE_AVERAGE,AVERAGE,45,8,9.56,0
+Website traffic-Search-1,Ad group 1,"event halls",PHRASE,ENABLED,3,BELOW_AVERAGE,AVERAGE,BELOW_AVERAGE,78,7,8.62,0
+Website traffic-Search-1,Ad group 1,"venue space",BROAD,PAUSED,5,BELOW_AVERAGE,ABOVE_AVERAGE,BELOW_AVERAGE,83,6,7.19,0
+Website traffic-Search-1,Ad group 1,"event space",BROAD,PAUSED,5,BELOW_AVERAGE,ABOVE_AVERAGE,BELOW_AVERAGE,133,8,6.02,2
+Website traffic-Search-1,Ad group 1,"event space Elmont",PHRASE,ENABLED,7,AVERAGE,ABOVE_AVERAGE,AVERAGE,49,8,5.91,0
+Website traffic-Search-1,Ad group 1,"event venues near me",BROAD,ENABLED,6,BELOW_AVERAGE,ABOVE_AVERAGE,AVERAGE,73,6,4.86,0
+Website traffic-Search-1,Ad group 1,"venue event space",PHRASE,ENABLED,,,,,41,2,2.82,1
+Website traffic-Search-1,Ad group 1,"venues in new york",BROAD,PAUSED,5,BELOW_AVERAGE,ABOVE_AVERAGE,BELOW_AVERAGE,40,5,2.76,0
+Website traffic-Search-1,Ad group 1,"event halls",BROAD,PAUSED,3,BELOW_AVERAGE,AVERAGE,BELOW_AVERAGE,101,5,2.73,0
+Website traffic-Search-1,Ad group 1,"rentable spaces near me",BROAD,PAUSED,,,,,54,2,2.67,0
+Website traffic-Search-1,Ad group 1,"private event space",PHRASE,ENABLED,,,,,29,3,2.64,0
+Website traffic-Search-1,Ad group 1,"party venue",PHRASE,ENABLED,7,ABOVE_AVERAGE,ABOVE_AVERAGE,BELOW_AVERAGE,22,1,1.00,0
+Website traffic-Search-1,Ad group 1,"venue halls",PHRASE,PAUSED,,,,,13,1,0.23,0
+Website traffic-Search-1,Ad group 1,"event venue",BROAD,PAUSED,,,,,17,1,0.11,0
+Website traffic-Search-1,Ad group 1,"free",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"hotel",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"job",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"jobs",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"photo",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"cheap",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"how to",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"restaurant",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"photos",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"decorator",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"syracuse",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"connecticut",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"rochester",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"buffalo",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"albany",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"playground",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"hiring",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"apartment",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"template",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"apartments",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"tent",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"diy",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"careers",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"salary",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"decorations",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"for sale",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"ideas",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"regency",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding sites",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"decoration",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding website",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding venues",BROAD,PAUSED,,,,,3,0,0.00,0
+Website traffic-Search-1,Ad group 1,"reception venues",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"zola",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"kids play",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"loft apartment",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"new jersey",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"the knot",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"party venue",BROAD,PAUSED,7,ABOVE_AVERAGE,ABOVE_AVERAGE,BELOW_AVERAGE,11,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding reception venues",PHRASE,PAUSED,,,,,1,0,0.00,0
+Website traffic-Search-1,Ad group 1,"staten island",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding reception venues",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"chair rental",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"party rentals",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"event venue",PHRASE,ENABLED,,,,,6,0,0.00,0
+Website traffic-Search-1,Ad group 1,"table rental",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding venues nyc",BROAD,PAUSED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding venues new york",PHRASE,PAUSED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"under 500",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"private event venues",BROAD,ENABLED,,,,,6,0,0.00,0
+Website traffic-Search-1,Ad group 1,"under $500",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"airbnb",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding venues near me",BROAD,PAUSED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"halls for weddings",BROAD,ENABLED,,,,,1,0,0.00,0
+Website traffic-Search-1,Ad group 1,"event space rentals near me",BROAD,PAUSED,,,,,3,0,0.00,0
+Website traffic-Search-1,Ad group 1,"event locations nyc",BROAD,PAUSED,,,,,6,0,0.00,0
+Website traffic-Search-1,Ad group 1,"the factory",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"halls near me",BROAD,PAUSED,3,BELOW_AVERAGE,AVERAGE,BELOW_AVERAGE,24,0,0.00,0
+Website traffic-Search-1,Ad group 1,"interwood",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"venues near",BROAD,PAUSED,,,,,13,0,0.00,0
+Website traffic-Search-1,Ad group 1,"coral house",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"private event venues near me",BROAD,ENABLED,,,,,16,0,0.00,0
+Website traffic-Search-1,Ad group 1,"the vault",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"peerspace",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"venue halls",BROAD,PAUSED,,,,,4,0,0.00,0
+Website traffic-Search-1,Ad group 1,"wedding hall reception",BROAD,PAUSED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"event space rentals near me",PHRASE,ENABLED,,,,,1,0,0.00,0
+Website traffic-Search-1,Ad group 1,"mbfni",BROAD,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"one space",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"venue event space",BROAD,PAUSED,,,,,5,0,0.00,0
+Website traffic-Search-1,Ad group 1,"studio 421",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"legend party",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"lux venue",PHRASE,ENABLED,,,,,0,0,0.00,0
+Website traffic-Search-1,Ad group 1,"suite 1937",PHRASE,ENABLED,,,,,0,0,0.00,0
+
+4. SEARCH TERMS
+top100_cost_30_csv: term,campaign,match,impr,clicks,cost,conv
+"cheap hall rentals long island",Website traffic-Search-1,NEAR_PHRASE,1,1,9.63,0
+"legend party hall",Website traffic-Search-1,BROAD,1,1,8.83,1
+"loft 442",Website traffic-Search-1,NEAR_PHRASE,37,9,8.56,0
+"mbfni",Website traffic-Search-1,NEAR_PHRASE,2,1,8.01,0
+"lux venue ™",Website traffic-Search-1,NEAR_PHRASE,1,1,7.39,1
+"venues under 2000 near me",Website traffic-Search-1,NEAR_PHRASE,1,1,6.63,0
+"event space near me",Website traffic-Search-1,NEAR_EXACT,29,2,5.36,1
+"loft 442 photos",Website traffic-Search-1,NEAR_PHRASE,9,2,5.24,1
+"party halls in valley stream ny",Website traffic-Search-1,PHRASE,2,3,5.09,0
+"venues in nassau county",Website traffic-Search-1,NEAR_PHRASE,2,1,3.92,0
+"party halls on merrick blvd",Website traffic-Search-1,PHRASE,4,2,3.01,1
+"event space long island ny",Website traffic-Search-1,NEAR_PHRASE,3,2,2.98,0
+"regency hall queens village",Website traffic-Search-1,NEAR_PHRASE,2,1,2.83,0
+"the loft event space",Website traffic-Search-1,NEAR_PHRASE,4,2,2.74,0
+"peerspace rentals",Website traffic-Search-1,NEAR_PHRASE,2,1,2.59,0
+"venues near me",Website traffic-Search-1,NEAR_EXACT,28,3,2.46,0
+"steel event space photos",Website traffic-Search-1,AI_MAX,1,1,2.43,0
+"rental halls in long island",Website traffic-Search-1,NEAR_PHRASE,3,1,2.31,0
+"small venues",Website traffic-Search-1,NEAR_PHRASE,1,1,2.30,0
+"party halls in staten island",Website traffic-Search-1,NEAR_PHRASE,1,1,2.25,0
+"the vault elmont ny",Website traffic-Search-1,NEAR_PHRASE,1,1,2.19,0
+"coral house baldwin ny",Website traffic-Search-1,NEAR_PHRASE,2,1,2.07,0
+"small party venues in nassau county",Website traffic-Search-1,NEAR_PHRASE,2,1,2.02,0
+"event spaces near me",Website traffic-Search-1,EXACT,24,2,1.90,1
+"space rentals for events near me",Website traffic-Search-1,NEAR_EXACT,2,1,1.87,0
+"rental halls near me",Website traffic-Search-1,NEAR_EXACT,4,1,1.82,0
+"cheap party halls in long island under $500",Website traffic-Search-1,BROAD,2,1,1.81,0
+"va hall rental",Website traffic-Search-1,NEAR_PHRASE,2,1,1.72,0
+"event spaces queens",Website traffic-Search-1,NEAR_PHRASE,13,1,1.63,0
+"event space queens",Website traffic-Search-1,NEAR_PHRASE,9,1,1.63,0
+"event space in long island",Website traffic-Search-1,NEAR_PHRASE,5,1,1.41,0
+"venue halls near me",Website traffic-Search-1,NEAR_EXACT,4,2,1.40,0
+"hall near me",Website traffic-Search-1,NEAR_PHRASE,7,1,1.32,0
+"sweet 16 venues near me",Website traffic-Search-1,NEAR_PHRASE,2,2,1.20,1
+"halls for rent near me",Website traffic-Search-1,NEAR_EXACT,4,1,1.18,0
+"venue union nj",Website traffic-Search-1,NEAR_PHRASE,2,1,1.18,0
+"private space near me",Website traffic-Search-1,NEAR_PHRASE,1,2,1.18,1
+"hall venues near me",Website traffic-Search-1,NEAR_EXACT,3,1,1.12,0
+"event halls in queens",Website traffic-Search-1,AI_MAX,1,1,1.07,0
+"party venue in queens",Website traffic-Search-1,NEAR_PHRASE,3,1,1.04,0
+"hall in long island",Website traffic-Search-1,NEAR_PHRASE,2,1,1.01,0
+"event party hall",Website traffic-Search-1,NEAR_EXACT,1,1,1.00,0
+"space for party rental",Website traffic-Search-1,NEAR_EXACT,1,1,0.98,0
+"the flatbush space",Website traffic-Search-1,NEAR_PHRASE,1,1,0.96,0
+"event venues near me",Website traffic-Search-1,EXACT,8,1,0.95,0
+"party venues near me",Website traffic-Search-1,EXACT,6,3,0.93,0
+"party hall rental queens ny",Website traffic-Search-1,PHRASE,1,1,0.92,0
+"events venue atlantic ave freeport ny",Website traffic-Search-1,NEAR_PHRASE,1,1,0.92,0
+"party hall near me",Website traffic-Search-1,NEAR_EXACT,35,2,0.89,0
+"restaurant venue for baby shower",Website traffic-Search-1,NEAR_PHRASE,5,1,0.84,0
+"rental halls queens",Website traffic-Search-1,NEAR_PHRASE,1,1,0.83,0
+"party hall queens",Website traffic-Search-1,PHRASE,4,1,0.74,0
+"rental space",Website traffic-Search-1,NEAR_PHRASE,2,1,0.73,0
+"halls for rent for parties",Website traffic-Search-1,NEAR_EXACT,1,1,0.72,0
+"venues in queens",Website traffic-Search-1,NEAR_PHRASE,3,1,0.69,0
+"studio 421 event space",Website traffic-Search-1,NEAR_PHRASE,5,1,0.67,0
+"venues around me",Website traffic-Search-1,NEAR_EXACT,2,1,0.65,0
+"event space for rent",Website traffic-Search-1,NEAR_EXACT,4,2,0.60,0
+"affordable party venues nyc",Website traffic-Search-1,NEAR_PHRASE,1,1,0.59,0
+"event space in the bronx",Website traffic-Search-1,NEAR_PHRASE,1,1,0.57,0
+"event space in queens",Website traffic-Search-1,NEAR_PHRASE,3,2,0.56,0
+"event space in long island",Website traffic-Search-1,PHRASE,1,1,0.53,0
+"places to throw baby shower near me",Website traffic-Search-1,NEAR_PHRASE,1,1,0.52,0
+"party halls near me",Website traffic-Search-1,NEAR_EXACT,7,2,0.46,0
+"party venues long island",Website traffic-Search-1,AI_MAX,1,1,0.45,0
+"event spaces bronx",Website traffic-Search-1,NEAR_PHRASE,4,1,0.43,0
+"occasions hall merrick blvd",Website traffic-Search-1,NEAR_PHRASE,1,1,0.43,0
+"nyc party rental space",Website traffic-Search-1,NEAR_EXACT,2,1,0.40,0
+"russo's on the bay photos",Website traffic-Search-1,NEAR_PHRASE,1,1,0.34,0
+"small halls for rent near me",Website traffic-Search-1,NEAR_PHRASE,3,1,0.33,0
+"vfw hall rental long island prices",Website traffic-Search-1,NEAR_PHRASE,3,1,0.31,0.5
+"venues queens ny",Website traffic-Search-1,NEAR_PHRASE,5,1,0.30,0
+"birthday hall rentals near me",Website traffic-Search-1,NEAR_PHRASE,1,1,0.29,0
+"passaic venues",Website traffic-Search-1,NEAR_PHRASE,1,1,0.29,0
+"party hall bronx ny",Website traffic-Search-1,PHRASE,1,1,0.28,0
+"new rochelle venue",Website traffic-Search-1,NEAR_PHRASE,1,1,0.28,0
+"venue packages near me",Website traffic-Search-1,NEAR_PHRASE,1,1,0.27,0
+"venue rentals near me",Website traffic-Search-1,NEAR_PHRASE,1,1,0.23,0
+"space to rent for baby shower",Website traffic-Search-1,NEAR_PHRASE,2,1,0.20,0
+"event space on long island",Website traffic-Search-1,NEAR_PHRASE,1,1,0.19,0
+"party halls long island",Website traffic-Search-1,PHRASE,1,1,0.18,0
+"local para fiestas",Website traffic-Search-1,BROAD,1,1,0.12,0
+"salones de fiesta cerca de mi",Website traffic-Search-1,NEAR_PHRASE,1,1,0.11,0
+"party hall on liberty ave",Website traffic-Search-1,PHRASE,1,1,0.06,0
+"42 loft elmont",Website traffic-Search-1,NEAR_PHRASE,2,1,0.05,0
+"the elegant loft",Website traffic-Search-1,NEAR_PHRASE,2,1,0.04,0
+"event halls near me",Website traffic-Search-1,NEAR_PHRASE,2,1,0.03,0
+"catering halls long island nassau county",Website traffic-Search-1,NEAR_PHRASE,1,1,0.02,0
+"event spaces in queens ny",Website traffic-Search-1,AI_MAX,1,1,0.02,0
+"event halls",Website traffic-Search-1,EXACT,4,0,0.00,0
+"event space",Website traffic-Search-1,EXACT,5,0,0.00,0
+"event space rental",Website traffic-Search-1,EXACT,4,0,0.00,0
+"event venue",Website traffic-Search-1,EXACT,1,0,0.00,0
+"halls near me",Website traffic-Search-1,EXACT,23,0,0.00,0
+"party venue",Website traffic-Search-1,EXACT,1,0,0.00,0
+"affordable party halls in queens",Website traffic-Search-1,PHRASE,1,0,0.00,0
+"avenue event space photos",Website traffic-Search-1,PHRASE,1,0,0.00,0
+"baby shower event space near me",Website traffic-Search-1,PHRASE,1,0,0.00,0
+"birthday event space near me",Website traffic-Search-1,PHRASE,1,0,0.00,0
+"cafe with event space near me",Website traffic-Search-1,PHRASE,1,0,0.00,0
+
+top100_cost_90_csv: term,campaign,match,impr,clicks,cost,conv
+"party rentals near me",Website traffic-Search-1,BROAD,9,2,28.19,0
+"loft 442",Website traffic-Search-1,NEAR_PHRASE,76,21,21.31,0
+"loft 442 photos",Website traffic-Search-1,NEAR_PHRASE,15,6,13.04,1.665688
+"event spaces queens",Website traffic-Search-1,NEAR_PHRASE,40,4,12.78,0
+"event spaces near me",Website traffic-Search-1,EXACT,84,6,10.77,1
+"cheap hall rentals long island",Website traffic-Search-1,NEAR_PHRASE,1,1,9.63,0
+"event venues near me",Website traffic-Search-1,EXACT,29,6,9.28,0
+"venues near me",Website traffic-Search-1,NEAR_EXACT,83,8,8.88,0
+"legend party hall",Website traffic-Search-1,BROAD,1,1,8.83,1
+"mbfni",Website traffic-Search-1,NEAR_PHRASE,5,1,8.01,0
+"lux venue ™",Website traffic-Search-1,NEAR_PHRASE,6,1,7.39,1
+"loft 442 photos",Website traffic-Search-1,AI_MAX,1,1,7.25,0.5
+"party hall near me",Website traffic-Search-1,NEAR_EXACT,79,6,6.87,0
+"event space rental near me",Website traffic-Search-1,NEAR_EXACT,23,4,6.71,1
+"venues under 2000 near me",Website traffic-Search-1,NEAR_PHRASE,1,1,6.63,0
+"event space near me",Website traffic-Search-1,NEAR_EXACT,77,5,6.34,1
+"party venue near me",Website traffic-Search-1,NEAR_EXACT,8,3,6.02,0
+"banquet restaurant near me",Website traffic-Search-1,NEAR_PHRASE,4,2,6.02,1
+"halls for party",Website traffic-Search-1,NEAR_EXACT,5,2,5.80,0
+"verdis country",Website traffic-Search-1,NEAR_PHRASE,1,1,5.59,0
+"party halls in valley stream ny",Website traffic-Search-1,PHRASE,3,3,5.09,0
+"party halls near me",Website traffic-Search-1,NEAR_EXACT,58,10,4.99,1
+"loft 442",Website traffic-Search-1,BROAD,30,4,4.51,0
+"party venues near me",Website traffic-Search-1,EXACT,36,9,4.28,0
+"venues in nassau county",Website traffic-Search-1,NEAR_PHRASE,3,1,3.92,0
+"party hall in long island",Website traffic-Search-1,NEAR_PHRASE,8,3,3.83,0
+"o connell gardens oceanside",Website traffic-Search-1,BROAD,1,1,3.45,0
+"loft 442 elmont",Website traffic-Search-1,NEAR_PHRASE,17,3,3.29,0
+"chameleon event space photos",Website traffic-Search-1,PHRASE,2,2,3.24,0
+"reception hall near me",Website traffic-Search-1,NEAR_EXACT,2,1,3.21,0
+"loft 442 photos",Website traffic-Search-1,BROAD,6,1,3.15,0.5
+"event hall rentals near me",Website traffic-Search-1,NEAR_EXACT,4,2,3.10,0
+"party halls on merrick blvd",Website traffic-Search-1,PHRASE,4,2,3.01,1
+"event space long island ny",Website traffic-Search-1,NEAR_PHRASE,4,2,2.98,0
+"loft 42 elmont",Website traffic-Search-1,NEAR_PHRASE,5,2,2.97,0
+"regency hall queens village",Website traffic-Search-1,NEAR_PHRASE,2,1,2.83,0
+"suite 1937",Website traffic-Search-1,NEAR_PHRASE,12,1,2.80,0
+"dunamis palace hempstead",Website traffic-Search-1,NEAR_PHRASE,1,1,2.74,0
+"the loft event space",Website traffic-Search-1,NEAR_PHRASE,5,2,2.74,0
+"halls near me",Website traffic-Search-1,EXACT,43,1,2.72,0
+"cheap party halls in queens under $500",Website traffic-Search-1,NEAR_PHRASE,20,1,2.72,0
+"hall space for rent near me",Website traffic-Search-1,NEAR_EXACT,2,2,2.62,1
+"peerspace rentals",Website traffic-Search-1,NEAR_PHRASE,2,1,2.59,0
+"venues in queens ny",Website traffic-Search-1,NEAR_PHRASE,5,1,2.59,0.332843
+"event place near me",Website traffic-Search-1,NEAR_EXACT,10,2,2.57,0
+"event space under $500",Website traffic-Search-1,NEAR_PHRASE,2,1,2.57,1
+"party hall",Website traffic-Search-1,NEAR_EXACT,25,2,2.53,0
+"party hall rental near me",Website traffic-Search-1,NEAR_EXACT,16,2,2.45,0
+"reception halls queens",Website traffic-Search-1,NEAR_PHRASE,5,4,2.45,0
+"steel event space photos",Website traffic-Search-1,AI_MAX,1,1,2.43,0
+"community center for rent bronx ny",Website traffic-Search-1,NEAR_PHRASE,1,1,2.42,0
+"the factory freeport ny",Website traffic-Search-1,NEAR_PHRASE,6,2,2.35,0
+"party halls queens",Website traffic-Search-1,BROAD,40,2,2.32,0
+"event space to rent",Website traffic-Search-1,NEAR_EXACT,5,1,2.32,0
+"rental halls in long island",Website traffic-Search-1,NEAR_PHRASE,3,1,2.31,0
+"event place",Website traffic-Search-1,NEAR_EXACT,1,1,2.30,0
+"small venues",Website traffic-Search-1,NEAR_PHRASE,3,1,2.30,0
+"indian party hall near me",Website traffic-Search-1,PHRASE,3,1,2.26,0
+"party halls in staten island",Website traffic-Search-1,NEAR_PHRASE,1,1,2.25,0
+"small event space near me",Website traffic-Search-1,PHRASE,2,1,2.23,0
+"event space queens",Website traffic-Search-1,PHRASE,5,2,2.22,0
+"queens event halls",Website traffic-Search-1,NEAR_PHRASE,5,2,2.22,0
+"rental halls near me",Website traffic-Search-1,NEAR_EXACT,26,2,2.20,0
+"100 people hall",Website traffic-Search-1,NEAR_PHRASE,2,1,2.19,0
+"the vault elmont ny",Website traffic-Search-1,NEAR_PHRASE,1,1,2.19,0
+"party hall brooklyn",Website traffic-Search-1,BROAD,3,2,2.08,0
+"catering halls nassau county new york",Website traffic-Search-1,NEAR_PHRASE,1,1,2.07,0
+"coral house baldwin ny",Website traffic-Search-1,NEAR_PHRASE,5,1,2.07,0
+"small party venues in nassau county",Website traffic-Search-1,NEAR_PHRASE,3,1,2.02,0
+"catering hall queens",Website traffic-Search-1,NEAR_PHRASE,2,1,1.99,0
+"party space rental",Website traffic-Search-1,NEAR_EXACT,6,1,1.87,0
+"space rentals for events near me",Website traffic-Search-1,NEAR_EXACT,2,1,1.87,0
+"birthday party halls near me",Website traffic-Search-1,NEAR_PHRASE,2,1,1.85,0
+"venue halls near me",Website traffic-Search-1,NEAR_EXACT,6,3,1.84,0
+"nearest party hall near me",Website traffic-Search-1,NEAR_EXACT,2,1,1.82,0
+"cheap party halls in long island under $500",Website traffic-Search-1,BROAD,2,1,1.81,0
+"affordable venues near me",Website traffic-Search-1,NEAR_PHRASE,5,1,1.80,1
+"a and p image events baldwin",Website traffic-Search-1,BROAD,7,1,1.77,0
+"event spaces long island",Website traffic-Search-1,NEAR_PHRASE,4,1,1.77,0
+"locales para fiesta cerca de mi",Website traffic-Search-1,BROAD,9,3,1.73,0
+"halls for rent bronx",Website traffic-Search-1,NEAR_PHRASE,7,1,1.72,0
+"va hall rental",Website traffic-Search-1,NEAR_PHRASE,2,1,1.72,0
+"cheap party halls in queens under $500",Website traffic-Search-1,PHRASE,24,1,1.71,0
+"venue near me",Website traffic-Search-1,NEAR_EXACT,26,4,1.65,0
+"1122 events venue",Website traffic-Search-1,NEAR_PHRASE,1,1,1.64,0
+"event space queens",Website traffic-Search-1,NEAR_PHRASE,21,1,1.63,0
+"event place for rent",Website traffic-Search-1,NEAR_EXACT,1,1,1.60,0
+"hall for rent near me",Website traffic-Search-1,NEAR_EXACT,11,2,1.56,0
+"halls for rent queens",Website traffic-Search-1,NEAR_PHRASE,13,1,1.55,0
+"baby shower venue queens ny",Website traffic-Search-1,NEAR_PHRASE,3,1,1.53,0
+"event hall in queens",Website traffic-Search-1,NEAR_PHRASE,14,1,1.47,0
+"event space in bronx",Website traffic-Search-1,NEAR_PHRASE,4,1,1.45,0
+"venues in bushwick",Website traffic-Search-1,NEAR_PHRASE,1,1,1.43,0
+"event hall in queens",Website traffic-Search-1,PHRASE,9,2,1.42,1
+"event space in long island",Website traffic-Search-1,NEAR_PHRASE,11,1,1.41,0
+"party halls",Website traffic-Search-1,EXACT,8,1,1.38,0
+"party rental places",Website traffic-Search-1,NEAR_EXACT,1,1,1.38,0
+"event space long island city",Website traffic-Search-1,NEAR_PHRASE,3,1,1.37,0
+"party halls in long island",Website traffic-Search-1,NEAR_PHRASE,4,2,1.36,0
+"party venues queens",Website traffic-Search-1,PHRASE,4,1,1.35,0
+
+waste_cost_gt_3_zero_conv_30_csv: term,campaign,match,impr,clicks,cost,conv
+"cheap hall rentals long island",Website traffic-Search-1,NEAR_PHRASE,1,1,9.63,0
+"loft 442",Website traffic-Search-1,NEAR_PHRASE,37,9,8.56,0
+"mbfni",Website traffic-Search-1,NEAR_PHRASE,2,1,8.01,0
+"venues under 2000 near me",Website traffic-Search-1,NEAR_PHRASE,1,1,6.63,0
+"party halls in valley stream ny",Website traffic-Search-1,PHRASE,2,3,5.09,0
+"venues in nassau county",Website traffic-Search-1,NEAR_PHRASE,2,1,3.92,0
+
+waste_cost_gt_3_zero_conv_90_csv: term,campaign,match,impr,clicks,cost,conv
+"party rentals near me",Website traffic-Search-1,BROAD,9,2,28.19,0
+"loft 442",Website traffic-Search-1,NEAR_PHRASE,76,21,21.31,0
+"event spaces queens",Website traffic-Search-1,NEAR_PHRASE,40,4,12.78,0
+"cheap hall rentals long island",Website traffic-Search-1,NEAR_PHRASE,1,1,9.63,0
+"event venues near me",Website traffic-Search-1,EXACT,29,6,9.28,0
+"venues near me",Website traffic-Search-1,NEAR_EXACT,83,8,8.88,0
+"mbfni",Website traffic-Search-1,NEAR_PHRASE,5,1,8.01,0
+"party hall near me",Website traffic-Search-1,NEAR_EXACT,79,6,6.87,0
+"venues under 2000 near me",Website traffic-Search-1,NEAR_PHRASE,1,1,6.63,0
+"party venue near me",Website traffic-Search-1,NEAR_EXACT,8,3,6.02,0
+"halls for party",Website traffic-Search-1,NEAR_EXACT,5,2,5.80,0
+"verdis country",Website traffic-Search-1,NEAR_PHRASE,1,1,5.59,0
+"party halls in valley stream ny",Website traffic-Search-1,PHRASE,3,3,5.09,0
+"loft 442",Website traffic-Search-1,BROAD,30,4,4.51,0
+"party venues near me",Website traffic-Search-1,EXACT,36,9,4.28,0
+"venues in nassau county",Website traffic-Search-1,NEAR_PHRASE,3,1,3.92,0
+"party hall in long island",Website traffic-Search-1,NEAR_PHRASE,8,3,3.83,0
+"o connell gardens oceanside",Website traffic-Search-1,BROAD,1,1,3.45,0
+"loft 442 elmont",Website traffic-Search-1,NEAR_PHRASE,17,3,3.29,0
+"chameleon event space photos",Website traffic-Search-1,PHRASE,2,2,3.24,0
+"reception hall near me",Website traffic-Search-1,NEAR_EXACT,2,1,3.21,0
+"event hall rentals near me",Website traffic-Search-1,NEAR_EXACT,4,2,3.10,0
+
+5. NEGATIVES
+account_shared_sets_csv: name,type,status,member_count
+"account-level negative keywords list",ACCOUNT_LEVEL_NEGATIVE_KEYWORDS,ENABLED,0
+shared_set_members: 0 (account-level negative keywords list member_count=0)
+campaign_shared_set_links: 0 (none linked)
+campaign_level_negatives_csv: campaign,match,keyword
+Website traffic-Search-1,EXACT,"balloons"
+Website traffic-Search-1,EXACT,"free"
+Website traffic-Search-1,EXACT,"cheap"
+Website traffic-Search-1,EXACT,"decorations"
+Website traffic-Search-1,EXACT,"tutorial"
+Website traffic-Search-1,EXACT,"wholesale"
+Website traffic-Search-1,EXACT,"training"
+Website traffic-Search-1,EXACT,"certification"
+Website traffic-Search-1,EXACT,"low cost"
+Website traffic-Search-1,EXACT,"party supplies"
+Website traffic-Search-1,EXACT,"discount venue"
+Website traffic-Search-1,EXACT,"event planning course"
+Website traffic-Search-1,EXACT,"event furniture"
+Website traffic-Search-1,EXACT,"how to host a party"
+Website traffic-Search-1,EXACT,"affordable venue"
+Website traffic-Search-1,EXACT,"free hall rental"
+Website traffic-Search-1,EXACT,"DIY event"
+ad_group_level_negatives_csv: campaign,ad_group,match,keyword
+Website traffic-Search-1,Ad group 1,BROAD,"free"
+Website traffic-Search-1,Ad group 1,BROAD,"hotel"
+Website traffic-Search-1,Ad group 1,BROAD,"job"
+Website traffic-Search-1,Ad group 1,BROAD,"jobs"
+Website traffic-Search-1,Ad group 1,BROAD,"photo"
+Website traffic-Search-1,Ad group 1,BROAD,"cheap"
+Website traffic-Search-1,Ad group 1,BROAD,"how to"
+Website traffic-Search-1,Ad group 1,BROAD,"restaurant"
+Website traffic-Search-1,Ad group 1,BROAD,"photos"
+Website traffic-Search-1,Ad group 1,BROAD,"decorator"
+Website traffic-Search-1,Ad group 1,BROAD,"syracuse"
+Website traffic-Search-1,Ad group 1,BROAD,"connecticut"
+Website traffic-Search-1,Ad group 1,BROAD,"rochester"
+Website traffic-Search-1,Ad group 1,BROAD,"buffalo"
+Website traffic-Search-1,Ad group 1,BROAD,"albany"
+Website traffic-Search-1,Ad group 1,BROAD,"playground"
+Website traffic-Search-1,Ad group 1,BROAD,"hiring"
+Website traffic-Search-1,Ad group 1,BROAD,"apartment"
+Website traffic-Search-1,Ad group 1,BROAD,"template"
+Website traffic-Search-1,Ad group 1,BROAD,"apartments"
+Website traffic-Search-1,Ad group 1,BROAD,"tent"
+Website traffic-Search-1,Ad group 1,BROAD,"diy"
+Website traffic-Search-1,Ad group 1,BROAD,"careers"
+Website traffic-Search-1,Ad group 1,BROAD,"salary"
+Website traffic-Search-1,Ad group 1,BROAD,"decorations"
+Website traffic-Search-1,Ad group 1,BROAD,"for sale"
+Website traffic-Search-1,Ad group 1,BROAD,"ideas"
+Website traffic-Search-1,Ad group 1,BROAD,"regency"
+Website traffic-Search-1,Ad group 1,BROAD,"decoration"
+Website traffic-Search-1,Ad group 1,BROAD,"wedding website"
+Website traffic-Search-1,Ad group 1,BROAD,"zola"
+Website traffic-Search-1,Ad group 1,BROAD,"kids play"
+Website traffic-Search-1,Ad group 1,BROAD,"loft apartment"
+Website traffic-Search-1,Ad group 1,PHRASE,"new jersey"
+Website traffic-Search-1,Ad group 1,BROAD,"the knot"
+Website traffic-Search-1,Ad group 1,PHRASE,"staten island"
+Website traffic-Search-1,Ad group 1,PHRASE,"chair rental"
+Website traffic-Search-1,Ad group 1,PHRASE,"party rentals"
+Website traffic-Search-1,Ad group 1,PHRASE,"table rental"
+Website traffic-Search-1,Ad group 1,PHRASE,"under 500"
+Website traffic-Search-1,Ad group 1,PHRASE,"under $500"
+Website traffic-Search-1,Ad group 1,BROAD,"airbnb"
+Website traffic-Search-1,Ad group 1,PHRASE,"the factory"
+Website traffic-Search-1,Ad group 1,BROAD,"interwood"
+Website traffic-Search-1,Ad group 1,PHRASE,"coral house"
+Website traffic-Search-1,Ad group 1,PHRASE,"the vault"
+Website traffic-Search-1,Ad group 1,BROAD,"peerspace"
+Website traffic-Search-1,Ad group 1,BROAD,"mbfni"
+Website traffic-Search-1,Ad group 1,PHRASE,"one space"
+Website traffic-Search-1,Ad group 1,PHRASE,"studio 421"
+Website traffic-Search-1,Ad group 1,PHRASE,"legend party"
+Website traffic-Search-1,Ad group 1,PHRASE,"lux venue"
+Website traffic-Search-1,Ad group 1,PHRASE,"suite 1937"
+
+6. ADS (30 days)
+csv: campaign,ad_group,ad_id,type,status,approval,review,strength,final_urls,impr,clicks,ctr,cost,conv,headlines,descriptions
+The Premier Loft,Smart Campaign Managed AdGroup,764319737203,SMART_CAMPAIGN_AD,ENABLED,APPROVED,REVIEWED,,[],0,0,,0.00,0,"",""
+Website traffic-Search-1,Ad group 1,773044073730,RESPONSIVE_SEARCH_AD,ENABLED,APPROVED,REVIEWED,EXCELLENT,["https://www.loft442.com/"],3006,250,8.32%,291.80,15,"Private Event Venue | Event Venue for Rent | Your Venue, Your Way | Host Events at Loft 442 | Book a Cozy Private Loft | Exclusive Loft Venue Rental | Rentable Loft in Elmont | Celebrate at Loft 442 | Book Loft 442 Today | Perfect Venue for Parties | Host Birthdays & Dinners | Elmont Private Event Loft | Gather at Loft 442 | Stylish Space in Elmont | {Keyword:Event Venue}","Loft 442 | Event Venue | 784 Elmont Road, Elmont, NY 11003, USA | Loft 442 is the perfect setting for your next event with our premier event venue services | Elevate your event with our exceptional venue, designed to impress and inspire | LOFT 442 is perfect for milestone birthdays, baby showers, weddings, repasses, and more."
+Website traffic-Search-1,Ad group 1,777302478605,CALL_AD,PAUSED,APPROVED,REVIEWED,,["https://www.loft442.com/"],0,0,,0.00,0,"",""
+Website traffic-Search-1,Ad group 1,830159387445,RESPONSIVE_SEARCH_AD,ENABLED,APPROVED,REVIEWED,GOOD,["https://loft442.com/schedule"],0,0,,0.00,0,"Call Today to Book | Up to 125 Guests | Tables and Chairs Included | Veteran-Owned Event Loft | Birthdays, Showers, Repasts | Repast Venue in Elmont | Loft 442, Elmont NY | 6 Hours Included | Host Events at Loft 442 | Serving Elmont, New York | Event Space Rental | Rentable Loft in Elmont | Book Loft 442 Today | Party Halls | Request a Date Online","Private event loft at 784 Elmont Road, Elmont, NY 11003. Up to 125 guests. | Tables and chairs included. Birthdays, showers, repasts and more. Veteran owned. | Call or request a date online. Book your party at Loft 442 today."
+call_ad_details: NOT AVAILABLE (Unrecognized fields in the query: 'ad_group_ad.ad.call_ad.disable_call_conversion', 'ad_group_ad.ad.call_ad.call_tracked', 'ad_group_ad.ad.call_ad.country_code', 'ad_group_ad.ad.call_ad.phone_number_verification_url', 'ad_group_ad.ad.call_ad.business_name'.)
+
+7. ASSETS
+customer_assets_csv: type,field_type,status,text_or_phone
+STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,ENABLED,"Service catalog"
+STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,ENABLED,"Types"
+STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,ENABLED,"Amenities"
+SITELINK,SITELINK,ENABLED,"Birthdays"
+SITELINK,SITELINK,ENABLED,"Weddings/Anniversaries"
+SITELINK,SITELINK,ENABLED,"Private/Corporate Events"
+SITELINK,SITELINK,ENABLED,"Kids Parties"
+CALLOUT,CALLOUT,ENABLED,"Flexible Event Packages"
+CALLOUT,CALLOUT,ENABLED,"Stylish Party Venue"
+CALLOUT,CALLOUT,ENABLED,"Perfect for Birthdays"
+CALLOUT,CALLOUT,ENABLED,"Private Event Loft"
+IMAGE,BUSINESS_LOGO,ENABLED,""
+campaign_assets_csv: campaign,type,field_type,status,text_or_phone,snippet_values
+The Premier Loft,IMAGE,LOGO,ENABLED,"",[]
+Leads-Performance Max-1,IMAGE,LOGO,ENABLED,"",[]
+Leads-Performance Max-1,IMAGE,LOGO,ENABLED,"",[]
+Leads-Performance Max-1,IMAGE,LOGO,ENABLED,"",[]
+Leads-Performance Max-1,IMAGE,LANDSCAPE_LOGO,ENABLED,"",[]
+Leads-Performance Max-1,STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,ENABLED,"Service catalog",["Event Planning Support","Furniture & Seating Setup","Catering Coordination","Audio/Visual Setup","Personalized Event Pack"]
+Leads-Performance Max-1,STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,ENABLED,"Types",["Weddings","Birthday Parties","Baby Showers","Corporate Events","Wedding Anniversaries"]
+Leads-Performance Max-1,STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,ENABLED,"Amenities",["Elegant Loft Space","Full Service Staff","Modern Lighting","Custom Decor Options","On-site Parking"]
+The Premier Loft,SITELINK,SITELINK,REMOVED,"Birthdays",[]
+The Premier Loft,SITELINK,SITELINK,REMOVED,"Location",[]
+The Premier Loft,SITELINK,SITELINK,REMOVED,"Services",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"Private Events",[]
+Leads-Performance Max-1,SITELINK,SITELINK,ENABLED,"Private Events",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"Weddings & Anniversaries",[]
+Leads-Performance Max-1,SITELINK,SITELINK,ENABLED,"Weddings & Anniversaries",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"About Us",[]
+Leads-Performance Max-1,SITELINK,SITELINK,ENABLED,"About Us",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"Kids Parties",[]
+Leads-Performance Max-1,SITELINK,SITELINK,ENABLED,"Kids Parties",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"Schedule Now",[]
+Leads-Performance Max-1,SITELINK,SITELINK,ENABLED,"Schedule Now",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"Look Inside LOFT 442",[]
+Leads-Performance Max-1,SITELINK,SITELINK,ENABLED,"Look Inside LOFT 442",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"Reserve LOFT 442 Today",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"Exclusive Hero Discounts",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"Veteran-Owned Event Hall",[]
+Website traffic-Search-1,SITELINK,SITELINK,ENABLED,"See Our Venue In Action",[]
+Leads-Performance Max-1,CALLOUT,CALLOUT,ENABLED,"Flexible Event Packages",[]
+Leads-Performance Max-1,CALLOUT,CALLOUT,ENABLED,"Stylish Party Venue",[]
+Leads-Performance Max-1,CALLOUT,CALLOUT,ENABLED,"Perfect for Birthdays",[]
+Leads-Performance Max-1,CALLOUT,CALLOUT,ENABLED,"Private Event Loft",[]
+Website traffic-Search-1,TEXT,BUSINESS_NAME,ENABLED,"",[]
+Leads-Performance Max-1,TEXT,BUSINESS_NAME,ENABLED,"",[]
+Website traffic-Search-1,TEXT,BUSINESS_NAME,REMOVED,"",[]
+Leads-Performance Max-1,TEXT,BUSINESS_NAME,REMOVED,"",[]
+The Premier Loft,CALL,CALL,ENABLED,"(347) 579-6578",[]
+Website traffic-Search-1,CALL,CALL,ENABLED,"(347) 579-6578",[]
+Leads-Performance Max-1,CALL,CALL,ENABLED,"(347) 579-6578",[]
+Website traffic-Search-1,IMAGE,BUSINESS_LOGO,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,REMOVED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+Website traffic-Search-1,IMAGE,AD_IMAGE,ENABLED,"",[]
+sitelink_urls_csv: link_text,final_urls,desc1,desc2
+"Birthdays",["https://www.loft442.com/birthdays"],"",""
+"Location",["https://www.loft442.com/corporate-events"],"Directions To Our","Business Locations."
+"Services",["https://www.loft442.com/capability"],"Learn More About The","Services We Offer."
+"Weddings/Anniversaries",["https://www.loft442.com/weddings"],"",""
+"Private/Corporate Events",["https://www.loft442.com/corporate-events"],"",""
+"Birthdays",["https://www.loft442.com/birthdays"],"",""
+"Kids Parties",["https://www.loft442.com/celebrations"],"",""
+"View Gallery",["https://www.loft442.com/projects-7"],"",""
+"Schedule Now",["https://www.loft442.com/schedule-now"],"",""
+"Private Events",["https://www.loft442.com/"],"Versatile Corporate Event Space","Elevate Your Business Gatherings"
+"Weddings & Anniversaries",["https://www.loft442.com/"],"Elegant Weddings at Loft 442","Create Your Dream Wedding Here"
+"About Us",["https://www.loft442.com/"],"Modern Elegance Meets Urban Chic","Your Event, Our Passionate Team"
+"Kids Parties",["https://www.loft442.com/"],"Host Unforgettable Celebrations","Versatile Space for Every Occasion"
+"Schedule Now",["https://www.loft442.com/"],"Reserve Your Event at Loft 442","Book a Viewing at Loft 442 Today"
+"Look Inside LOFT 442",["https://loft442.com/gallery"],"Romantic Lighting & Decor Touches","Urban Loft Vibes, Graceful Elegance"
+"Private Events",["https://www.loft442.com/corporate-events"],"",""
+"Weddings & Anniversaries",["https://www.loft442.com/weddings"],"",""
+"About Us",["https://www.loft442.com/about"],"",""
+"Kids Parties",["https://www.loft442.com/celebrations"],"",""
+"Schedule Now",["https://www.loft442.com/schedule-now"],"",""
+"For Weddings",["https://www.loft442.com/weddings"],"",""
+"For Kids Parties",["https://www.loft442.com/celebrations"],"",""
+"Plan Your Event",["https://loft442.com/schedule"],"",""
+"About Us",["https://loft442.com/#about"],"",""
+"Start Planning",["https://loft442.com/schedule"],"",""
+"View Gallery",["https://loft442.com/gallery"],"",""
+"Photo Gallery",["https://loft442.com/gallery"],"",""
+"Our Pricing",["https://loft442.com/pricing"],"",""
+"Schedule A Consultation",["https://loft442.com/schedule"],"",""
+"Events Gallery",["https://loft442.com/gallery"],"",""
+"Pricing Plans",["https://loft442.com/pricing"],"",""
+"Pricing Plan",["https://loft442.com/pricing"],"",""
+"Reserve LOFT 442 Today",["https://loft442.com"],"Host Weddings, Repasses and Parties","Book Baby Showers and Birthdays"
+"Exclusive Hero Discounts",["https://www.loft442.com"],"Veteran & First Responder Savings","Proudly Veteran-Owned in Elmont."
+"Veteran-Owned Event Hall",["https://loft442.com"],"Create unforgettable memories here","Private event space in Elmont NY"
+"See Our Venue In Action",["https://www.instagram.com/loft.442/?hl=en"],"Luxury Event Space near Queens, NY","Beautiful Venue for all Occasions"
+asset_perf_30_csv: campaign,type,field,text,impr,clicks,cost,conv
+Leads-Performance Max-1,IMAGE,LOGO,"",168358,157,232.12,17
+Leads-Performance Max-1,IMAGE,LOGO,"",167588,112,202.15,7
+Leads-Performance Max-1,IMAGE,LOGO,"",146032,103,179.56,9
+Leads-Performance Max-1,STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,"",1,0,0.00,0
+Leads-Performance Max-1,STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,"",7,3,1.80,0
+Leads-Performance Max-1,STRUCTURED_SNIPPET,STRUCTURED_SNIPPET,"",5,0,0.00,0
+Website traffic-Search-1,SITELINK,SITELINK,"Private Events",8,1,0.04,0
+Leads-Performance Max-1,SITELINK,SITELINK,"Private Events",20,2,2.91,0
+Website traffic-Search-1,SITELINK,SITELINK,"Weddings & Anniversaries",7,1,0.04,0
+Leads-Performance Max-1,SITELINK,SITELINK,"Weddings & Anniversaries",45,5,3.38,0
+Website traffic-Search-1,SITELINK,SITELINK,"About Us",6,0,0.00,0
+Leads-Performance Max-1,SITELINK,SITELINK,"About Us",18,2,5.16,0
+Website traffic-Search-1,SITELINK,SITELINK,"Kids Parties",37,1,2.33,0
+Leads-Performance Max-1,SITELINK,SITELINK,"Kids Parties",32,9,14.00,0
+Website traffic-Search-1,SITELINK,SITELINK,"Schedule Now",17,0,0.00,0
+Leads-Performance Max-1,SITELINK,SITELINK,"Schedule Now",35,4,7.82,0
+Website traffic-Search-1,SITELINK,SITELINK,"Look Inside LOFT 442",91,3,1.01,0
+Leads-Performance Max-1,SITELINK,SITELINK,"Look Inside LOFT 442",85,13,20.14,0
+Website traffic-Search-1,SITELINK,SITELINK,"Reserve LOFT 442 Today",53,1,0.68,0
+Website traffic-Search-1,SITELINK,SITELINK,"Exclusive Hero Discounts",72,2,0.97,0
+Website traffic-Search-1,SITELINK,SITELINK,"Veteran-Owned Event Hall",42,2,1.21,0
+Leads-Performance Max-1,CALLOUT,CALLOUT,"Flexible Event Packages",54,9,8.63,1
+Leads-Performance Max-1,CALLOUT,CALLOUT,"Stylish Party Venue",52,8,10.56,1
+Leads-Performance Max-1,CALLOUT,CALLOUT,"Perfect for Birthdays",53,11,18.51,2
+Leads-Performance Max-1,CALLOUT,CALLOUT,"Private Event Loft",81,15,19.35,2
+Website traffic-Search-1,TEXT,BUSINESS_NAME,"",579,60,74.85,4.5
+Leads-Performance Max-1,TEXT,BUSINESS_NAME,"",698,39,30.59,0
+Website traffic-Search-1,CALL,CALL,"(347) 579-6578",2079,212,265.14,13
+Leads-Performance Max-1,CALL,CALL,"(347) 579-6578",3720,293,297.07,22
+Website traffic-Search-1,IMAGE,BUSINESS_LOGO,"",568,60,74.85,4.5
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",28,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",2,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",2,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",2,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",1,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",7,2,11.16,1
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",2,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",1,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",9,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",5,0,0.00,0
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",52,4,10.44,1
+Website traffic-Search-1,IMAGE,AD_IMAGE,"",5,1,8.83,1
+lead_forms: NOT AVAILABLE (none found in customer/campaign asset listings with LEAD_FORM type in selected rows)
+location_assets: [{"id":"263321908029","placeId":"ChIJeS96PMRjwokRfWgAbAXdH4I","bp":[{"storeCode":"10493453137477791596","listingId":"-7744356897725057564"}]}]
+
+8. PERFORMANCE MAX
+asset_groups_csv: campaign,name,status,ad_strength,final_urls
+Leads-Performance Max-1,"Events",ENABLED,EXCELLENT,["https://www.loft442.com/"]
+signals_csv: campaign,asset_group,search_theme,audience
+Leads-Performance Max-1,"Events","Birthday party venue",
+Leads-Performance Max-1,"Events","Wedding reception venue",
+Leads-Performance Max-1,"Events","Baby shower venue",
+Leads-Performance Max-1,"Events","Anniversary party venue",
+Leads-Performance Max-1,"Events","Private event space near me",
+Leads-Performance Max-1,"Events","Affordable event space",
+Leads-Performance Max-1,"Events","Affordable wedding venue near me",
+Leads-Performance Max-1,"Events","Venue for 100+ people",
+Leads-Performance Max-1,"Events","Large reception hall",
+Leads-Performance Max-1,"Events","Banquet hall capacity",
+Leads-Performance Max-1,"Events","Small intimate event space",
+Leads-Performance Max-1,"Events","Venue for 50-100 guests",
+Leads-Performance Max-1,"Events","Best value event space",
+Leads-Performance Max-1,"Events","Loft venue for weddings Elmont NY",
+Leads-Performance Max-1,"Events","Unique venue for private events",
+Leads-Performance Max-1,"Events","Venue that handles full service events",
+Leads-Performance Max-1,"Events","Venue available for corporate events and parties",
+Leads-Performance Max-1,"Events","Event space with modern decor",
+Leads-Performance Max-1,"Events","Budget event venues Elmont",
+Leads-Performance Max-1,"Events","Luxury venue without high cost",
+Leads-Performance Max-1,"Events","Venue pricing transparent",
+Leads-Performance Max-1,"Events","Venue with parking",
+Leads-Performance Max-1,"Events","",customers/4828865735/audiences/326796338
+Leads-Performance Max-1,"Events","Event venue Elmont NY",
+Leads-Performance Max-1,"Events","Wedding venue near Elmont",
+Leads-Performance Max-1,"Events","Party venue near Elmont NY",
+Leads-Performance Max-1,"Events","Banquet hall in Elmont NY",
+Leads-Performance Max-1,"Events","Elegant loft event venue",
+Leads-Performance Max-1,"Events","Loft venue with decor",
+Leads-Performance Max-1,"Events","Corporate meeting venue",
+Leads-Performance Max-1,"Events","Venue with catering",
+search_term_insights/categories: NOT AVAILABLE (Request contains an invalid argument.)
+asset_group_top_combinations:
+{"campaign":{"resourceName":"customers/4828865735/campaigns/23095755507","name":"Leads-Performance Max-1"},"assetGroupTopCombinationView":{"resourceName":"customers/4828865735/assetGroupTopCombinationViews/6617437502~TEXT","assetGroupTopCombinations":[{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716501837","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/297716501843","servedAssetFieldType":"HEADLINE_2"},{"asset":"customers/4828865735/assets/297716501882","servedAssetFieldType":"DESCRIPTION_1"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716501837","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/286345005386","servedAssetFieldType":"HEADLINE_2"},{"asset":"customers/4828865735/assets/297716501882","servedAssetFieldType":"DESCRIPTION_1"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716501837","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/297716501882","servedAssetFieldType":"DESCRIPTION_1"},{"asset":"customers/4828865735/assets/263342343747","servedAssetFieldType":"CALL"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716501873","servedAssetFieldType":"DESCRIPTION"},{"asset":"customers/4828865735/assets/297716501882","servedAssetFieldType":"DESCRIPTION"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716501882","servedAssetFieldType":"DESCRIPTION"},{"asset":"customers/4828865735/assets/263342343747","servedAssetFieldType":"CALL"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716501873","servedAssetFieldType":"DESCRIPTION"},{"asset":"customers/4828865735/assets/297716501882","servedAssetFieldType":"DESCRIPTION"},{"asset":"customers/4828865735/assets/263342343747","servedAssetFieldType":"CALL"}]}]}}
+{"campaign":{"resourceName":"customers/4828865735/campaigns/23095755507","name":"Leads-Performance Max-1"},"assetGroupTopCombinationView":{"resourceName":"customers/4828865735/assetGroupTopCombinationViews/6617437502~IMAGE","assetGroupTopCombinations":[{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297799919711","servedAssetFieldType":"MARKETING_IMAGE"},{"asset":"customers/4828865735/assets/263335120896","servedAssetFieldType":"LOGO"},{"asset":"customers/4828865735/assets/297811933870","servedAssetFieldType":"CALL_TO_ACTION"},{"asset":"customers/4828865735/assets/297716501831","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/297716501885","servedAssetFieldType":"DESCRIPTION_1"},{"asset":"customers/4828865735/assets/297716494214","servedAssetFieldType":"BUSINESS_NAME"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297800530109","servedAssetFieldType":"MARKETING_IMAGE"},{"asset":"customers/4828865735/assets/297811933870","servedAssetFieldType":"CALL_TO_ACTION"},{"asset":"customers/4828865735/assets/297716501855","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/297716494214","servedAssetFieldType":"BUSINESS_NAME"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297880355431","servedAssetFieldType":"MARKETING_IMAGE"},{"asset":"customers/4828865735/assets/286415859154","servedAssetFieldType":"LOGO"},{"asset":"customers/4828865735/assets/297811933870","servedAssetFieldType":"CALL_TO_ACTION"},{"asset":"customers/4828865735/assets/297716501831","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/297716494214","servedAssetFieldType":"BUSINESS_NAME"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716494214","servedAssetFieldType":"UNKNOWN"},{"asset":"customers/4828865735/assets/297921123336","servedAssetFieldType":"SQUARE_MARKETING_IMAGE"},{"asset":"customers/4828865735/assets/286415859154","servedA
+{"campaign":{"resourceName":"customers/4828865735/campaigns/23095755507","name":"Leads-Performance Max-1"},"assetGroupTopCombinationView":{"resourceName":"customers/4828865735/assetGroupTopCombinationViews/6617437502~VIDEO","assetGroupTopCombinations":[{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716494214","servedAssetFieldType":"UNKNOWN"},{"asset":"customers/4828865735/assets/263335120896","servedAssetFieldType":"LOGO"},{"asset":"customers/4828865735/assets/297811933870","servedAssetFieldType":"CALL_TO_ACTION"},{"asset":"customers/4828865735/assets/297716501834","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/297847259877","servedAssetFieldType":"YOU_TUBE_VIDEO"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716494214","servedAssetFieldType":"UNKNOWN"},{"asset":"customers/4828865735/assets/263335120896","servedAssetFieldType":"LOGO"},{"asset":"customers/4828865735/assets/297811933870","servedAssetFieldType":"CALL_TO_ACTION"},{"asset":"customers/4828865735/assets/297716501843","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/297847259877","servedAssetFieldType":"YOU_TUBE_VIDEO"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716494214","servedAssetFieldType":"UNKNOWN"},{"asset":"customers/4828865735/assets/263335120896","servedAssetFieldType":"LOGO"},{"asset":"customers/4828865735/assets/297811933870","servedAssetFieldType":"CALL_TO_ACTION"},{"asset":"customers/4828865735/assets/297716501846","servedAssetFieldType":"HEADLINE_1"},{"asset":"customers/4828865735/assets/297847259877","servedAssetFieldType":"YOU_TUBE_VIDEO"}]},{"assetCombinationServedAssets":[{"asset":"customers/4828865735/assets/297716494214","servedAssetFieldType":"UNKNOWN"},{"asset":"customers/4828865735/assets/263335120896","servedAssetFieldType":"LOGO"},{"asset":"customers/4828865735/assets/297811933870","servedAssetFieldType":"CALL_TO_ACTION"},{"asset":"custo
+placement_report: NOT AVAILABLE
+
+9. SEGMENTS (30 days)
+device_csv: campaign,device,impr,clicks,cost,conv
+Website traffic-Search-1,DESKTOP,24,2,0.69,0
+Website traffic-Search-1,MOBILE,2982,248,291.11,15
+Leads-Performance Max-1,DESKTOP,9865,43,20.33,1
+Leads-Performance Max-1,MOBILE,478861,684,899.50,56
+Leads-Performance Max-1,TABLET,3648,10,8.90,0
+Leads-Performance Max-1,CONNECTED_TV,350,0,2.77,0
+day_of_week_csv: campaign,day,impr,clicks,cost,conv
+Website traffic-Search-1,SUNDAY,488,32,24.96,1
+Website traffic-Search-1,MONDAY,436,40,57.81,3
+Website traffic-Search-1,TUESDAY,377,22,40.74,2
+Website traffic-Search-1,WEDNESDAY,435,44,43.16,2
+Website traffic-Search-1,THURSDAY,253,20,33.77,4
+Website traffic-Search-1,FRIDAY,408,37,45.56,2
+Website traffic-Search-1,SATURDAY,609,55,45.80,1
+Leads-Performance Max-1,SUNDAY,77481,130,123.65,4
+Leads-Performance Max-1,MONDAY,64274,115,121.10,11
+Leads-Performance Max-1,TUESDAY,66637,109,123.99,4.333333
+Leads-Performance Max-1,WEDNESDAY,61386,85,118.58,7.666667
+Leads-Performance Max-1,THURSDAY,69676,87,118.08,12
+Leads-Performance Max-1,FRIDAY,82164,108,159.40,12
+Leads-Performance Max-1,SATURDAY,71106,103,166.72,6
+hour_csv: campaign,hour,impr,clicks,cost,conv
+Website traffic-Search-1,0,16,0,0.00,0
+Website traffic-Search-1,1,5,0,0.00,0
+Website traffic-Search-1,2,4,0,0.00,0
+Website traffic-Search-1,3,4,1,0.75,0
+Website traffic-Search-1,4,4,1,0.02,0
+Website traffic-Search-1,5,1,0,0.00,0
+Website traffic-Search-1,6,7,1,0.24,0
+Website traffic-Search-1,7,25,1,0.31,0
+Website traffic-Search-1,8,70,7,14.99,1
+Website traffic-Search-1,9,234,19,28.23,2
+Website traffic-Search-1,10,249,24,59.30,3
+Website traffic-Search-1,11,298,21,39.92,0
+Website traffic-Search-1,12,365,30,33.43,1
+Website traffic-Search-1,13,316,27,32.81,5
+Website traffic-Search-1,14,292,22,14.86,2
+Website traffic-Search-1,15,237,16,16.99,0
+Website traffic-Search-1,16,210,17,16.57,0
+Website traffic-Search-1,17,197,22,17.97,0
+Website traffic-Search-1,18,185,16,8.20,1
+Website traffic-Search-1,19,111,8,3.50,0
+Website traffic-Search-1,20,82,9,2.86,0
+Website traffic-Search-1,21,38,4,0.27,0
+Website traffic-Search-1,22,26,2,0.25,0
+Website traffic-Search-1,23,30,2,0.32,0
+Leads-Performance Max-1,0,10836,28,23.22,0
+Leads-Performance Max-1,1,8346,16,14.78,0
+Leads-Performance Max-1,2,6528,6,12.10,0
+Leads-Performance Max-1,3,5316,11,9.37,1
+Leads-Performance Max-1,4,8681,7,9.46,0
+Leads-Performance Max-1,5,17373,3,15.02,2
+Leads-Performance Max-1,6,26347,12,27.71,8
+Leads-Performance Max-1,7,30853,34,40.68,2
+Leads-Performance Max-1,8,30026,41,42.51,2
+Leads-Performance Max-1,9,30350,28,58.35,0
+Leads-Performance Max-1,10,30022,42,67.35,3
+Leads-Performance Max-1,11,30987,64,77.30,4.666667
+Leads-Performance Max-1,12,35665,73,89.57,10
+Leads-Performance Max-1,13,36950,78,100.07,8
+Leads-Performance Max-1,14,36008,54,77.58,5
+Leads-Performance Max-1,15,35093,60,68.97,4.333333
+Leads-Performance Max-1,16,35048,73,79.54,2
+Leads-Performance Max-1,17,27820,51,49.21,2
+Leads-Performance Max-1,18,18036,19,26.82,2
+Leads-Performance Max-1,19,13586,14,14.71,1
+Leads-Performance Max-1,20,7431,5,7.99,0
+Leads-Performance Max-1,21,5816,8,10.83,0
+Leads-Performance Max-1,22,3658,6,6.03,0
+Leads-Performance Max-1,23,1948,4,2.34,0
+user_location_top_by_cost_csv: campaign,country_criterion_id,targeting_location,impr,clicks,cost,conv,geo_name
+Leads-Performance Max-1,2840,false,484202,506,741.02,44,United States
+Website traffic-Search-1,2840,true,3006,250,291.80,15,United States
+Leads-Performance Max-1,2840,true,5066,200,187.06,13,United States
+Leads-Performance Max-1,2214,false,63,1,0.43,0,Dominican Republic
+Leads-Performance Max-1,2566,false,83,1,0.31,0,Nigeria
+Leads-Performance Max-1,2124,false,242,3,0.29,0,Canada
+Leads-Performance Max-1,2276,false,61,1,0.26,0,Germany
+Leads-Performance Max-1,2012,false,5,1,0.22,0,Algeria
+Leads-Performance Max-1,2826,false,185,1,0.20,0,United Kingdom
+Leads-Performance Max-1,2050,false,102,3,0.15,0,Bangladesh
+Leads-Performance Max-1,2356,false,234,2,0.11,0,India
+Leads-Performance Max-1,2586,false,184,1,0.11,0,Pakistan
+Leads-Performance Max-1,2608,false,248,0,0.10,0,Philippines
+Leads-Performance Max-1,2036,false,46,0,0.08,0,Australia
+Leads-Performance Max-1,2376,false,144,0,0.06,0,Israel
+Leads-Performance Max-1,2484,false,80,1,0.05,0,Mexico
+Leads-Performance Max-1,2076,false,74,1,0.04,0,Brazil
+Leads-Performance Max-1,2372,false,31,0,0.04,0,Ireland
+Leads-Performance Max-1,2833,false,1,0,0.04,0,Isle of Man
+Leads-Performance Max-1,2170,false,68,1,0.04,0,Colombia
+Leads-Performance Max-1,2630,false,69,1,0.04,0,Puerto Rico
+Leads-Performance Max-1,2860,false,43,0,0.03,0,Uzbekistan
+Leads-Performance Max-1,2360,false,54,0,0.03,0,Indonesia
+Leads-Performance Max-1,2410,false,53,1,0.03,0,South Korea
+Leads-Performance Max-1,2688,false,23,1,0.03,0,Serbia
+Leads-Performance Max-1,2250,false,34,0,0.03,0,France
+Leads-Performance Max-1,2032,false,65,1,0.03,0,Argentina
+Leads-Performance Max-1,2792,false,55,1,0.02,0,Turkiye
+Leads-Performance Max-1,2380,false,29,0,0.02,0,Italy
+Leads-Performance Max-1,2388,false,50,0,0.02,0,Jamaica
+Leads-Performance Max-1,2504,false,12,0,0.02,0,Morocco
+Leads-Performance Max-1,2328,false,36,1,0.02,0,Guyana
+Leads-Performance Max-1,2344,false,36,0,0.02,0,Hong Kong
+Leads-Performance Max-1,2784,false,29,0,0.02,0,United Arab Emirates
+Leads-Performance Max-1,2392,false,16,0,0.02,0,Japan
+Leads-Performance Max-1,2764,false,29,1,0.02,0,Thailand
+Leads-Performance Max-1,2156,false,42,0,0.02,0,China
+Leads-Performance Max-1,2604,false,41,1,0.02,0,Peru
+Leads-Performance Max-1,2528,false,14,0,0.02,0,Netherlands
+Leads-Performance Max-1,2724,false,17,1,0.02,0,Spain
+Leads-Performance Max-1,2780,false,40,0,0.02,0,Trinidad and Tobago
+Leads-Performance Max-1,2152,false,17,1,0.02,0,Chile
+Leads-Performance Max-1,2591,false,14,1,0.01,0,Panama
+Leads-Performance Max-1,2203,false,20,0,0.01,0,Czechia
+Leads-Performance Max-1,2320,false,18,0,0.01,0,Guatemala
+Leads-Performance Max-1,2702,false,38,0,0.01,0,Singapore
+Leads-Performance Max-1,2818,false,22,0,0.01,0,Egypt
+Leads-Performance Max-1,2498,false,27,0,0.01,0,Moldova
+Leads-Performance Max-1,2218,false,30,0,0.01,0,Ecuador
+Leads-Performance Max-1,2682,false,22,0,0.01,0,Saudi Arabia
+Leads-Performance Max-1,2710,false,14,1,0.01,0,South Africa
+Leads-Performance Max-1,2894,false,2,0,0.01,0,Zambia
+Leads-Performance Max-1,2804,false,24,0,0.01,0,Ukraine
+Leads-Performance Max-1,2300,false,18,0,0.01,0,Greece
+Leads-Performance Max-1,2404,false,12,0,0.01,0,Kenya
+Leads-Performance Max-1,2246,false,11,0,0.01,0,Finland
+Leads-Performance Max-1,2616,false,35,0,0.01,0,Poland
+Leads-Performance Max-1,2756,false,13,0,0.01,0,Switzerland
+Leads-Performance Max-1,2188,false,18,0,0.01,0,Costa Rica
+Leads-Performance Max-1,2104,false,17,0,0.01,0,Myanmar (Burma)
+Leads-Performance Max-1,2052,false,28,0,0.01,0,Barbados
+Leads-Performance Max-1,2060,false,17,1,0.01,0,Bermuda
+Leads-Performance Max-1,2512,false,3,0,0.01,0,Oman
+Leads-Performance Max-1,2642,false,19,0,0.01,0,Romania
+Leads-Performance Max-1,2364,false,11,0,0.01,0,
+Leads-Performance Max-1,2231,false,7,0,0.01,0,Ethiopia
+Leads-Performance Max-1,2268,false,18,0,0.01,0,Georgia
+Leads-Performance Max-1,2752,false,10,0,0.01,0,Sweden
+Leads-Performance Max-1,2158,false,18,0,0.01,0,Taiwan
+Leads-Performance Max-1,2191,false,6,0,0.01,0,Croatia
+Leads-Performance Max-1,2414,false,8,0,0.01,0,Kuwait
+Leads-Performance Max-1,2208,false,5,0,0.01,0,Denmark
+Leads-Performance Max-1,2458,false,12,1,0.00,0,Malaysia
+Leads-Performance Max-1,2428,false,7,0,0.00,0,Latvia
+Leads-Performance Max-1,2048,false,4,0,0.00,0,Bahrain
+Leads-Performance Max-1,2620,false,11,0,0.00,0,Portugal
+Leads-Performance Max-1,2222,false,13,0,0.00,0,El Salvador
+Leads-Performance Max-1,2634,false,8,0,0.00,0,Qatar
+Leads-Performance Max-1,2340,false,9,0,0.00,0,Honduras
+Leads-Performance Max-1,2368,false,3,0,0.00,0,Iraq
+user_location_total_rows,155
+city_segment_note: geographic_view with segments.geo_target_city returned 1123 rows; top 50 by cost:
+city_csv: campaign,geo_target_city,impr,clicks,cost,conv,geo_name
+Leads-Performance Max-1,geoTargetConstants/1023191,330475,272,379.69,25,New York,New York,United States
+Website traffic-Search-1,geoTargetConstants/1023191,1574,113,126.85,5,New York,New York,United States
+Leads-Performance Max-1,geoTargetConstants/1023191,2075,104,117.30,8,New York,New York,United States
+Leads-Performance Max-1,geoTargetConstants/1022915,42581,67,103.50,2,
+Leads-Performance Max-1,geoTargetConstants/9189402,17697,35,61.55,8,
+Leads-Performance Max-1,geoTargetConstants/1023442,21429,34,57.75,0,
+Leads-Performance Max-1,geoTargetConstants/1022899,1932,53,49.30,3,
+Website traffic-Search-1,geoTargetConstants/1022915,110,14,16.33,1,
+Website traffic-Search-1,geoTargetConstants/1022921,14,1,13.32,1,
+Website traffic-Search-1,geoTargetConstants/9189402,47,6,11.97,0,
+Leads-Performance Max-1,geoTargetConstants/1022936,11053,1,11.47,0,
+Website traffic-Search-1,geoTargetConstants/1023137,9,4,10.49,1,
+Website traffic-Search-1,geoTargetConstants/1023442,115,11,10.23,0,
+Leads-Performance Max-1,geoTargetConstants/1022921,49,3,10.09,0,
+Website traffic-Search-1,geoTargetConstants/9051874,5,2,9.89,0,
+Website traffic-Search-1,geoTargetConstants/9051869,1,1,8.83,1,
+Leads-Performance Max-1,geoTargetConstants/1022915,148,9,7.60,0,
+Website traffic-Search-1,geoTargetConstants/1022987,69,6,7.59,1,
+Website traffic-Search-1,geoTargetConstants/1022835,10,3,7.48,1,
+Website traffic-Search-1,geoTargetConstants/1023319,23,5,6.44,0,
+Leads-Performance Max-1,geoTargetConstants/9189402,38,6,6.29,1,
+Leads-Performance Max-1,geoTargetConstants/1023319,6550,2,5.82,1,
+Leads-Performance Max-1,geoTargetConstants/1023442,189,7,5.75,0,
+Leads-Performance Max-1,geoTargetConstants/9192208,28,3,5.16,0,
+Website traffic-Search-1,geoTargetConstants/1014778,23,7,4.82,0,
+Website traffic-Search-1,geoTargetConstants/1022710,23,2,4.58,0,
+Leads-Performance Max-1,geoTargetConstants/1023509,1656,4,4.15,0,
+Leads-Performance Max-1,geoTargetConstants/1023489,29,2,3.95,0,
+Leads-Performance Max-1,geoTargetConstants/1014873,4,2,3.52,1,
+Leads-Performance Max-1,geoTargetConstants/1023158,103,2,3.43,0,
+Website traffic-Search-1,geoTargetConstants/1022925,37,5,3.36,1,
+Website traffic-Search-1,geoTargetConstants/1022331,4,2,2.84,0,
+Leads-Performance Max-1,geoTargetConstants/1023517,13,4,2.76,1,
+Leads-Performance Max-1,geoTargetConstants/9052532,25,2,2.57,0,
+Website traffic-Search-1,geoTargetConstants/1014679,9,2,2.53,0,
+Leads-Performance Max-1,geoTargetConstants/1023479,917,2,2.44,1,
+Website traffic-Search-1,geoTargetConstants/9051861,3,1,2.43,0,
+Website traffic-Search-1,geoTargetConstants/1022285,2,1,2.38,0,
+Website traffic-Search-1,geoTargetConstants/1023474,9,1,2.31,0,
+Website traffic-Search-1,geoTargetConstants/1022748,11,1,2.26,0,
+Leads-Performance Max-1,geoTargetConstants/1022710,33,4,2.22,0,
+Leads-Performance Max-1,geoTargetConstants/1022993,13,4,2.19,1,
+Website traffic-Search-1,geoTargetConstants/1023130,4,2,2.09,0,
+Website traffic-Search-1,geoTargetConstants/9191420,18,2,2.09,0,
+Website traffic-Search-1,geoTargetConstants/9195530,10,1,2.07,0,
+Leads-Performance Max-1,geoTargetConstants/1022710,47,5,2.01,1,
+Website traffic-Search-1,geoTargetConstants/1022300,14,2,1.98,0,
+Leads-Performance Max-1,geoTargetConstants/1022300,34,1,1.98,0,
+Leads-Performance Max-1,geoTargetConstants/1022470,5,1,1.96,0,
+Leads-Performance Max-1,geoTargetConstants/1023319,37,3,1.90,0,
+age_csv: campaign,age_range,impr,clicks,cost,conv
+The Premier Loft,AGE_RANGE_18_24,0,0,0.00,0
+The Premier Loft,AGE_RANGE_25_34,0,0,0.00,0
+The Premier Loft,AGE_RANGE_35_44,0,0,0.00,0
+The Premier Loft,AGE_RANGE_45_54,0,0,0.00,0
+The Premier Loft,AGE_RANGE_55_64,0,0,0.00,0
+The Premier Loft,AGE_RANGE_65_UP,0,0,0.00,0
+The Premier Loft,AGE_RANGE_UNDETERMINED,0,0,0.00,0
+Website traffic-Search-1,AGE_RANGE_18_24,149,8,4.56,0
+Website traffic-Search-1,AGE_RANGE_25_34,770,58,55.11,2
+Website traffic-Search-1,AGE_RANGE_35_44,626,67,105.49,6
+Website traffic-Search-1,AGE_RANGE_45_54,441,48,49.66,3
+Website traffic-Search-1,AGE_RANGE_55_64,267,24,35.82,0
+Website traffic-Search-1,AGE_RANGE_65_UP,161,11,23.88,3
+Website traffic-Search-1,AGE_RANGE_UNDETERMINED,592,34,17.29,1
+gender_csv: campaign,gender,impr,clicks,cost,conv
+The Premier Loft,MALE,0,0,0.00,0
+The Premier Loft,FEMALE,0,0,0.00,0
+The Premier Loft,UNDETERMINED,0,0,0.00,0
+Website traffic-Search-1,MALE,556,39,49.12,3
+Website traffic-Search-1,FEMALE,1867,179,227.25,11
+Website traffic-Search-1,UNDETERMINED,583,32,15.44,1
+ZIP-level user location: NOT AVAILABLE as separate ZIP dimension in pulled resources (city/country/user_location only)
+
+10. AUCTION INSIGHTS (Search, 30 days)
+NOT AVAILABLE (The developer doesn't have access to metrics: ''auction_insight_search_impression_share', 'auction_insight_search_overlap_rate', 'auction_insight_search_outranking_share', 'auction_insight_search_position_above_rate', 'auction_insight_search_top_impression_percentage', 'auction_insight_search_absolute_top_impression_percentage''.)
+
+11. OTHER
+optimization_score,0.8954812
+recommendations_csv: type,campaign,dismissed
+FORECASTING_SET_TARGET_CPA,customers/4828865735/campaigns/23001782623,false
+policy_ads_csv: campaign,ad_id,status,approval,review,topics
+The Premier Loft,764319737203,ENABLED,APPROVED,REVIEWED,[]
+Website traffic-Search-1,773044073730,ENABLED,APPROVED,REVIEWED,[]
+Website traffic-Search-1,777302478605,PAUSED,APPROVED,REVIEWED,[]
+Website traffic-Search-1,830159387445,ENABLED,APPROVED,REVIEWED,[]
+change_history_last_14_days_csv: datetime,resource,operation,client,user
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:44:12.912271,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:40:14.780251,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:35:35.960631,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:35:35.960631,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:35:35.960631,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:35:35.960631,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:35:35.960631,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-31 12:35:35.960631,AD_GROUP_CRITERION,UPDATE,GOOGLE_ADS_WEB_CLIENT,fahibsyed@gmail.com
+2026-10-30 21:46:22.974943,CAMPAIGN_CRITERION,REMOVE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 21:46:22.974943,CAMPAIGN_CRITERION,REMOVE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 21:46:22.974943,CAMPAIGN_CRITERION,REMOVE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 21:46:22.974943,CAMPAIGN_CRITERION,REMOVE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 21:46:22.974943,CAMPAIGN_CRITERION,REMOVE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:27:27.823855,CAMPAIGN_BUDGET,UPDATE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:25:28.8421,CAMPAIGN_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:25:28.8421,CAMPAIGN_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:25:28.8421,CAMPAIGN_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:25:28.8421,CAMPAIGN_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:25:28.8421,CAMPAIGN_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:25:28.8421,CAMPAIGN_CRITERION,CREATE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:21:44.080575,CAMPAIGN_BUDGET,UPDATE,GOOGLE_ADS_WEB_CLIENT,andreanderson018@gmail.com
+2026-10-30 12:19:42.681615,CAMPAIGN_BUDGET,UPDATE,GOOGLE_ADS_RECOMMENDATIONS,andreanderson018@gmail.com
+2026-10-30 12:19:42.681615,CAMPAIGN_BUDGET,UPDATE,GOOGLE_ADS_RECOMMENDATIONS,andreanderson018@gmail.com
+2026-10-30 12:18:02.259727,ASSET,CREATE,INTERNAL_TOOL,andreanderson018@gmail.com
+2026-10-30 12:18:02.054175,ASSET,CREATE,INTERNAL_TOOL,andreanderson018@gmail.com
+2026-10-30 12:18:01.957343,ASSET,CREATE,INTERNAL_TOOL,andreanderson018@gmail.com
+2026-10-30 12:17:33.658598,AD_GROUP_CRITERION,CREATE,GOOGLE_ADS_RECOMMENDATIONS,andreanderson018@gmail.com
+change_history_full_30_days: NOT AVAILABLE (The requested start date is too old. It cannot be older than 30 days.)
+linked_google_business_profile: NO customer_asset LOCATION rows; location asset rows=1
+{"resourceName":"customers/4828865735/assets/263321908029","type":"LOCATION","id":"263321908029","locationAsset":{"placeId":"ChIJeS96PMRjwokRfWgAbAXdH4I","businessProfileLocations":[{"storeCode":"10493453137477791596","listingId":"-7744356897725057564"}]}}
+
+COULD NOT PULL
+- campaign.url_expansion_opt_out / Final URL expansion on-off flag
+- Auction insights competitor domains and rates (API access denied for auction insight metrics)
+- Change history older than ~14-30 days via change_event (30-day exact request rejected as too old at pull time)
+- CALL_AD headline/description/phone detail fields (unrecognized in this API version)
+- Performance Max search term insights / category report
+- Performance Max placement report
+- Dedicated ZIP-level segment beyond city/user_location country ids
+- ads_call: Unrecognized fields in the query: 'ad_group_ad.ad.call_ad.disable_call_conversion', 'ad_group_ad.ad.call_ad.call_tracked', 'ad_group_ad.ad.call_ad.country_code', 'ad_group_ad.ad.call_ad.phone_number_verification_url', 'ad_group_ad.ad.call_ad.business_name'.
+- auction_30: The developer doesn't have access to metrics: ''auction_insight_search_impression_share', 'auction_insight_search_overlap_rate', 'auction_insight_search_outranking_share', 'auction_insight_search_position_above_rate', 'auction_insight_search_top_impression_percentage', 'auction_insight_search_absolute_top_impression_percentage''.
+- pmax_search_terms_30: Request contains an invalid argument.

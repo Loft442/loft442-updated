@@ -197,7 +197,7 @@ export default function GalleryLightbox({
             </>
           ) : null}
         </div>
-        <div className="mt-[clamp(8px,1svh,16px)] flex max-w-full shrink-0 flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
+        <div className="mt-[clamp(8px,1svh,16px)] flex max-w-full shrink-0 flex-wrap items-center justify-between gap-2 text-[0.7rem] uppercase tracking-[0.3em] text-white/60">
           <span>{activeItem.category}</span>
           <span>
             {activeIndex + 1} / {items.length}

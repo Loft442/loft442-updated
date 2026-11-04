@@ -1,7 +1,5 @@
 import Image, { getImageProps } from "next/image";
-import Link from "next/link";
-import type { CSSProperties } from "react";
-import styles from "./Hero.module.css";
+import Button from "@/components/ui/Button";
 
 const bannerProps = { alt: "", fill: true, sizes: "100vw", quality: 85 } as const;
 
@@ -16,169 +14,86 @@ const { props: mobileBanner } = getImageProps({
   fetchPriority: "high",
 });
 
+const STAR_PATH =
+  "M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z";
+
 export default function Hero() {
-  const letterDelay = 18;
-
-  const renderLetters = (text: string, startIndex: number) => {
-    let index = startIndex;
-    const renderChar = (char: string) => {
-      const charIndex = index++;
-      return (
-        <span
-          key={charIndex}
-          className={styles.heroLetter}
-          style={{ "--letter-delay": `${charIndex * letterDelay}ms` } as CSSProperties}
-        >
-          {char === " " ? "\u00A0" : char}
-        </span>
-      );
-    };
-
-    // Letters of one word stay in a nowrap group so narrow phones never break mid-word.
-    const nodes = text.split(/( )/).filter(Boolean).map((part) =>
-      part === " " ? (
-        renderChar(part)
-      ) : (
-        <span key={`w${index}`} className={styles.heroWord}>
-          {Array.from(part).map(renderChar)}
-        </span>
-      )
-    );
-
-    return { nodes, nextIndex: index };
-  };
-
-  let letterIndex = 0;
-  const { nodes: creatingNodes, nextIndex: afterCreating } = renderLetters(
-    "CREATING ",
-    letterIndex
-  );
-  letterIndex = afterCreating;
-  const { nodes: unforgettableNodes, nextIndex: afterUnforgettable } =
-    renderLetters("UNFORGETTABLE", letterIndex);
-  letterIndex = afterUnforgettable;
-
-  const { nodes: line2Nodes, nextIndex: line2End } = renderLetters(
-    "MEMORIES ONE EVENT ",
-    letterIndex
-  );
-  const { nodes: line3Nodes } = renderLetters("AT A TIME", line2End);
-
   return (
-    <section
-      className="hero-no-glow relative w-full min-h-[calc(100svh-var(--nav-offset)-4rem)] overflow-hidden bg-black aspect-9/16 sm:min-h-0 sm:aspect-640/367 md:min-h-[85vh] lg:min-h-[90vh]"
-    >
+    <section className="hero-no-glow relative w-full min-h-[calc(100svh-var(--nav-offset)-3rem)] overflow-hidden bg-black sm:min-h-[calc(100svh-var(--nav-offset)-2.25rem)]">
       <div className="absolute inset-0 z-0">
         {/* One art-directed <picture> so each device downloads only its own banner. */}
         <picture>
           <source media="(min-width: 640px)" srcSet={desktopBanner} sizes="100vw" />
           <img
             {...mobileBanner}
-            alt="Loft 442 elegant event venue interior"
+            alt="The Loft 442 event salon set for an evening reception"
             className="object-cover object-center"
           />
         </picture>
+        {/* Quiet tonal wash keeps the type legible without heavy text effects. */}
+        <div
+          className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,7,8,0.88)_0%,rgba(7,7,8,0.62)_45%,rgba(7,7,8,0.25)_100%)]"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--background)] to-transparent"
+          aria-hidden="true"
+        />
       </div>
-      <div className="relative z-10 mx-auto flex min-h-[10vh] max-w-7xl items-center px-4 py-16 sm:px-6 sm:py-20 md:px-10 md:py-24 lg:px-12 lg:py-28">
-        <div className="max-w-2xl md:max-w-3xl">
-          <div className="text-spotlight inline-block rounded-sm px-4 py-4">
-            <div className="flex flex-col gap-5 sm:gap-6">
-              <p className={`text-[0.75rem] uppercase tracking-[0.2em] text-white/60 sm:tracking-[0.45em] ${styles.heroTextStroke}`}>
-                Loft 442
-              </p>
-              <h1 className="hero-stagger hero-stagger--1 flex flex-col gap-1.5 text-3xl font-semibold tracking-[0.06em] text-white sm:gap-2 sm:text-4xl sm:tracking-[0.12em] md:text-4xl lg:text-6xl leading-[1.05] md:leading-[1.1]">
-                <span className={`${styles.heroHeadlineLine} block sm:whitespace-nowrap`}>
-                  <span className={styles.heroLetterGroup}>{creatingNodes}</span>
-                  <span
-                    className={`${styles.heroLetterGroup} ${styles.venueUnderline} ${styles.venueUnderlineAnimated} block sm:inline`}
-                  >
-                    {unforgettableNodes}
+
+      <div className="relative z-10 mx-auto flex min-h-[inherit] max-w-7xl items-center px-6 py-24 sm:px-10 sm:py-[clamp(2rem,7svh,8rem)] lg:px-12">
+        <div className="max-w-2xl">
+          <p className="eyebrow hero-stagger hero-stagger--1">Loft 442 &nbsp;·&nbsp; Elmont, New York</p>
+
+          <h1 className="display-xl hero-stagger hero-stagger--1 mt-7 sm:mt-[clamp(1rem,3svh,1.75rem)]">
+            A private loft for celebrations worth{" "}
+            <em className="display-italic">remembering</em>
+          </h1>
+
+          <p className="lede hero-stagger hero-stagger--2 mt-7 max-w-xl sm:mt-[clamp(1rem,3svh,1.75rem)]">
+            Weddings, milestone celebrations and private events for up to 125 guests, with a
+            dedicated team attending to every detail.
+          </p>
+
+          <div className="hero-stagger hero-stagger--3 mt-10 flex flex-col items-start gap-4 sm:mt-[clamp(1.25rem,4svh,2.5rem)] sm:flex-row">
+            <Button href="/schedule" className="w-full sm:w-64">Request a Tour</Button>
+            <Button href="/gallery" variant="ghost" className="w-full sm:w-64">
+              View the Gallery
+            </Button>
+          </div>
+
+          <div className="hero-stagger hero-stagger--3 mt-12 flex flex-wrap sm:mt-[clamp(1.25rem,4.5svh,3rem)] sm:pt-[clamp(1rem,2.5svh,1.5rem)] items-center gap-x-8 gap-y-4 border-t border-[var(--line)] pt-6 text-[0.7rem] uppercase tracking-[0.3em] text-white/60">
+            <span className="flex items-center gap-3">
+              <Image
+                src="/images/veteran-icon.svg"
+                alt=""
+                width={18}
+                height={24}
+                sizes="18px"
+                className="h-6 w-[18px] opacity-80"
+              />
+              Veteran owned &amp; operated
+            </span>
+            <span className="flex items-center gap-3">
+              <span className="flex items-center gap-1 text-gold" role="img" aria-label="4.8 star rating">
+                {[0, 1, 2, 3].map((index) => (
+                  <svg key={index} viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3" aria-hidden="true">
+                    <path d={STAR_PATH} />
+                  </svg>
+                ))}
+                <span className="relative inline-block h-3 w-3">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-full w-full text-white/20" aria-hidden="true">
+                    <path d={STAR_PATH} />
+                  </svg>
+                  <span className="absolute inset-0 overflow-hidden" style={{ width: "80%" }}>
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3" aria-hidden="true">
+                      <path d={STAR_PATH} />
+                    </svg>
                   </span>
                 </span>
-                <span className={`${styles.heroHeadlineLine} block`}>
-                  <span className={styles.heroLetterGroup}>{line2Nodes}</span>
-                </span>
-                <span className={`${styles.heroHeadlineLine} block`}>
-                  <span className={styles.heroLetterGroup}>{line3Nodes}</span>
-                </span>
-              </h1>
-              <div className="hero-stagger hero-stagger--2 flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src="/images/veteran-icon.svg"
-                    alt="Veteran Owned icon"
-                    width={28}
-                    height={36}
-                    sizes="28px"
-                    className="h-9 w-7"
-                  />
-                  <p className={`hero-underline relative inline-block overflow-visible text-base sm:text-lg md:text-base font-medium text-white/90 ${styles.heroTextStroke}`}>
-                    VETERAN OWNED & OPERATED
-                  </p>
-                </div>
-                <p className={`text-xs sm:text-sm md:text-sm uppercase tracking-[0.18em] text-white sm:tracking-[0.35em] ${styles.heroTextStroke}`}>
-                  Proudly Serving Those Who Served
-                </p>
-                <div className="flex self-start items-center gap-3">
-                  <div
-                    className="flex items-center gap-2 text-[#d4af37] [filter:drop-shadow(0_0_4px_rgba(212,175,55,0.6))]"
-                    role="img"
-                    aria-label="4.8 star rating"
-                  >
-                    {[0, 1, 2, 3].map((index) => (
-                      <svg
-                        key={index}
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]"
-                        aria-hidden="true"
-                      >
-                        <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
-                      </svg>
-                    ))}
-                    <span className="relative inline-block h-[20px] w-[20px] md:h-[22px] md:w-[22px]">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="h-full w-full text-white/20"
-                        aria-hidden="true"
-                      >
-                        <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
-                      </svg>
-                      <span className="absolute inset-0 overflow-hidden" style={{ width: "80%" }}>
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]"
-                          aria-hidden="true"
-                        >
-                          <path d="M12 2.5l2.955 5.985 6.61.96-4.782 4.66 1.128 6.57L12 17.77l-5.911 3.105 1.128-6.57-4.782-4.66 6.61-.96L12 2.5z" />
-                        </svg>
-                      </span>
-                    </span>
-                  </div>
-                  <span className={`text-base sm:text-lg md:text-base font-medium text-white/90 ${styles.heroTextStroke}`}>
-                    4.8 on Google
-                  </span>
-                </div>
-              </div>
-              <div className="hero-stagger hero-stagger--3 flex flex-col items-start gap-3 sm:flex-row">
-                <Link
-                  href="/gallery"
-                  className="no-shadow relative isolate inline-flex h-10 sm:h-11 md:h-10 items-center justify-center cta-button border border-white/60 bg-black px-6 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-white hover:text-white"
-                >
-                  <span className={`relative z-10 ${styles.heroTextStroke}`}>
-                    View Gallery
-                  </span>
-                </Link>
-                <Link
-                  href="/schedule"
-                  className={`cta-button cta-book inline-flex h-10 sm:h-11 md:h-10 items-center justify-center px-6 text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-black transition hover:-translate-y-px hover:shadow-[0_0_20px_rgba(212,175,55,0.18)] ${styles.heroCtaReveal}`}
-                >
-                  Plan Your Event
-                </Link>
-              </div>
-            </div>
+              </span>
+              4.8 on Google
+            </span>
           </div>
         </div>
       </div>

@@ -45,5 +45,14 @@
   },
   "overrides": {
     "@sanity/client": "7.14.0"
-  }
+  },
+  "browserslist": [
+    "chrome >= 100",
+    "edge >= 100",
+    "firefox >= 100",
+    "safari >= 15",
+    "ios_saf >= 15",
+    "samsung >= 18",
+    "not dead"
+  ]
 }

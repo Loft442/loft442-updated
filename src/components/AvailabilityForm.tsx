@@ -1,138 +1,66 @@
-import {
-  BadgeCheck,
-  Calendar,
-  Clock,
-  MapPin,
-  Phone,
-  User,
-  Users2,
-} from "lucide-react";
+import Button from "@/components/ui/Button";
+import { TEAM_CONTACTS } from "@/lib/contacts";
 
 const viewingHours = [
-  {
-    day: "Monday",
-    times: "7:00AM - 9:00AM / 6:30PM - 8:30PM",
-  },
-  {
-    day: "Wednesday",
-    times: "7:00AM - 9:00AM / 6:30PM - 8:30PM",
-  },
-  {
-    day: "Friday",
-    times: "7:00AM - 9:00AM / 6:30PM - 8:30PM",
-  },
+  { day: "Monday", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
+  { day: "Wednesday", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
+  { day: "Friday", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
 ];
 
-const contacts = [
-  { name: "Andre", phone: "(347) 579-6578" },
-  { name: "Alfred", phone: "(917) 496-2261" },
-  { name: "Justine", phone: "(347) 975-5516" },
-];
+const contacts = TEAM_CONTACTS;
 
-const stats = [
-  {
-    icon: Users2,
-    eyebrow: "Up to",
-    value: "125 Guests",
-  },
-  {
-    icon: BadgeCheck,
-    eyebrow: "Veteran",
-    value: "Discounts",
-  },
-  {
-    icon: MapPin,
-    eyebrow: "Located in",
-    value: "Elmont, New York",
-  },
-];
-
-function CardHeader({
-  icon: Icon,
-  title,
-}: {
-  icon: typeof Clock;
-  title: string;
-}) {
-  return (
-    <div className="flex w-full flex-col items-center gap-3">
-      <div className="reference-card-header">
-        <span className="reference-card-header__line" aria-hidden="true" />
-        <span className="reference-icon-ring">
-          <Icon aria-hidden="true" />
-        </span>
-        <span className="reference-card-header__line" aria-hidden="true" />
-      </div>
-      <p className="text-center text-[0.65rem] font-medium uppercase tracking-[0.28em] text-white/70 sm:text-xs sm:tracking-[0.32em]">
-        {title}
-      </p>
-    </div>
-  );
-}
-
+/** "Private Tours & Contact": viewing hours, the team, and the inquiry CTA. */
 export default function AvailabilityForm() {
   return (
-    <section
-      id="pricing"
-      className="scroll-mt-28 section-glow pricing-glow pb-12 sm:pb-16 md:scroll-mt-32"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="reference-card hours-pattern hours-glow flex flex-col items-center gap-5 p-5 sm:gap-6 sm:p-6">
-            <CardHeader icon={Clock} title="Viewing Hours Available" />
-            <div className="flex w-full flex-col gap-2.5">
+    <section id="contact" className="scroll-mt-28 section-pad border-t border-[var(--line)] md:scroll-mt-32">
+      {/* Older links point at /#pricing; keep that anchor alive. */}
+      <span id="pricing" className="block scroll-mt-28 md:scroll-mt-32" aria-hidden="true" />
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="flex flex-col items-center gap-5 text-center">
+          <p className="eyebrow">Begin the Conversation</p>
+          <h2 className="display-lg max-w-2xl">Reserve a private tour of Loft 442</h2>
+          <p className="lede max-w-xl">
+            Tours are offered by appointment, so the space and our full attention are yours
+            alone.
+          </p>
+        </div>
+
+        <div className="mt-16 grid gap-px bg-[var(--line)] md:grid-cols-2">
+          <div className="flex flex-col gap-6 bg-[var(--background)] p-8 sm:p-12">
+            <p className="eyebrow">Viewing Hours</p>
+            <ul className="flex flex-col">
               {viewingHours.map((row) => (
-                <div key={row.day} className="reference-row">
-                  <Calendar className="reference-row__icon" aria-hidden="true" />
-                  <span className="reference-row__label">{row.day}</span>
-                  <span className="reference-row__divider" aria-hidden="true" />
-                  <span className="reference-row__value">{row.times}</span>
-                </div>
+                <li
+                  key={row.day}
+                  className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[var(--line)] py-4 last:border-b-0"
+                >
+                  <span className="font-serif text-xl text-[var(--ivory)]">{row.day}</span>
+                  <span className="text-sm text-white/65">{row.times.join("  ·  ")}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
-          <div className="reference-card hours-pattern hours-glow flex flex-col items-center gap-5 p-5 sm:gap-6 sm:p-6">
-            <CardHeader icon={Phone} title="Contacts" />
-            <div className="flex w-full flex-col gap-2.5">
+          <div className="flex flex-col gap-6 bg-[var(--background)] p-8 sm:p-12">
+            <p className="eyebrow">Your Hosts</p>
+            <ul className="flex flex-col">
               {contacts.map((row) => (
-                <div key={row.name} className="reference-row">
-                  <User className="reference-row__icon" aria-hidden="true" />
-                  <span className="reference-row__label">{row.name}</span>
-                  <span className="reference-row__divider" aria-hidden="true" />
-                  {row.phone === "(347) 579-6578" ? (
-                    <a
-                      href="tel:+13475796578"
-                      className="reference-row__value reference-row__value--contact"
-                    >
-                      {row.phone}
-                    </a>
-                  ) : (
-                    <span className="reference-row__value reference-row__value--contact">
-                      {row.phone}
-                    </span>
-                  )}
-                </div>
+                <li
+                  key={row.tel}
+                  className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[var(--line)] py-4 last:border-b-0"
+                >
+                  <span className="font-serif text-xl text-[var(--ivory)]">{row.name}</span>
+                  <a href={`tel:${row.tel}`} className="tap text-sm text-white/65 transition-colors hover:text-gold-light">
+                    {row.display}
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
 
-        <div className="reference-stats-band about-card-outline mt-4 sm:mt-6">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <article key={stat.value} className="reference-stat">
-                <span className="reference-icon-ring">
-                  <Icon aria-hidden="true" />
-                </span>
-                <div>
-                  <p className="reference-stat__eyebrow">{stat.eyebrow}</p>
-                  <p className="reference-stat__value">{stat.value}</p>
-                </div>
-              </article>
-            );
-          })}
+        <div className="mt-14 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <Button href="/schedule">Request a Tour</Button>
         </div>
       </div>
     </section>

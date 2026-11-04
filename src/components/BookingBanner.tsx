@@ -2,23 +2,22 @@ import Link from "next/link";
 
 export default function BookingBanner() {
   return (
-    <div className="relative z-20 border-b border-[#d4af37]/30 bg-gradient-to-r from-black via-[#1a1508] to-black">
+    <div className="relative z-20 overflow-hidden border-b border-gold/50 bg-[var(--background)]">
+      {/* Soft gold glow centred behind the message. */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(212,175,55,0.12)_0%,_transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_120%_at_50%_50%,rgba(201,169,97,0.16)_0%,rgba(201,169,97,0.05)_45%,transparent_75%)]"
         aria-hidden="true"
       />
-      <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-center gap-2 px-4 py-3 text-center sm:flex-row sm:gap-4 sm:px-6">
-        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-[#f5e6a8] sm:text-xs">
-          Now Booking 2026–2027 Events
+      <div className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-2.5 text-center text-[0.7rem] uppercase tracking-[0.3em] text-white/60 sm:px-6">
+        <p>
+          <span className="sm:hidden">Limited 2026–2027 dates</span>
+          <span className="hidden sm:inline">Now accepting a limited number of 2026–2027 dates</span>
         </p>
-        <span className="hidden text-[#d4af37]/50 sm:inline" aria-hidden="true">
-          |
+        <span className="text-gold/60" aria-hidden="true">
+          ·
         </span>
-        <Link
-          href="/schedule"
-          className="text-[0.6rem] uppercase tracking-[0.3em] text-white/75 transition hover:text-[#f5e6a8] hover:[text-shadow:0_0_10px_rgba(212,175,55,0.35)]"
-        >
-          Check availability
+        <Link href="/schedule" className="tap text-gold-light underline-offset-4 transition hover:underline">
+          Inquire
         </Link>
       </div>
     </div>

@@ -3,26 +3,22 @@ import PricingPage from "@/components/PricingPage";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Venue Pricing",
+  title: "Packages & Pricing",
   description:
-    "View LOFT 442 event venue pricing and package options for weddings, corporate events, repass gatherings, and private celebrations in Elmont, NY.",
+    "LOFT 442 packages and pricing: The Essential for up to 50 guests and The Grand for up to 125, with curated enhancements, for weddings, milestone celebrations and private events in Elmont, NY.",
   path: "/pricing",
   keywords: [
     "LOFT 442 pricing",
     "event venue pricing Elmont NY",
     "wedding venue packages",
-    "repass venue pricing",
-    "private event venue rates",
+    "private event venue Nassau County",
+    "wedding venue Long Island",
   ],
 });
 
 export default function Pricing() {
   return (
-    <main className="ambient-surface bg-black pt-nav text-white">
-      <div className="ambient-glow" aria-hidden="true">
-        <span className="ambient-glow__layer" />
-      </div>
-      <div className="divider-glow h-[2px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+    <main className="bg-[var(--background)] pt-nav text-white">
       <PricingPage />
       <Footer />
     </main>

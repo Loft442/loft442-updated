@@ -3,21 +3,24 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import posthog from "posthog-js";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { buttonClasses } from "@/components/ui/Button";
+import { TEAM_CONTACTS, TEAM_EMAIL } from "@/lib/contacts";
 import Footer from "@/components/Footer";
 import PartyTypeSelect from "@/components/ui/PartyTypeSelect";
 import { trackSendRequestConversion } from "@/lib/googleAds";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+// Baby Shower stays its own option here even though the home page groups it under
+// Milestone Celebrations: it is a common inquiry and helps the team prepare.
 const partyTypes = [
-  "Wedding/Anniversary",
-  "Corporate Event",
-  "Birthday/Celebration",
-  "Kids Events",
-  "Private Event",
+  "Wedding & Anniversary",
+  "Corporate & Private Event",
+  "Milestone Celebration",
   "Baby Shower",
-  "Repass",
+  "Repass & Celebration of Life",
 ];
 
 type FieldName =
@@ -122,6 +125,7 @@ export default function SchedulePage() {
   const [successMessage, setSuccessMessage] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [honeypot, setHoneypot] = useState("");
+  const [reviewedPricing, setReviewedPricing] = useState(false);
 
   const errors = useMemo(() => {
     const emailValue = form.email.trim();
@@ -151,17 +155,19 @@ export default function SchedulePage() {
   }, [form]);
 
   const isFormValid =
-    Boolean(selectedDate) && requiredFields.every((field) => !errors[field]);
+    Boolean(selectedDate) &&
+    reviewedPricing &&
+    requiredFields.every((field) => !errors[field]);
+  const pricingError = submitAttempted && !reviewedPricing ? "Required" : "";
 
   const baseInputClass =
-    "w-full rounded-sm border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none transition duration-300 placeholder:text-white/40 focus:border-[#d9be62]/70 focus:bg-black";
-  const sectionAccentLabelClass =
-    "text-xs font-medium uppercase tracking-[0.35em] text-[#d9be62] sm:text-sm";
+    "w-full border-0 border-b border-[var(--line-strong)] bg-transparent px-0 py-3 text-[0.95rem] normal-case tracking-normal text-[var(--ivory)] outline-none transition duration-300 placeholder:text-white/35 focus:border-gold";
+  const sectionAccentLabelClass = "eyebrow";
   const formLabelClass =
-    "flex flex-col gap-2 text-xs uppercase tracking-[0.2em] text-[#d9be62]";
+    "flex flex-col gap-1 text-[0.7rem] uppercase tracking-[0.3em] text-white/60";
   const errorInputClass = "border-rose-200/60 focus:border-rose-200/80";
   const errorTextClass =
-    "min-h-[0.75rem] text-[0.6rem] uppercase tracking-[0.2em] text-rose-200/70 transition";
+    "min-h-[0.75rem] text-[0.7rem] uppercase tracking-[0.2em] text-rose-200/70 transition";
 
   const updateField = (field: FieldName, value: string) => {
     const nextValue =
@@ -204,6 +210,7 @@ export default function SchedulePage() {
           email: form.email.trim(),
           hearAboutUs: form.hearAboutUs.trim(),
           message: form.message.trim(),
+          reviewedPricing,
           website: honeypot,
         }),
       });
@@ -237,61 +244,40 @@ export default function SchedulePage() {
         hearAboutUs: false,
         message: false,
       });
+      setReviewedPricing(false);
       setSubmitAttempted(false);
-      setSuccessMessage("Request sent successfully.");
+      setSuccessMessage("Thank you. Your inquiry has been received and our team will be in touch.");
     } catch {
-      setSubmitError("Something went wrong. Please try again.");
+      setSubmitError("We could not send your inquiry. Please try again, or call us directly.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <main className="ambient-surface scheduling-page bg-black pt-nav text-white">
-      <div className="ambient-glow" aria-hidden="true">
-        <span className="ambient-glow__layer" />
-      </div>
-      <div className="divider-glow h-0.5 w-full bg-linear-to-r from-transparent via-white/20 to-transparent" />
-
-      <section className="section-glow section-divider relative border-t border-white/10 pb-0 pt-6 sm:pt-8">
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-white/5"
-        />
+    <main className="scheduling-page bg-[var(--background)] pt-nav text-white">
+      <section className="relative border-t border-[var(--line)] pb-24 pt-16 sm:pt-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="spotlight rounded-sm px-4 py-3">
-            <Reveal mode="text" className="flex flex-col gap-4">
-              <p className="text-xs uppercase tracking-[0.4em] text-white">
-                Loft 442
-              </p>
-              <h1 className="text-spotlight relative inline-block text-3xl font-semibold tracking-[0.32em] text-white sm:text-4xl md:text-5xl">
-                <span
-                  className="pointer-events-none absolute -inset-x-12 -inset-y-8 z-0 blur-3xl"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse at center, rgba(200,200,210,0.85) 0%, transparent 65%)",
-                  }}
-                  aria-hidden="true"
-                />
-                <span className="relative z-10">PLAN YOUR EVENT</span>
-              </h1>
-              <p className="max-w-2xl text-sm text-white/70">
-                Select your preferred date and tell us about your event. Our
-                team will follow up to confirm availability.
-              </p>
-            </Reveal>
-          </div>
+          <Reveal mode="text" className="flex max-w-3xl flex-col gap-6">
+            <p className="eyebrow">Loft 442</p>
+            <h1 className="display-xl">Request a Tour</h1>
+            <span className="hairline" aria-hidden="true" />
+            <p className="lede">
+              Share a few details and a member of our team will personally follow up to confirm
+              availability.
+            </p>
+          </Reveal>
 
-          <div className="mt-6 grid gap-8 sm:mt-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="mt-16 grid gap-px bg-[var(--line)] lg:grid-cols-[1.35fr_1fr]">
             <Reveal
               mode="text"
-              className="rounded-sm border border-white/10 bg-white/8 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] sm:p-8"
+              className="bg-[var(--background)] px-2 py-6 sm:p-10"
             >
-              <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-5">
+              <div className="flex flex-wrap items-end justify-between gap-3 border-b px-2 sm:px-0 border-[var(--line)] pb-6">
                 <div>
-                  <p className={sectionAccentLabelClass}>Select Preferred Date</p>
-                  <p className="mt-2 text-sm tracking-[0.12em] text-white/85">
-                    Pick a date and we will confirm availability
+                  <p className={sectionAccentLabelClass}>Preferred Date</p>
+                  <p className="mt-3 font-serif text-xl text-[var(--ivory)]">
+                    Choose a date; we will confirm availability
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -307,9 +293,9 @@ export default function SchedulePage() {
                         )
                       )
                     }
-                    className="rounded-sm border border-white/10 bg-black/40 p-2 text-white/70 transition duration-300 hover:border-[#d9be62]/60 hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50"
+                    className="flex h-12 w-12 items-center justify-center border border-[var(--line)] text-white/70 transition duration-300 hover:border-gold/60 hover:text-gold-light"
                   >
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-5 w-5" strokeWidth={1.5} />
                   </button>
                   <button
                     type="button"
@@ -323,25 +309,25 @@ export default function SchedulePage() {
                         )
                       )
                     }
-                    className="rounded-sm border border-white/10 bg-black/40 p-2 text-white/70 transition duration-300 hover:border-[#d9be62]/60 hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50"
+                    className="flex h-12 w-12 items-center justify-center border border-[var(--line)] text-white/70 transition duration-300 hover:border-gold/60 hover:text-gold-light"
                   >
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
                   </button>
                 </div>
               </div>
 
-              <div className="mt-6 rounded-sm border border-white/10 bg-black/40 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:p-5">
+              <div className="mt-6 p-0 sm:p-2">
                 <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm font-medium tracking-[0.12em] text-white/90">
+                  <p className="font-serif text-lg text-[var(--ivory)]">
                     {monthLabel}
                   </p>
                   {selectedDate ? (
-                    <span className="text-[0.62rem] uppercase tracking-[0.32em] text-[#d9be62]">
+                    <span className="text-[0.7rem] uppercase tracking-[0.32em] text-gold">
                       {formatSelectedDate(selectedDate)}
                     </span>
                   ) : null}
                 </div>
-                <div className="grid w-full grid-cols-7 gap-2 text-[0.6rem] uppercase tracking-[0.15em] text-white/55 sm:gap-3 sm:text-[0.65rem]">
+                <div className="grid w-full grid-cols-7 gap-0.5 text-[0.7rem] uppercase tracking-[0.15em] text-white/55 sm:gap-3 sm:text-[0.7rem]">
                   {weekdays.map((day) => (
                     <div key={day} className="text-center">
                       {day}
@@ -351,14 +337,14 @@ export default function SchedulePage() {
                 <div
                   role="grid"
                   aria-label="Choose a date to plan your event"
-                  className="mt-4 grid w-full grid-cols-7 gap-2 sm:gap-3"
+                  className="mt-4 grid w-full grid-cols-7 gap-0.5 sm:gap-3"
                 >
                   {days.map((date, index) => {
                     if (!date) {
                       return (
                         <div
                           key={`empty-${index}`}
-                          className="aspect-square w-full sm:h-14 sm:w-14"
+                          className="aspect-square w-full"
                         />
                       );
                     }
@@ -378,10 +364,10 @@ export default function SchedulePage() {
                       isSameDay(selectedDate, date);
                     const isToday = isSameDay(today, date);
                     const stateClass = disabled
-                      ? "border-white/10 bg-black/70 text-white/40 opacity-70 cursor-not-allowed"
+                      ? "border-transparent text-white/25 cursor-not-allowed"
                       : isSelected
-                        ? "border-[#d9be62]/70 bg-[#d9be62]/12 text-white shadow-[0_0_18px_rgba(217,190,98,0.18)]"
-                        : "border-white/10 bg-black/30 text-white/70 md:hover:border-[#d9be62]/50 md:hover:bg-white/6 md:hover:text-white";
+                        ? "border-gold bg-gold text-[var(--ink)]"
+                        : "border-[var(--line)] text-white/75 md:hover:border-gold/60 md:hover:text-gold-light";
 
                     return (
                       <button
@@ -394,7 +380,7 @@ export default function SchedulePage() {
                         onClick={
                           disabled ? undefined : () => setSelectedDate(date)
                         }
-                        className={`flex aspect-square w-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-sm border text-[0.7rem] leading-none transition duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d9be62]/50 sm:aspect-auto sm:h-14 sm:w-14 sm:text-sm ${stateClass} ${
+                        className={`flex aspect-square w-full min-w-0 flex-col items-center justify-center gap-0.5 border text-[0.7rem] leading-none transition duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/50 sm:text-base ${stateClass} ${
                           !disabled && isToday
                             ? "border-white/20 text-white"
                             : ""
@@ -410,7 +396,7 @@ export default function SchedulePage() {
 
             <Reveal
               mode="text"
-              className="rounded-sm border border-white/10 bg-white/8 p-6 shadow-[0_25px_70px_rgba(0,0,0,0.45)] sm:p-8"
+              className="bg-[var(--background)] p-6 sm:p-10"
             >
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <label className="sr-only" aria-hidden="true">
@@ -423,10 +409,10 @@ export default function SchedulePage() {
                     onChange={(event) => setHoneypot(event.target.value)}
                   />
                 </label>
-                <div className="flex flex-col gap-3 border-b border-white/10 pb-5">
-                  <p className={sectionAccentLabelClass}>Selected Date</p>
-                  <p className="text-sm tracking-[0.12em] text-white/85">
-                    {selectedDate ? formatSelectedDate(selectedDate) : "None"}
+                <div className="flex flex-col gap-3 border-b border-[var(--line)] pb-6">
+                  <p className={sectionAccentLabelClass}>Your Date</p>
+                  <p className="font-serif text-xl text-[var(--ivory)]">
+                    {selectedDate ? formatSelectedDate(selectedDate) : "No date selected"}
                   </p>
                 </div>
 
@@ -588,7 +574,7 @@ export default function SchedulePage() {
                   <textarea
                     rows={4}
                     maxLength={FIELD_MAX_LENGTH.message}
-                    placeholder="Tell us about your event, guest count, preferred time, special requests, or anything you'd like us to know."
+                    placeholder="Your guest count, preferred time, and anything you would like us to know."
                     value={form.message}
                     onChange={(event) =>
                       updateField("message", event.target.value)
@@ -599,19 +585,51 @@ export default function SchedulePage() {
                   <span className={`${errorTextClass} opacity-0`} />
                 </label>
 
+                <div className="flex flex-col gap-2">
+                  <label className="flex cursor-pointer items-start gap-3 text-[0.9rem] leading-relaxed text-white/80">
+                    <input
+                      type="checkbox"
+                      required
+                      checked={reviewedPricing}
+                      onChange={(event) => setReviewedPricing(event.target.checked)}
+                      aria-invalid={Boolean(pricingError)}
+                      aria-describedby="reviewedPricing-error"
+                      className="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-[var(--gold)]"
+                    />
+                    <span>
+                      I&rsquo;ve reviewed the{" "}
+                      <Link
+                        href="/pricing"
+                        target="_blank"
+                        className="text-gold-light underline underline-offset-4 hover:text-gold"
+                      >
+                        package pricing
+                      </Link>
+                      .
+                    </span>
+                  </label>
+                  <span
+                    id="reviewedPricing-error"
+                    aria-live="polite"
+                    className={`${errorTextClass} ${pricingError ? "opacity-100" : "opacity-0"}`}
+                  >
+                    {pricingError}
+                  </span>
+                </div>
+
                 <div className="mt-2 flex justify-center lg:justify-end">
                   <button
                     type="submit"
                     disabled={!isFormValid || isSubmitting}
-                    className="inline-flex h-11 items-center justify-center rounded-sm border border-[#d4af37] px-5 text-[0.65rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-[#f5e6a8] hover:bg-[#d4af37]/15 hover:text-white hover:shadow-[0_0_24px_rgba(212,175,55,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
+                    className={buttonClasses("primary")}
                   >
-                    {isSubmitting ? "Sending..." : "Send Request"}
+                    {isSubmitting ? "Sending…" : "Submit Inquiry"}
                   </button>
                 </div>
 
                 {successMessage ? (
                   <div
-                    className="rounded-2xl border border-emerald-300/30 bg-emerald-500/10 px-4 py-3 text-[0.6rem] uppercase tracking-[0.3em] text-emerald-100/80"
+                    className="border border-gold/40 px-5 py-4 text-sm leading-relaxed text-gold-light"
                     aria-live="polite"
                   >
                     {successMessage}
@@ -619,13 +637,39 @@ export default function SchedulePage() {
                 ) : null}
 
                 {submitError ? (
-                  <div className="rounded-2xl border border-rose-200/40 bg-rose-500/10 px-4 py-3 text-[0.6rem] uppercase tracking-[0.3em] text-rose-100/80">
+                  <div className="border border-rose-200/40 px-5 py-4 text-sm leading-relaxed text-rose-100/80">
                     {submitError}
                   </div>
                 ) : null}
               </form>
             </Reveal>
           </div>
+
+          {/* One combined, centred contact block under the form. */}
+          <Reveal mode="text" className="mt-16 flex flex-col items-center gap-4 text-center">
+            <p className="eyebrow">Prefer to Talk?</p>
+            <p className="font-serif text-2xl text-[var(--ivory)] sm:text-3xl">Speak with our team directly</p>
+            <span className="hairline" aria-hidden="true" />
+            <ul className="mt-2 flex flex-col gap-1">
+              {TEAM_CONTACTS.map((contact) => (
+                <li key={contact.tel} className="flex items-baseline justify-center gap-x-5">
+                  <span className="w-20 text-right font-serif text-xl text-[var(--ivory)]">{contact.name}</span>
+                  <a
+                    href={`tel:${contact.tel}`}
+                    className="tap w-32 whitespace-nowrap text-left text-sm text-white/65 transition-colors hover:text-gold-light"
+                  >
+                    {contact.display}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a
+              href={`mailto:${TEAM_EMAIL}`}
+              className="tap text-sm text-gold-light transition-colors hover:text-gold"
+            >
+              {TEAM_EMAIL}
+            </a>
+          </Reveal>
         </div>
       </section>
       <Footer />

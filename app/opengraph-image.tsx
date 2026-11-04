@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { SITE_NAME } from "@/lib/seo";
 
 export const runtime = "edge";
-export const alt = `${SITE_NAME} — Luxury Event Venue in Elmont, NY`;
+export const alt = `${SITE_NAME} | Luxury Event Venue in Elmont, NY`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -17,8 +17,8 @@ export default function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          background: "linear-gradient(135deg, #070708 0%, #141418 55%, #1a1810 100%)",
-          color: "#ffffff",
+          background: "#070708",
+          color: "#f4efe6",
           padding: "64px",
           textAlign: "center",
         }}
@@ -28,16 +28,16 @@ export default function OpenGraphImage() {
             fontSize: 28,
             letterSpacing: "0.35em",
             textTransform: "uppercase",
-            color: "#d4af37",
+            color: "#c9a961",
             marginBottom: 24,
           }}
         >
-          Luxury Event Venue
+          Private Event Venue
         </div>
         <div
           style={{
             fontSize: 96,
-            fontWeight: 700,
+            fontWeight: 400,
             letterSpacing: "0.12em",
             lineHeight: 1,
             marginBottom: 32,
@@ -53,7 +53,7 @@ export default function OpenGraphImage() {
             maxWidth: 900,
           }}
         >
-          Weddings, Repass, Corporate Events & Private Celebrations
+          Weddings · Milestone Celebrations · Private Events
         </div>
         <div
           style={{

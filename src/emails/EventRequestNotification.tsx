@@ -20,6 +20,7 @@ type Props = {
   partyType: string;
   dateLabel: string;
   hearAboutUs: string;
+  reviewedPricing: boolean;
   messageText: string;
 };
 
@@ -163,6 +164,7 @@ export default function EventRequestNotification({
   partyType,
   dateLabel,
   hearAboutUs,
+  reviewedPricing,
   messageText,
 }: Props) {
   const safeMessage = messageText?.trim() ? messageText.trim() : "None";
@@ -254,6 +256,16 @@ export default function EventRequestNotification({
                       <Icon>📣</Icon>HOW DID YOU HEAR ABOUT US
                     </Text>
                     <Text style={styles.value}>{hearAboutUs}</Text>
+                  </Section>
+                </Column>
+              </Row>
+
+              {/* Row 5 (full width) */}
+              <Row style={styles.gridRow}>
+                <Column style={{ width: "100%" }}>
+                  <Section style={styles.fieldCard}>
+                    <Text style={styles.label}>REVIEWED PACKAGE PRICING</Text>
+                    <Text style={styles.value}>{reviewedPricing ? "Yes" : "No"}</Text>
                   </Section>
                 </Column>
               </Row>

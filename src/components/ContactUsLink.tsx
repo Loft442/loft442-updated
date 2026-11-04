@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { MouseEvent } from "react";
 
-const CONTACT_SECTION_ID = "pricing";
+const CONTACT_SECTION_ID = "contact";
 
 type ContactUsLinkProps = {
   className?: string;

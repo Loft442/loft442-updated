@@ -38,6 +38,7 @@ type RequestPayload = {
   email?: string;
   hearAboutUs?: string;
   message?: string;
+  reviewedPricing?: boolean;
   website?: string;
 };
 
@@ -162,6 +163,14 @@ export async function POST(request: Request) {
     );
   }
 
+  // Qualifying step: the form requires the visitor to confirm they reviewed pricing.
+  if (payload.reviewedPricing !== true) {
+    return Response.json(
+      { ok: false, error: "Please confirm you have reviewed the package pricing.", fields: ["reviewedPricing"] },
+      { status: 400 }
+    );
+  }
+
   if (!datePattern.test(String(payload.date))) {
     return Response.json({ ok: false, error: "Invalid date format." }, { status: 400 });
   }
@@ -193,6 +202,7 @@ Phone: ${phone}
 Type of Event: ${partyType || "Unknown"}
 Date: ${dateLabel}
 How Did You Hear About Us: ${hearAboutUs}
+Reviewed Package Pricing: Yes
 
 Message:
 ${messageText}
@@ -214,6 +224,7 @@ ${messageText}
         partyType: partyType || "Unknown",
         dateLabel,
         hearAboutUs,
+        reviewedPricing: true,
         messageText,
       }),
       text: emailText, // fallback for clients that can't render HTML

@@ -1,8 +1,10 @@
 import { createElement } from "react";
 import { defineField, defineType } from "sanity";
 
-// Keep in sync with GalleryItemCategory in src/lib/galleryItems.ts.
-const CATEGORIES = ["Weddings", "Private Events", "Birthdays", "Kids Parties", "Baby Shower"];
+import { GALLERY_CATEGORIES } from "../galleryCategories";
+
+// Same categories (and names) as the tabs on the website's /gallery page.
+const CATEGORIES = GALLERY_CATEGORIES.map(({ title, value }) => ({ title, value }));
 
 function previewMedia(url: string | undefined, mimeType: string | undefined) {
   if (!url) return undefined;
@@ -20,7 +22,8 @@ export default defineType({
     defineField({
       name: "media",
       title: "Photo or video",
-      description: "Drag a photo or video here. Keep videos short (under about 100 MB).",
+      description:
+        "Drag a photo or video here. To add many files at once, use the Upload tab at the top. Keep videos short (under about 100 MB).",
       type: "file",
       options: { accept: "image/*,video/*" },
       validation: (rule) => rule.required(),
@@ -39,6 +42,14 @@ export default defineType({
         "Describe the photo or video for search engines and screen readers, e.g. \"Wedding reception with gold uplighting\".",
       type: "string",
       validation: (rule) => rule.required().max(140),
+    }),
+    defineField({
+      // Set only on photos copied in from the website's original built-in gallery.
+      name: "legacyId",
+      title: "Original gallery photo number",
+      type: "number",
+      hidden: true,
+      readOnly: true,
     }),
     defineField({
       name: "poster",

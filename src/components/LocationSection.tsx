@@ -50,13 +50,13 @@ export default function LocationSection() {
   }, []);
 
   return (
-    <section className="section-glow section-divider border-t border-white/10 py-12 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+    <section className="section-pad border-t border-[var(--line)]">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="grid items-center gap-10 md:grid-cols-[1.1fr_0.9fr]">
           {/* Map container with fixed aspect ratio to prevent CLS */}
           <div
             ref={mapRef}
-            className="w-full max-w-full overflow-hidden rounded-sm border border-white/10 bg-black/60 shadow-[0_0_20px_rgba(255,255,255,0.12),0_0_32px_rgba(59,130,246,0.06),0_0_32px_rgba(239,68,68,0.06),0_25px_70px_rgba(0,0,0,0.45)] transition duration-200 ease-out hover:shadow-[0_0_32px_rgba(255,255,255,0.22),0_0_48px_rgba(59,130,246,0.1),0_0_48px_rgba(239,68,68,0.1),0_25px_70px_rgba(0,0,0,0.45)] focus-within:shadow-[0_0_32px_rgba(255,255,255,0.22),0_0_48px_rgba(59,130,246,0.1),0_0_48px_rgba(239,68,68,0.1),0_25px_70px_rgba(0,0,0,0.45)] min-w-0"
+            className="w-full max-w-full min-w-0 overflow-hidden border border-[var(--line)] bg-black/60 grayscale-[35%] transition duration-500 hover:grayscale-0"
           >
             <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[3/2]">
               {/* Always show placeholder first for CLS prevention */}
@@ -92,22 +92,22 @@ export default function LocationSection() {
             </div>
           </div>
           <div className="min-w-0">
-            <div className="text-spotlight inline-block rounded-sm px-4 py-3">
-              <div className="flex flex-col gap-4">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                  LOCATION
-                </p>
-                <div className="flex flex-col gap-1 text-lg leading-relaxed text-white/85">
+            <div className="inline-block">
+              <div className="flex flex-col gap-6">
+                <p className="eyebrow">Location</p>
+                <h2 className="display-md">Minutes from Queens, at the gateway to Long Island</h2>
+                <span className="hairline" aria-hidden="true" />
+                <div className="flex flex-col gap-1 text-base leading-relaxed text-white/75">
                   <p>Loft 442</p>
                   <p>
                     784 Elmont Road, Elmont,
                     <br />
-                    NY 11003
+                    New York 11003
                   </p>
                 </div>
                 <Link
                   href="https://www.google.com/maps/place/LOFT+442/@40.6911659,-73.7213089,19.25z/data=!4m15!1m8!3m7!1s0x89c26393a45415bd:0xd22bc228f411a3f4!2s784+Elmont+Rd,+Elmont,+NY+11003!3b1!8m2!3d40.6911699!4d-73.7207723!16s%2Fg%2F11x6sc7qp4!3m5!1s0x89c263c43c7a2f79:0x821fdd056c00687d!8m2!3d40.6911699!4d-73.7207723!16s%2Fg%2F11wx_gcp51?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDExOS4wIKXMDSoASAFQAw%3D%3D"
-                  className="text-xs uppercase tracking-[0.35em] text-white/70 transition hover:text-white"
+                  className="tap self-start text-[0.7rem] uppercase tracking-[0.3em] text-white/75 underline decoration-gold/50 underline-offset-[6px] transition-colors hover:text-gold-light hover:decoration-gold"
                 >
                   Open in Maps
                 </Link>

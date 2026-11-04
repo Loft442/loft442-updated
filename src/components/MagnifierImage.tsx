@@ -679,7 +679,7 @@ export default function MagnifierImage({
               <div
                 ref={lensRef}
                 aria-hidden
-                className="pointer-events-none absolute border-2 border-[#d4af37] opacity-0 shadow-[0_0_12px_rgba(212,175,55,0.65),0_0_24px_rgba(212,175,55,0.35)]"
+                className="pointer-events-none absolute border-2 border-gold opacity-0 shadow-[0_0_12px_rgba(212,175,55,0.65),0_0_24px_rgba(212,175,55,0.35)]"
               />
             ) : null}
           </div>
@@ -690,7 +690,7 @@ export default function MagnifierImage({
             aria-hidden
             className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center px-4 md:hidden"
           >
-            <p className="rounded-sm border border-white/30 bg-black/70 px-3 py-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/90">
+            <p className="rounded-sm border border-white/30 bg-black/70 px-3 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-white/90">
               Pinch or double-tap to zoom
             </p>
           </div>
@@ -711,7 +711,7 @@ export default function MagnifierImage({
             >
               {!isHovering ? (
                 <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-                  <p className="rounded-sm border border-black bg-white px-4 py-2.5 text-[0.65rem] uppercase tracking-[0.35em] text-black">
+                  <p className="rounded-sm border border-black bg-white px-4 py-2.5 text-[0.7rem] uppercase tracking-[0.35em] text-black">
                     Hover the flyer to zoom
                   </p>
                 </div>

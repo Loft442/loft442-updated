@@ -25,7 +25,7 @@ function PostTile({ post, onOpen }: { post: InstagramPost; onOpen: () => void })
       type="button"
       onClick={onOpen}
       aria-label={`View ${label.toLowerCase()}`}
-      className="group relative block aspect-square w-full overflow-hidden rounded-sm border border-white/10 bg-white/5 text-left transition-colors hover:border-[#d4af37]/50 focus-visible:border-[#d4af37] focus-visible:outline-none"
+      className="group relative block aspect-square w-full overflow-hidden rounded-sm border border-white/10 bg-white/5 text-left transition-colors hover:border-gold/50 focus-visible:border-gold focus-visible:outline-none"
     >
       {post.imageUrl ? (
         <Image

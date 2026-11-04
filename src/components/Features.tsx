@@ -1,134 +1,124 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import Reveal from "@/components/Reveal";
-import styles from "./Features.module.css";
+
+type FeatureBlockProps = {
+  id?: string;
+  eyebrow: string;
+  title: ReactNode;
+  children: ReactNode;
+  image: { src: string; alt: string };
+  imageFirst?: boolean;
+  titleClassName?: string;
+};
+
+function FeatureBlock({ id, eyebrow, title, children, image, imageFirst = false, titleClassName = "display-md" }: FeatureBlockProps) {
+  return (
+    <section id={id} className="scroll-mt-28 md:scroll-mt-32 section-pad border-t border-[var(--line)]">
+      <div className="mx-auto max-w-6xl px-6">
+        <Reveal className="grid items-center gap-12 md:grid-cols-2 md:gap-16 lg:gap-24">
+          <div className={`flex flex-col gap-7 ${imageFirst ? "md:order-2" : ""}`}>
+            <p className="eyebrow">{eyebrow}</p>
+            <h2 className={titleClassName}>{title}</h2>
+            <span className="hairline" aria-hidden="true" />
+            <div className="flex flex-col gap-5">{children}</div>
+          </div>
+          <div
+            className={`relative w-full aspect-[4/5] overflow-hidden sm:aspect-[543/420] ${imageFirst ? "md:order-1" : ""}`}
+          >
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 45vw"
+              className="reveal reveal-image object-cover"
+            />
+            <div className="pointer-events-none absolute inset-4 border border-white/15" aria-hidden="true" />
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+export function AboutSection() {
+  return (
+    <FeatureBlock
+      id="about"
+      eyebrow="About Loft 442"
+      title={
+        <>
+          A private loft, <em className="display-italic">thoughtfully</em> appointed
+        </>
+      }
+      image={{ src: "/images/ribbon3.webp", alt: "The Loft 442 salon dressed for a reception" }}
+    >
+      <p className="lede">
+        Loft 442 is an intimate, veteran-owned event venue in Elmont, on the border of Queens and
+        Long Island. Designed for weddings, milestone celebrations and private gatherings, the loft
+        pairs modern elegance with warm, urban character: tailored seating, a flexible floor plan
+        and integrated sound, lighting and video.
+      </p>
+      <p className="lede">
+        Guided by discipline, integrity and a genuine attention to detail, our team hosts a limited
+        number of events so that each one receives our complete focus.
+      </p>
+    </FeatureBlock>
+  );
+}
+
+export function TributeSection() {
+  return (
+    <FeatureBlock
+      id="tribute"
+      eyebrow="A Tribute to Service & Sacrifice"
+      title="Built on the values of service"
+      image={{ src: "/images/military-ex.webp", alt: "A tribute to military service at Loft 442" }}
+      imageFirst
+    >
+      <p className="lede">
+        Loft 442 is proudly veteran-owned. We honor the men and women who have served, not only in
+        words, but through respect, integrity and community. The discipline, dedication and pride
+        carried from service shape every event we host.
+      </p>
+      <p className="lede">
+        As a tribute to service, Loft 442 extends exclusive discounts to all active and retired
+        veterans and first responders.
+      </p>
+    </FeatureBlock>
+  );
+}
+
+export function StandardSection() {
+  return (
+    <FeatureBlock
+      eyebrow="Our Standard"
+      title={
+        <>
+          Attentive, discreet and <em className="display-italic">detail-led</em>
+        </>
+      }
+      image={{ src: "/images/quality-promise2.webp", alt: "Table and décor detail at Loft 442" }}
+    >
+      <p className="lede">
+        Every event at Loft 442 is prepared with precision. The space is immaculately kept, the
+        technology is ready before your guests arrive, and a member of our team is on hand from
+        set-up to the final farewell.
+      </p>
+      <p className="lede">
+        We welcome your planner, decorator, DJ and caterer, and coordinate with them so the evening
+        feels effortless for you and for every guest.
+      </p>
+    </FeatureBlock>
+  );
+}
 
 export default function Features() {
   return (
     <>
-      <section
-        id="about"
-        className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider border-t border-white/10 py-12 sm:py-16"
-      >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="grid items-center gap-6 sm:gap-8 md:grid-cols-2 md:gap-10 lg:gap-12">
-            <div className={`relative order-2 h-full md:order-1 ${styles.aboutColumn} ${styles.aboutReveal} ${styles.featureText}`}>
-              <span className={styles.aboutLine} aria-hidden="true" />
-              <div className="inline-block rounded-sm px-4 py-3">
-                <div className="flex flex-col gap-6">
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                    ABOUT LOFT 442
-                  </p>
-                  <div className="body-spotlight flex flex-col gap-6">
-                    <p className="text-sm leading-relaxed text-white/80 sm:text-base">
-                      LOFT 442 is a premier, veteran-owned event venue in Long Island,
-                      thoughtfully designed for weddings, celebrations, corporate
-                      events, and private gatherings. Blending modern elegance with
-                      urban charm, the space features stylish seating, a flexible
-                      layout, and advanced sound, lighting, and video technology to
-                      elevate every event. Guided by discipline, integrity, and
-                      attention to detail, our dedicated team creates seamless,
-                      memorable experiences where every occasion is treated with care
-                      and respect.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className={`relative order-1 w-full aspect-[543/358] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] md:order-2 md:max-w-[543px] ${styles.featureImage}`}>
-              <Image
-                src="/images/ribbon3.webp"
-                alt="Loft 442 event venue interior"
-                fill
-                sizes="(max-width: 768px) 100vw, 45vw"
-                className="reveal reveal-image object-cover"
-              />
-            </div>
-          </Reveal>
-        </div>
-      </section>
-      <section
-        id="tribute"
-        className="scroll-mt-28 md:scroll-mt-32 section-glow section-divider border-t border-white/10 py-12 sm:py-16"
-      >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="grid items-center gap-6 sm:gap-8 md:grid-cols-2 md:gap-10 lg:gap-12">
-            <div className={`relative order-1 w-full aspect-[543/358] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] md:max-w-[543px] ${styles.featureImage}`}>
-              <Image
-                src="/images/military-ex.webp"
-                alt="Military tribute"
-                fill
-                sizes="(max-width: 768px) 100vw, 45vw"
-                className="reveal reveal-image object-cover"
-              />
-            </div>
-            <div className={`relative order-2 h-full ${styles.qualityColumn} ${styles.tributeReveal} ${styles.featureText}`}>
-              <div className="inline-block rounded-sm px-4 py-3">
-                <div className="flex flex-col gap-6">
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                    A Tribute to Service & Sacrifice
-                  </p>
-                  <div className="body-spotlight flex flex-col gap-6">
-                    <p className="text-sm leading-relaxed text-white/80 sm:text-base">
-                      Loft 442 is proudly veteran-owned. We honor the men and women
-                      who have served, not just in words, but through respect,
-                      integrity, and community. This space was built on discipline,
-                      dedication, and pride, values carried from service into every
-                      event we host.
-                    </p>
-                    <p className="text-sm leading-relaxed text-white/80 sm:text-base">
-                      As a tribute to service, LOFT 442 extends exclusive discounts to
-                      all active, retired veterans and first responders.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <span className={styles.qualityLine} aria-hidden="true" />
-            </div>
-          </Reveal>
-        </div>
-      </section>
-      <section className="section-glow section-divider border-t border-white/10 py-12 sm:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="grid items-center gap-10 md:grid-cols-[1fr_1.05fr] md:items-stretch">
-            <div className={`relative h-full ${styles.qualityColumnLeft} ${styles.qualityReveal} ${styles.featureText}`}>
-              <div className="inline-block rounded-sm px-4 py-3">
-                <div className="flex flex-col gap-6">
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                    QUALITY PROMISE
-                  </p>
-                  <div className="body-spotlight flex flex-col gap-6">
-                    <p className="text-base leading-relaxed text-white/80">
-                      We ensure that every event is executed with precision and
-                      excellence. We prioritize customer satisfaction by providing a
-                      well-maintained space, state-of-the-art facilities, and a
-                      dedicated team ready to assist with all aspects of your event. We
-                      guarantee a seamless experience that meets your specific needs
-                      and exceeds expectations.
-                    </p>
-                    <p className="text-base leading-relaxed text-white/80">
-                      Choose us for a venue that reflects professionalism and
-                      attention to detail.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <span
-                className={`${styles.qualityLine} ${styles.qualityLineLeft}`}
-                aria-hidden="true"
-              />
-            </div>
-            <div className={`relative h-[240px] overflow-hidden rounded-sm border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.4)] sm:h-[320px] lg:h-[360px] ${styles.featureImage}`}>
-              <Image
-                src="/images/quality-promise2.webp"
-                alt="Loft 442 venue detail"
-                fill
-                sizes="(max-width: 768px) 100vw, 45vw"
-                className="reveal reveal-image object-cover"
-              />
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <AboutSection />
+      <TributeSection />
+      <StandardSection />
     </>
   );
 }

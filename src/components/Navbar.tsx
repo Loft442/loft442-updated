@@ -12,15 +12,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { buttonClasses } from "@/components/ui/Button";
 import { getScrollY, useLockBodyScroll } from "@/lib/useIOSSafari";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Gallery", href: "/gallery" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Repass", href: "/repass" },
+  { label: "Gallery", href: "/gallery" },
   { label: "Catering", href: "/catering" },
+  { label: "Repass", href: "/repass" },
   { label: "About", href: "#about" },
+];
+
+const navRevealClasses = [
+  "nav-home-reveal",
+  "nav-gallery-reveal",
+  "nav-pricing-reveal",
+  "nav-repass-reveal",
+  "nav-catering-reveal",
+  "nav-about-reveal",
 ];
 
 const getDesktopNavSnapshot = () =>
@@ -131,9 +141,9 @@ export default function Navbar() {
       <div
         aria-hidden
         className={[
-          "pointer-events-none absolute inset-0 -z-10 backdrop-blur-md",
+          "nav-glass pointer-events-none absolute inset-0 -z-10 backdrop-blur-md",
           "transition-opacity duration-300 ease-out motion-reduce:transition-none",
-          menuOpen ? "bg-black/90" : "bg-black/70",
+          menuOpen ? "bg-black/95" : "bg-black/90",
           menuOpen || isScrolled ? "opacity-100" : "opacity-0",
         ].join(" ")}
       />
@@ -166,13 +176,13 @@ export default function Navbar() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 text-xs uppercase tracking-[0.3em] text-white/70 md:flex md:min-w-0 md:flex-1 md:justify-center md:px-6 lg:absolute lg:left-1/2 lg:top-1/2 lg:w-auto lg:flex-none lg:-translate-x-1/2 lg:-translate-y-1/2 lg:px-0">
-          {navLinks.map((link) => (
+        <nav className="hidden items-center gap-4 text-[0.7rem] uppercase tracking-[0.16em] lg:gap-8 lg:text-[0.78rem] lg:tracking-[0.24em] text-white/65 md:flex md:min-w-0 md:flex-1 md:justify-center md:px-6 lg:absolute lg:left-1/2 lg:top-1/2 lg:w-auto lg:flex-none lg:-translate-x-1/2 lg:-translate-y-1/2 lg:px-0">
+          {navLinks.map((link, index) => (
             <Link
               key={link.label}
               href={link.href}
               onClick={(event) => handleNavClick(event, link.href)}
-              className={`nav-underline relative transition hover:text-white after:pointer-events-none after:absolute after:left-1/2 after:-bottom-2 after:h-[2px] after:w-full after:-translate-x-1/2 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent after:opacity-0 after:transition after:duration-200 after:ease-out after:content-[''] after:shadow-[0_0_8px_rgba(255,255,255,0.35)] hover:after:opacity-100 after:[mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[mask-size:100%_100%] after:[mask-repeat:no-repeat] after:[mask-position:center] after:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_80%,transparent_100%)] after:[-webkit-mask-size:100%_100%] after:[-webkit-mask-repeat:no-repeat] after:[-webkit-mask-position:center] ${link.label === "Home" ? "nav-home-reveal" : ""} ${link.label === "Gallery" ? "nav-gallery-reveal" : ""} ${link.label === "Pricing" ? "nav-pricing-reveal" : ""} ${link.label === "Repass" ? "nav-repass-reveal" : ""} ${link.label === "Catering" ? "nav-catering-reveal" : ""} ${link.label === "About" ? "nav-about-reveal" : ""}`}
+              className={`nav-underline relative transition-colors duration-300 hover:text-[var(--ivory)] after:pointer-events-none after:absolute after:left-0 after:-bottom-2 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 ${navRevealClasses[index] ?? ""}`}
             >
               {link.label}
             </Link>
@@ -182,9 +192,9 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/schedule"
-            className="nav-cta-reveal cta-button cta-book inline-flex h-11 items-center justify-center rounded-sm border border-[#d4af37] px-4 text-[0.65rem] uppercase tracking-[0.35em] text-white/90 transition hover:border-[#f5e6a8] hover:text-white hover:shadow-[0_0_20px_rgba(212,175,55,0.18)] sm:px-5"
+            className={buttonClasses("primary", "sm", "nav-cta-reveal h-11 px-4 sm:px-5")}
           >
-            Start planning
+            Request a Tour
           </Link>
           <button
             type="button"
@@ -199,7 +209,7 @@ export default function Navbar() {
                 return !prev;
               })
             }
-            className="inline-flex h-11 w-11 items-center justify-center rounded-sm border border-white/20 text-white/80 transition hover:border-white/40 hover:text-white md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center border border-white/20 text-white/80 transition hover:border-white/40 hover:text-white md:hidden"
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -229,7 +239,7 @@ export default function Navbar() {
                     handleNavClick(event, link.href);
                     handleCloseMenu();
                   }}
-                  className="py-3.5 transition hover:text-white"
+                  className="border-b border-[var(--line)] py-4 transition hover:text-gold-light last:border-b-0"
                 >
                   {link.label}
                 </Link>

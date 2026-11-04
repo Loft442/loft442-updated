@@ -41,7 +41,7 @@ function PlayOnInstagram({
           href={permalink}
           target="_blank"
           rel="noopener noreferrer"
-          className="cta-button cta-book inline-flex h-11 items-center justify-center gap-2 rounded-sm px-5 text-[0.65rem] uppercase tracking-[0.16em] text-black transition hover:opacity-90 sm:px-6 sm:tracking-[0.28em]"
+          className="cta-button cta-book inline-flex h-11 items-center justify-center gap-2 rounded-sm px-5 text-[0.7rem] uppercase tracking-[0.16em] text-black transition hover:opacity-90 sm:px-6 sm:tracking-[0.28em]"
         >
           <Play className="h-4 w-4" aria-hidden="true" />
           Play on Instagram
@@ -197,7 +197,7 @@ export default function InstagramModal({ posts, position, close, step }: Instagr
             <button
               type="button"
               onClick={() => step(-1)}
-              className="min-tap-target inline-flex items-center gap-1 rounded-sm border border-white/20 bg-black/60 px-3 text-[0.6rem] uppercase tracking-[0.2em] text-white/80"
+              className="min-tap-target inline-flex items-center gap-1 rounded-sm border border-white/20 bg-black/60 px-3 text-[0.7rem] uppercase tracking-[0.2em] text-white/80"
             >
               <ChevronLeft className="h-5 w-5" />
               Prev
@@ -205,7 +205,7 @@ export default function InstagramModal({ posts, position, close, step }: Instagr
             <button
               type="button"
               onClick={() => step(1)}
-              className="min-tap-target inline-flex items-center gap-1 rounded-sm border border-white/20 bg-black/60 px-3 text-[0.6rem] uppercase tracking-[0.2em] text-white/80"
+              className="min-tap-target inline-flex items-center gap-1 rounded-sm border border-white/20 bg-black/60 px-3 text-[0.7rem] uppercase tracking-[0.2em] text-white/80"
             >
               Next
               <ChevronRight className="h-5 w-5" />
@@ -213,7 +213,7 @@ export default function InstagramModal({ posts, position, close, step }: Instagr
           </div>
         ) : null}
 
-        <div className="mt-[clamp(8px,1svh,16px)] flex shrink-0 flex-wrap items-center justify-between gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/60">
+        <div className="mt-[clamp(8px,1svh,16px)] flex shrink-0 flex-wrap items-center justify-between gap-2 text-[0.7rem] uppercase tracking-[0.3em] text-white/60">
           <span>
             {position.post + 1} / {posts.length}
           </span>

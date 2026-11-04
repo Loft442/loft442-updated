@@ -4,7 +4,7 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://loft442.com";
 export const SITE_NAME = "LOFT 442";
 export const SITE_DESCRIPTION =
-  "LOFT 442 is a veteran-owned event venue designed for elegant weddings, corporate events, repass gatherings, and private celebrations in Elmont, NY.";
+  "LOFT 442 is an intimate, veteran-owned event venue in Elmont, NY for weddings, milestone celebrations and private events of up to 125 guests.";
 export const SITE_EMAIL = "events@loft442.com";
 export const SITE_PHONE = "+1-347-579-6578";
 export const SITE_INSTAGRAM = "https://www.instagram.com/loft.442/";
@@ -91,6 +91,8 @@ export function localBusinessJsonLd() {
     telephone: SITE_PHONE,
     image: absoluteUrl(DEFAULT_OG_IMAGE),
     sameAs: [SITE_INSTAGRAM],
+    maximumAttendeeCapacity: 125,
+    priceRange: "$$$",
     address: {
       "@type": "PostalAddress",
       ...SITE_ADDRESS,
@@ -153,11 +155,10 @@ export function serviceJsonLd({
 
 export const PUBLIC_ROUTES = [
   { path: "/", priority: 1, changeFrequency: "weekly" as const },
-  { path: "/repass", priority: 0.9, changeFrequency: "monthly" as const },
-  { path: "/catering", priority: 0.9, changeFrequency: "monthly" as const },
-  { path: "/gallery", priority: 0.8, changeFrequency: "monthly" as const },
-  { path: "/pricing", priority: 0.8, changeFrequency: "monthly" as const },
+  { path: "/gallery", priority: 0.9, changeFrequency: "monthly" as const },
+  { path: "/pricing", priority: 0.9, changeFrequency: "monthly" as const },
+  { path: "/schedule", priority: 0.8, changeFrequency: "monthly" as const },
+  { path: "/repass", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/catering", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/availability", priority: 0.7, changeFrequency: "weekly" as const },
-  { path: "/booking", priority: 0.7, changeFrequency: "monthly" as const },
-  { path: "/schedule", priority: 0.7, changeFrequency: "monthly" as const },
 ];
