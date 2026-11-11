@@ -132,7 +132,7 @@ export default function Navbar() {
     setMenuOpen(false);
   }, []);
 
-  const showScrollDivider = isScrolled && !suppressNavBorder && !menuOpen;
+  const showNavDivider = !suppressNavBorder && !menuOpen;
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 w-full overflow-x-clip isolate pt-safe pl-safe pr-safe [transform:translateZ(0)]">
@@ -147,10 +147,10 @@ export default function Navbar() {
           menuOpen || isScrolled ? "opacity-100" : "opacity-0",
         ].join(" ")}
       />
-      {showScrollDivider ? (
+      {showNavDivider ? (
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/10"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gold"
         />
       ) : null}
       <div
