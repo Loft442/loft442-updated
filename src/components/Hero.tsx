@@ -56,7 +56,7 @@ export default function Hero() {
           </p>
 
           <div className="hero-stagger hero-stagger--3 mt-10 flex flex-col items-start gap-4 sm:mt-[clamp(1.25rem,4svh,2.5rem)] sm:flex-row">
-            <Button href="/schedule" className="w-full sm:w-64">Request a Tour</Button>
+            <Button href="/schedule" className="w-full sm:w-64">Plan Your Event</Button>
             <Button href="/gallery" variant="ghost" className="w-full sm:w-64">
               View the Gallery
             </Button>

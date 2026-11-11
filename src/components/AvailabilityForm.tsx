@@ -18,11 +18,7 @@ export default function AvailabilityForm() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col items-center gap-5 text-center">
           <p className="eyebrow">Begin the Conversation</p>
-          <h2 className="display-lg max-w-2xl">Reserve a private tour of Loft 442</h2>
-          <p className="lede max-w-xl">
-            Tours are offered by appointment, so the space and our full attention are yours
-            alone.
-          </p>
+          <h2 className="display-lg max-w-2xl">Ready to plan your event?</h2>
         </div>
 
         <div className="mt-16 grid gap-px bg-[var(--line)] md:grid-cols-2">
@@ -60,7 +56,7 @@ export default function AvailabilityForm() {
         </div>
 
         <div className="mt-14 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <Button href="/schedule">Request a Tour</Button>
+          <Button href="/schedule">Plan Your Event</Button>
         </div>
       </div>
     </section>

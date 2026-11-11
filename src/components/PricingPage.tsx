@@ -158,7 +158,7 @@ export default function PricingPage() {
             the space.
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <Button href="/schedule" className="w-full sm:w-64">Request a Tour</Button>
+            <Button href="/schedule" className="w-full sm:w-64">Plan Your Event</Button>
             <Button href="/gallery" variant="ghost" className="w-full sm:w-64">
               View the Gallery
             </Button>

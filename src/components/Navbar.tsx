@@ -192,9 +192,13 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/schedule"
-            className={buttonClasses("primary", "sm", "nav-cta-reveal h-11 px-4 sm:px-5")}
+            className={buttonClasses(
+              "primary",
+              "sm",
+              "nav-cta-reveal h-11 px-3.5 tracking-[0.16em] sm:px-5 sm:tracking-[0.24em]"
+            )}
           >
-            Request a Tour
+            Start Planning
           </Link>
           <button
             type="button"

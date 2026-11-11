@@ -74,7 +74,7 @@ export default function CateringPage() {
             through each step.
           </p>
           <div className="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row">
-            <Button href="/schedule">Request a Tour</Button>
+            <Button href="/schedule">Plan Your Event</Button>
             <ContactUsLink className={buttonClasses("ghost")} />
           </div>
         </Reveal>

@@ -7,7 +7,7 @@ const exploreLinks = [
   { label: "Gallery", href: "/gallery" },
   { label: "Catering", href: "/catering" },
   { label: "Repass", href: "/repass" },
-  { label: "Request a Tour", href: "/schedule" },
+  { label: "Plan Your Event", href: "/schedule" },
 ];
 
 const contacts = TEAM_CONTACTS;

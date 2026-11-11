@@ -54,7 +54,7 @@ export default function AvailabilityPage() {
               </p>
             </div>
             <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-              <Button href="/schedule">Request a Tour</Button>
+              <Button href="/schedule">Plan Your Event</Button>
               <Button href={`tel:${SITE_PHONE}`} variant="ghost">
                 Call
               </Button>

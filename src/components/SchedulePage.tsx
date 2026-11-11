@@ -260,11 +260,11 @@ export default function SchedulePage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal mode="text" className="flex max-w-3xl flex-col gap-6">
             <p className="eyebrow">Loft 442</p>
-            <h1 className="display-xl">Request a Tour</h1>
+            <h1 className="display-xl">Plan Your Event</h1>
             <span className="hairline" aria-hidden="true" />
             <p className="lede">
-              Share a few details and a member of our team will personally follow up to confirm
-              availability.
+              Select your preferred date and tell us about your event. Our team will follow up to
+              confirm availability.
             </p>
           </Reveal>
 
