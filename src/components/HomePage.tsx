@@ -1,5 +1,4 @@
 import AvailabilityForm from "@/components/AvailabilityForm";
-import BookingBanner from "@/components/BookingBanner";
 import EventTypes from "@/components/EventTypes";
 import FAQ from "@/components/FAQ";
 import { AboutSection, StandardSection, TributeSection } from "@/components/Features";
@@ -14,7 +13,6 @@ import VideoSection from "@/components/VideoSection";
 export default function HomePage() {
   return (
     <main className="bg-[var(--background)] pt-nav text-white">
-      <BookingBanner />
       <Hero />
       <AboutSection />
       <EventTypes />
