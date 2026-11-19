@@ -1,14 +1,15 @@
 "use client";
 
 /**
- * Studio "Upload" tool: one column per gallery category, each with its own drop zone
- * right under the heading. Files dropped in a column are uploaded as Sanity file assets
- * and saved as *draft* galleryItems in that category. Each column lists its uploads and
- * the drafts waiting to publish; nothing reaches /gallery until it is published.
+ * Studio "Upload" tool: one column per gallery category, each with its own drop zone.
+ * Uploads become drafts; deletes, moves, and the one-time import are staged in a
+ * Changes box. Nothing hits the live /gallery until Publish is pressed — then every
+ * staged change is applied together and the website cache is refreshed once.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent } from "react";
 import { useClient } from "sanity";
+import { revalidateGalleryAction } from "@/lib/revalidateGalleryAction";
 import { apiVersion } from "../env";
 import { GALLERY_CATEGORIES, defaultAltFor, type GalleryCategoryValue } from "../galleryCategories";
 import { galleryItems as BUILT_IN_PHOTOS } from "../../src/lib/galleryItems";
@@ -43,6 +44,31 @@ type DraftRow = {
   mimeType?: string;
 };
 
+type PendingDelete = {
+  kind: "delete";
+  id: string;
+  label: string;
+  url?: string;
+  mimeType?: string;
+  category?: string;
+};
+
+type PendingMove = {
+  kind: "move";
+  id: string;
+  from: string;
+  to: GalleryCategoryValue;
+  label: string;
+  url?: string;
+  mimeType?: string;
+};
+
+type PendingImport = {
+  kind: "import";
+};
+
+type PendingChange = PendingDelete | PendingMove | PendingImport;
+
 const DRAFTS_QUERY = `*[_type == "galleryItem" && _id in path("drafts.**")] | order(_createdAt desc){
   _id, _createdAt, category, alt,
   "url": media.asset->url,
@@ -62,6 +88,9 @@ const LIVE_QUERY = `{
 const formatSize = (bytes: number) =>
   bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
 
+const categoryTitle = (value: string) =>
+  GALLERY_CATEGORIES.find((c) => c.value === value)?.title ?? value;
+
 // Loft 442 brand palette (matches the website's globals.css tokens).
 const ui = {
   bg: "#070708",
@@ -78,7 +107,6 @@ const ui = {
   danger: "#f2a7a7",
 };
 
-// The website loads these fonts globally; fall back to similar system fonts.
 const font = {
   display: 'var(--font-display, "Gilda Display"), Georgia, "Times New Roman", serif',
   body: 'var(--font-inter, Inter), system-ui, -apple-system, "Segoe UI", sans-serif',
@@ -141,14 +169,15 @@ type ColumnProps = {
   value: GalleryCategoryValue;
   queue: QueueItem[];
   drafts: DraftRow[];
-  busyIds: Set<string>;
+  publishing: boolean;
   onFiles: (files: FileList | File[], category: GalleryCategoryValue) => void;
   onRetry: (key: string) => void;
-  onPublish: (ids: string[]) => void;
-  onDelete: (id: string) => void;
+  onDiscardDraft: (id: string) => void;
   live: DraftRow[];
+  pendingDeleteIds: Set<string>;
+  pendingMoves: Map<string, GalleryCategoryValue>;
   onMove: (id: string, category: GalleryCategoryValue) => void;
-  onDeleteLive: (id: string) => void;
+  onStageDelete: (item: DraftRow) => void;
 };
 
 function CategoryColumn({
@@ -156,14 +185,15 @@ function CategoryColumn({
   value,
   queue,
   drafts,
-  busyIds,
+  publishing,
   onFiles,
   onRetry,
-  onPublish,
-  onDelete,
+  onDiscardDraft,
   live,
+  pendingDeleteIds,
+  pendingMoves,
   onMove,
-  onDeleteLive,
+  onStageDelete,
 }: ColumnProps) {
   const [dragOver, setDragOver] = useState(false);
   const [moveOver, setMoveOver] = useState(false);
@@ -180,7 +210,6 @@ function CategoryColumn({
   return (
     <section
       aria-label={`${title} uploads`}
-      // Drop a photo dragged from another column anywhere on this column to move it here.
       onDragOver={(e) => {
         if (!isItemDrag(e)) return;
         e.preventDefault();
@@ -231,20 +260,18 @@ function CategoryColumn({
             pointerEvents: "none",
           }}
         >
-          Drop to move to {title}
+          Drop to queue move to {title}
         </div>
       ) : null}
-      {/* Column heading */}
       <header style={{ padding: "20px 18px 16px", borderBottom: `1px solid ${ui.line}` }}>
         <h2 style={{ margin: 0, fontFamily: font.display, fontWeight: 400, fontSize: 22, lineHeight: 1.2, color: ui.ivory, ...ellipsis }}>
           {title}
         </h2>
         <div style={{ ...eyebrow, marginTop: 8, color: drafts.length || inProgress ? ui.gold : ui.muted, letterSpacing: "0.22em" }}>
-          {drafts.length} waiting{inProgress ? ` · ${inProgress} uploading` : ""}
+          {drafts.length} to add{inProgress ? ` · ${inProgress} uploading` : ""}
         </div>
       </header>
 
-      {/* Drop zone, right under the heading */}
       <div style={{ padding: 16 }}>
         <div
           role="button"
@@ -290,7 +317,6 @@ function CategoryColumn({
         </div>
       </div>
 
-      {/* Uploads in progress / just finished */}
       {queue.length ? (
         <ul style={{ listStyle: "none", margin: 0, padding: "0 16px 16px", display: "grid", gap: 10 }}>
           {queue.map((q) => (
@@ -304,7 +330,7 @@ function CategoryColumn({
                     : q.status === "uploading"
                       ? `Uploading ${q.percent}%`
                       : q.status === "saved"
-                        ? "Saved as draft"
+                        ? "Queued in Changes"
                         : `Failed${q.error ? `: ${q.error}` : ""}`}
                 </div>
                 {q.status === "uploading" ? (
@@ -323,41 +349,26 @@ function CategoryColumn({
         </ul>
       ) : null}
 
-      {/* Drafts waiting to publish in this category */}
       <div style={{ borderTop: `1px solid ${ui.line}`, padding: 16, display: "grid", gap: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
-          <span style={{ ...eyebrow, letterSpacing: "0.2em", color: ui.muted, whiteSpace: "nowrap" }}>To publish</span>
-          <button
-            type="button"
-            style={buttonStyle(true, !drafts.length || busyIds.size > 0, true)}
-            disabled={!drafts.length || busyIds.size > 0}
-            onClick={() => onPublish(drafts.map((d) => d._id))}
-          >
-            Publish {drafts.length || ""}
-          </button>
-        </div>
+        <span style={{ ...eyebrow, letterSpacing: "0.2em", color: ui.muted, whiteSpace: "nowrap" }}>Waiting to add</span>
         {drafts.length ? (
           <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
             {drafts.map((d) => {
-              const busy = busyIds.has(d._id);
               const isVideo = d.mimeType?.startsWith("video/") ?? false;
               return (
                 <li key={d._id} style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                   <Thumb url={d.url} isVideo={isVideo} size={36} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: font.body, fontSize: 13, color: ui.text, ...ellipsis }}>{d.alt || "No description"}</div>
-                    <div style={{ fontFamily: font.body, fontSize: 11.2, color: ui.muted }}>{isVideo ? "Video" : "Photo"}</div>
+                    <div style={{ fontFamily: font.body, fontSize: 11.2, color: ui.muted }}>In Changes box</div>
                   </div>
-                  <button type="button" style={buttonStyle(true, busy, true)} disabled={busy} onClick={() => onPublish([d._id])}>
-                    Publish
-                  </button>
                   <button
                     type="button"
-                    aria-label="Delete draft"
-                    title="Delete draft"
-                    style={buttonStyle(false, busy, true)}
-                    disabled={busy}
-                    onClick={() => onDelete(d._id)}
+                    aria-label="Discard draft"
+                    title="Discard draft"
+                    style={buttonStyle(false, publishing, true)}
+                    disabled={publishing}
+                    onClick={() => onDiscardDraft(d._id)}
                   >
                     ✕
                   </button>
@@ -370,7 +381,6 @@ function CategoryColumn({
         )}
       </div>
 
-      {/* Photos/videos currently on the website in this category: move or delete */}
       <div style={{ borderTop: `1px solid ${ui.line}`, padding: 16 }}>
         <div style={{ display: "grid", gap: 6 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
@@ -380,7 +390,7 @@ function CategoryColumn({
             </span>
           </div>
           <span style={{ fontFamily: font.body, fontSize: 11.5, color: ui.muted }}>
-            Drag a photo onto another column to move it · ✕ to delete.
+            Drag to another column to queue a move · ✕ to queue a delete. Publish applies them together.
           </span>
         </div>
         {live.length ? (
@@ -395,14 +405,15 @@ function CategoryColumn({
             }}
           >
             {live.map((item) => {
-              const busy = busyIds.has(item._id);
               const isVideo = item.mimeType?.startsWith("video/") ?? false;
               const dragging = draggingId === item._id;
+              const willDelete = pendingDeleteIds.has(item._id);
+              const moveTo = pendingMoves.get(item._id);
               return (
                 <li
                   key={item._id}
-                  draggable={!busy}
-                  title={`${item.alt || "No description"} · drag onto another column to move`}
+                  draggable={!publishing && !willDelete}
+                  title={`${item.alt || "No description"} · drag onto another column to queue a move`}
                   onDragStart={(e) => {
                     e.dataTransfer.setData(ITEM_MIME, JSON.stringify({ id: item._id, from: value }));
                     e.dataTransfer.effectAllowed = "move";
@@ -412,10 +423,10 @@ function CategoryColumn({
                   style={{
                     position: "relative",
                     aspectRatio: "1 / 1",
-                    border: `1px solid ${ui.line}`,
+                    border: `1px solid ${willDelete ? "rgba(242, 167, 167, 0.55)" : moveTo ? ui.goldSoft : ui.line}`,
                     background: "#1a1a1b",
-                    cursor: busy ? "progress" : "grab",
-                    opacity: busy ? 0.4 : dragging ? 0.35 : 1,
+                    cursor: publishing || willDelete ? "default" : "grab",
+                    opacity: willDelete ? 0.45 : dragging ? 0.35 : 1,
                     overflow: "hidden",
                   }}
                 >
@@ -436,7 +447,7 @@ function CategoryColumn({
                       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                     />
                   )}
-                  {isVideo ? (
+                  {willDelete || moveTo || isVideo ? (
                     <span
                       style={{
                         position: "absolute",
@@ -444,22 +455,22 @@ function CategoryColumn({
                         bottom: 6,
                         padding: "2px 6px",
                         background: "rgba(7,7,8,0.75)",
-                        color: ui.goldLight,
+                        color: willDelete ? ui.danger : ui.goldLight,
                         fontFamily: font.body,
                         fontSize: 10.5,
                         letterSpacing: "0.12em",
                         textTransform: "uppercase",
                       }}
                     >
-                      Video
+                      {willDelete ? "Will delete" : moveTo ? `→ ${categoryTitle(moveTo)}` : "Video"}
                     </span>
                   ) : null}
                   <button
                     type="button"
-                    aria-label={`Delete ${item.alt || "this photo"} from the website`}
-                    title="Delete from the website"
-                    disabled={busy}
-                    onClick={() => onDeleteLive(item._id)}
+                    aria-label={willDelete ? `Undo delete for ${item.alt || "this photo"}` : `Queue delete for ${item.alt || "this photo"}`}
+                    title={willDelete ? "Undo delete" : "Queue delete"}
+                    disabled={publishing}
+                    onClick={() => onStageDelete(item)}
                     style={{
                       position: "absolute",
                       top: 6,
@@ -468,16 +479,16 @@ function CategoryColumn({
                       height: 28,
                       display: "grid",
                       placeItems: "center",
-                      border: "1px solid rgba(242, 167, 167, 0.6)",
+                      border: `1px solid ${willDelete ? ui.goldSoft : "rgba(242, 167, 167, 0.6)"}`,
                       background: "rgba(7, 7, 8, 0.8)",
-                      color: ui.danger,
+                      color: willDelete ? ui.goldLight : ui.danger,
                       fontSize: 14,
                       lineHeight: 1,
-                      cursor: busy ? "not-allowed" : "pointer",
+                      cursor: publishing ? "not-allowed" : "pointer",
                       borderRadius: 0,
                     }}
                   >
-                    ✕
+                    {willDelete ? "↺" : "✕"}
                   </button>
                 </li>
               );
@@ -499,13 +510,15 @@ export function UploadTool() {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [notice, setNotice] = useState("");
   const [drafts, setDrafts] = useState<DraftRow[]>([]);
-  const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
   const [live, setLive] = useState<DraftRow[]>([]);
   const [importDone, setImportDone] = useState<boolean | null>(null);
   const [importProgress, setImportProgress] = useState<{ done: number; total: number; failed: number } | null>(null);
+  const [pending, setPending] = useState<PendingChange[]>([]);
+  const [publishing, setPublishing] = useState(false);
   const activeRef = useRef(0);
+  /** Keys currently being uploaded — prevents the scheduler from starting the same item twice. */
+  const inFlightKeysRef = useRef(new Set<string>());
 
-  // ---- Drafts waiting to publish + items on the website (live-updating) ----
   const loadDrafts = useCallback(() => {
     client.fetch<DraftRow[]>(DRAFTS_QUERY).then(setDrafts).catch(() => undefined);
     client
@@ -525,7 +538,6 @@ export function UploadTool() {
     return () => sub.unsubscribe();
   }, [client, loadDrafts]);
 
-  // Release object URLs when the tool unmounts.
   const queueRef = useRef(queue);
   queueRef.current = queue;
   useEffect(() => () => queueRef.current.forEach((q) => URL.revokeObjectURL(q.previewUrl)), []);
@@ -533,7 +545,6 @@ export function UploadTool() {
   const update = (key: string, patch: Partial<QueueItem>) =>
     setQueue((prev) => prev.map((q) => (q.key === key ? { ...q, ...patch } : q)));
 
-  // ---- Upload one queued file ----
   const uploadOne = useCallback(
     (item: QueueItem) =>
       new Promise<void>((resolve) => {
@@ -573,29 +584,39 @@ export function UploadTool() {
     [client],
   );
 
-  // ---- Keep up to MAX_PARALLEL uploads running across all columns ----
   useEffect(() => {
-    const waiting = queue.filter((q) => q.status === "waiting");
+    const waiting = queue.filter(
+      (q) => q.status === "waiting" && !inFlightKeysRef.current.has(q.key),
+    );
     const free = MAX_PARALLEL - activeRef.current;
-    waiting.slice(0, Math.max(0, free)).forEach((item) => {
-      activeRef.current += 1;
-      // Mark immediately so the next render doesn't schedule it twice.
-      item.status = "uploading";
+    const toStart = waiting.slice(0, Math.max(0, free));
+    if (!toStart.length) return;
+
+    // Mark in React state before starting work so a re-run can't pick the same items.
+    const startKeys = new Set(toStart.map((item) => item.key));
+    toStart.forEach((item) => inFlightKeysRef.current.add(item.key));
+    activeRef.current += toStart.length;
+    setQueue((prev) =>
+      prev.map((q) => (startKeys.has(q.key) ? { ...q, status: "uploading" as const, percent: 0, error: undefined } : q)),
+    );
+
+    toStart.forEach((item) => {
       uploadOne(item).finally(() => {
-        activeRef.current -= 1;
+        inFlightKeysRef.current.delete(item.key);
+        activeRef.current = Math.max(0, activeRef.current - 1);
+        // Nudge the effect so the next waiting items can start.
         setQueue((prev) => [...prev]);
       });
     });
   }, [queue, uploadOne]);
 
-  // ---- Add files dropped (or chosen) in a category column ----
   const addFiles = (files: FileList | File[], category: GalleryCategoryValue) => {
     const list = Array.from(files);
     const media = list.filter((f) => f.type.startsWith("image/") || f.type.startsWith("video/"));
     const rejected = list.length - media.length;
     const bigVideos = media.filter((f) => f.type.startsWith("video/") && f.size > LARGE_VIDEO_BYTES).length;
     const alt = (batchAlt.trim() || defaultAltFor(category)).slice(0, 140);
-    const title = GALLERY_CATEGORIES.find((c) => c.value === category)?.title ?? category;
+    const title = categoryTitle(category);
 
     setQueue((prev) => [
       ...media.map((file) => ({
@@ -612,7 +633,7 @@ export function UploadTool() {
     ]);
 
     const parts = [];
-    if (media.length) parts.push(`${media.length} file${media.length === 1 ? "" : "s"} added to ${title}.`);
+    if (media.length) parts.push(`${media.length} file${media.length === 1 ? "" : "s"} added to ${title} — they appear in Changes when upload finishes.`);
     if (rejected) parts.push(`${rejected} skipped (only photos and videos can be uploaded).`);
     if (bigVideos) parts.push(`${bigVideos} video${bigVideos === 1 ? " is" : "s are"} over 100 MB and may upload slowly.`);
     setNotice(parts.join(" "));
@@ -625,96 +646,154 @@ export function UploadTool() {
       return prev.filter((q) => q.status !== "saved");
     });
 
-  // ---- Publish / delete drafts ----
-  const setBusy = (ids: string[], on: boolean) =>
-    setBusyIds((prev) => {
-      const next = new Set(prev);
-      ids.forEach((id) => (on ? next.add(id) : next.delete(id)));
-      return next;
-    });
-
-  const publish = async (ids: string[]) => {
-    if (!ids.length) return;
-    setBusy(ids, true);
+  const pushToWebsite = useCallback(async (): Promise<boolean> => {
     try {
-      const docs = await client.fetch<Record<string, unknown>[]>(`*[_id in $ids]`, { ids });
-      const tx = client.transaction();
-      docs.forEach((doc) => {
-        const draftId = doc._id as string;
-        // Drop system fields; the published copy gets fresh ones.
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { _rev, _updatedAt, _createdAt, ...rest } = doc;
-        tx.createOrReplace({ ...rest, _id: draftId.replace(/^drafts\./, ""), _type: "galleryItem" });
-        tx.delete(draftId);
-      });
-      await tx.commit();
-      setNotice(`${docs.length} item${docs.length === 1 ? "" : "s"} published to the gallery.`);
+      await revalidateGalleryAction();
+      return true;
     } catch (err) {
-      setNotice(`Publishing failed: ${(err as Error).message}`);
-    } finally {
-      setBusy(ids, false);
-      loadDrafts();
+      console.error("[gallery] Failed to refresh website cache", err);
+      return false;
     }
+  }, []);
+
+  const pendingDeletes = useMemo(
+    () => pending.filter((c): c is PendingDelete => c.kind === "delete"),
+    [pending],
+  );
+  const pendingMoves = useMemo(
+    () => pending.filter((c): c is PendingMove => c.kind === "move"),
+    [pending],
+  );
+  const pendingImport = useMemo(
+    () => pending.find((c): c is PendingImport => c.kind === "import"),
+    [pending],
+  );
+  const pendingDeleteIds = useMemo(() => new Set(pendingDeletes.map((c) => c.id)), [pendingDeletes]);
+  const pendingMoveMap = useMemo(() => {
+    const map = new Map<string, GalleryCategoryValue>();
+    pendingMoves.forEach((c) => map.set(c.id, c.to));
+    return map;
+  }, [pendingMoves]);
+
+  /** Live items as they will look after Publish (moves applied, deletes still visible but marked). */
+  const previewLive = useMemo(
+    () =>
+      live.map((item) => {
+        const to = pendingMoveMap.get(item._id);
+        return to ? { ...item, category: to } : item;
+      }),
+    [live, pendingMoveMap],
+  );
+
+  const changeCount = drafts.length + pending.length;
+
+  const stageDelete = (item: DraftRow) => {
+    setPending((prev) => {
+      const already = prev.some((c) => c.kind === "delete" && c.id === item._id);
+      if (already) {
+        return prev.filter((c) => !(c.kind === "delete" && c.id === item._id));
+      }
+      // Delete wins over a queued move for the same item.
+      const withoutMove = prev.filter((c) => !(c.kind === "move" && c.id === item._id));
+      return [
+        ...withoutMove,
+        {
+          kind: "delete",
+          id: item._id,
+          label: item.alt || "Untitled photo",
+          url: item.url,
+          mimeType: item.mimeType,
+          category: item.category,
+        },
+      ];
+    });
+    setNotice("Delete queued in Changes. Press Publish to apply it with any other changes.");
   };
 
-  const removeDraft = async (id: string) => {
-    if (!window.confirm("Delete this draft? The file will not appear on the site.")) return;
-    setBusy([id], true);
+  const stageMove = (id: string, category: GalleryCategoryValue) => {
+    const item = live.find((row) => row._id === id);
+    if (!item) return;
+    if (pendingDeleteIds.has(id)) {
+      setNotice("That photo is queued to delete. Undo the delete first if you want to move it.");
+      return;
+    }
+    const from = item.category || "Unknown";
+    if (from === category) {
+      setPending((prev) => prev.filter((c) => !(c.kind === "move" && c.id === id)));
+      return;
+    }
+    setPending((prev) => {
+      const others = prev.filter((c) => !(c.kind === "move" && c.id === id));
+      return [
+        ...others,
+        {
+          kind: "move",
+          id,
+          from,
+          to: category,
+          label: item.alt || "Untitled photo",
+          url: item.url,
+          mimeType: item.mimeType,
+        },
+      ];
+    });
+    setNotice(`Move to ${categoryTitle(category)} queued in Changes. Press Publish to apply.`);
+  };
+
+  const stageImport = () => {
+    if (pendingImport) {
+      setPending((prev) => prev.filter((c) => c.kind !== "import"));
+      setNotice("Import removed from Changes.");
+      return;
+    }
+    if (
+      !window.confirm(
+        `Queue importing the website's ${BUILT_IN_PHOTOS.length} original gallery photos? They will be copied when you press Publish.`,
+      )
+    ) {
+      return;
+    }
+    setPending((prev) => [...prev.filter((c) => c.kind !== "import"), { kind: "import" }]);
+    setNotice("Import queued in Changes. Press Publish to copy the original photos into Sanity.");
+  };
+
+  const removePending = (change: PendingChange) => {
+    setPending((prev) =>
+      prev.filter((c) => {
+        if (change.kind === "import") return c.kind !== "import";
+        if (change.kind === "delete") return !(c.kind === "delete" && c.id === change.id);
+        if (change.kind === "move") return !(c.kind === "move" && c.id === change.id);
+        return true;
+      }),
+    );
+  };
+
+  const clearPending = () => {
+    if (!pending.length) return;
+    if (!window.confirm("Clear all queued deletes, moves, and import from Changes? Draft uploads are kept.")) return;
+    setPending([]);
+    setNotice("Queued website changes cleared. Draft uploads are still waiting to be published.");
+  };
+
+  const discardDraft = async (id: string) => {
+    if (!window.confirm("Discard this upload? It will not be published.")) return;
     try {
       await client.delete(id);
+      setNotice("Draft discarded.");
     } catch (err) {
-      setNotice(`Delete failed: ${(err as Error).message}`);
+      setNotice(`Discard failed: ${(err as Error).message}`);
     } finally {
-      setBusy([id], false);
       loadDrafts();
     }
   };
 
-  // Move a published item to another category (also updates an unpublished edit, if any).
-  const moveItem = async (id: string, category: GalleryCategoryValue) => {
-    const title = GALLERY_CATEGORIES.find((c) => c.value === category)?.title ?? category;
-    setBusy([id], true);
-    try {
-      const draftId = `drafts.${id}`;
-      const hasDraft = await client.fetch<boolean>(`defined(*[_id == $draftId][0]._id)`, { draftId });
-      const tx = client.transaction().patch(id, (p) => p.set({ category }));
-      if (hasDraft) tx.patch(draftId, (p) => p.set({ category }));
-      await tx.commit();
-      setNotice(`Moved to ${title}. The website gallery updates within about a minute.`);
-    } catch (err) {
-      setNotice(`Move failed: ${(err as Error).message}`);
-    } finally {
-      setBusy([id], false);
-      loadDrafts();
-    }
-  };
-
-  // Remove an item from the website (published copy and any unpublished edit).
-  const deleteLive = async (id: string) => {
-    if (!window.confirm("Remove this from the website gallery? This can't be undone.")) return;
-    setBusy([id], true);
-    try {
-      await client.transaction().delete(id).delete(`drafts.${id}`).commit();
-      setNotice("Removed from the website gallery. It disappears within about a minute.");
-    } catch (err) {
-      setNotice(`Delete failed: ${(err as Error).message}`);
-    } finally {
-      setBusy([id], false);
-      loadDrafts();
-    }
-  };
-
-  // One-time copy of the website's original built-in photos into Sanity (published, same
-  // categories, descriptions and order). Safe to re-run: already-copied photos are skipped.
-  const runImport = async () => {
-    if (!window.confirm(`Copy the website's ${BUILT_IN_PHOTOS.length} original gallery photos into Sanity so they can be moved or deleted here?`)) return;
+  const runImportNow = async (): Promise<{ failed: number }> => {
     const existing = new Set(
       await client.fetch<string[]>(`*[_type == "galleryItem" && defined(legacyId)]._id`).catch(() => [] as string[]),
     );
     let done = 0;
     let failed = 0;
     setImportProgress({ done, total: BUILT_IN_PHOTOS.length, failed });
-    // Oldest first, one at a time, so the gallery keeps its current order.
     for (const photo of BUILT_IN_PHOTOS) {
       const id = importedId(photo.id);
       if (!existing.has(id)) {
@@ -746,11 +825,113 @@ export function UploadTool() {
         completedAt: new Date().toISOString(),
         count: BUILT_IN_PHOTOS.length,
       });
-      setNotice("All original photos are now managed here. Use \"On the website\" in each column to move or delete them.");
-    } else {
-      setNotice(`${failed} photo${failed === 1 ? "" : "s"} could not be copied. Click Import again to retry; copied photos are skipped.`);
     }
-    loadDrafts();
+    return { failed };
+  };
+
+  const publishAllChanges = async () => {
+    if (!changeCount) return;
+    if (publishing) return;
+    if (
+      !window.confirm(
+        `Publish ${changeCount} change${changeCount === 1 ? "" : "s"} to the website now? New uploads, deletes, moves, and import (if queued) will all apply together.`,
+      )
+    ) {
+      return;
+    }
+
+    setPublishing(true);
+    setNotice("Publishing all changes…");
+    const hadImport = Boolean(pendingImport);
+    const appliedCount = changeCount;
+
+    try {
+      // Transaction first (adds / moves / deletes). Import runs after so a failed
+      // commit does not leave newly imported originals live on their own.
+      const draftIds = drafts.map((d) => d._id);
+      const docs = draftIds.length
+        ? await client.fetch<Record<string, unknown>[]>(`*[_id in $ids]`, { ids: draftIds })
+        : [];
+
+      const movesToApply = pendingMoves.filter((move) => !pendingDeleteIds.has(move.id));
+      const moveDraftIds = movesToApply.map((move) => `drafts.${move.id}`);
+      const existingMoveDrafts = moveDraftIds.length
+        ? new Set(
+            await client
+              .fetch<string[]>(`*[_id in $ids]._id`, { ids: moveDraftIds })
+              .catch(() => [] as string[]),
+          )
+        : new Set<string>();
+
+      const tx = client.transaction();
+      docs.forEach((doc) => {
+        const draftId = doc._id as string;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { _rev, _updatedAt, _createdAt, ...rest } = doc;
+        tx.createOrReplace({ ...rest, _id: draftId.replace(/^drafts\./, ""), _type: "galleryItem" });
+        tx.delete(draftId);
+      });
+
+      movesToApply.forEach((move) => {
+        tx.patch(move.id, (p) => p.set({ category: move.to }));
+        const draftId = `drafts.${move.id}`;
+        if (existingMoveDrafts.has(draftId)) {
+          tx.patch(draftId, (p) => p.set({ category: move.to }));
+        }
+      });
+
+      pendingDeletes.forEach((del) => {
+        tx.delete(del.id);
+        tx.delete(`drafts.${del.id}`);
+      });
+
+      if (docs.length || movesToApply.length || pendingDeletes.length) {
+        await tx.commit();
+      }
+
+      // Clears applied staging; keep import queued until it finishes successfully.
+      setPending((prev) => prev.filter((c) => c.kind === "import"));
+
+      if (hadImport) {
+        const result = await runImportNow();
+        if (result.failed) {
+          throw new Error(
+            `${result.failed} original photo${result.failed === 1 ? "" : "s"} could not be imported. Other changes were saved — retry Publish for the import.`,
+          );
+        }
+        setPending([]);
+      }
+
+      const refreshed = await pushToWebsite();
+      if (!refreshed) {
+        // One retry — Sanity can lag briefly after a large commit.
+        const retried = await pushToWebsite();
+        if (!retried) {
+          setNotice(
+            `Saved ${appliedCount} change${appliedCount === 1 ? "" : "s"} in Sanity, but the live gallery cache did not refresh. Click “Push to website now”, then hard-refresh /gallery.`,
+          );
+          return;
+        }
+      }
+
+      setNotice(`Published ${appliedCount} change${appliedCount === 1 ? "" : "s"} together. Website gallery is updated.`);
+    } catch (err) {
+      setNotice(`Publish failed: ${(err as Error).message}`);
+    } finally {
+      setPublishing(false);
+      setImportProgress(null);
+      loadDrafts();
+    }
+  };
+
+  const forcePushToWebsite = async () => {
+    setNotice("Refreshing the live gallery…");
+    const refreshed = await pushToWebsite();
+    setNotice(
+      refreshed
+        ? "Website gallery refreshed. Open /gallery and hard-refresh (Ctrl+Shift+R) if needed."
+        : "Could not refresh the website cache. Redeploy the site, or wait up to an hour.",
+    );
   };
 
   const savedCount = useMemo(() => queue.filter((q) => q.status === "saved").length, [queue]);
@@ -766,8 +947,8 @@ export function UploadTool() {
             </h1>
             <span style={{ display: "block", width: 56, height: 1, background: ui.gold, opacity: 0.7, margin: "18px 0" }} aria-hidden="true" />
             <p style={{ margin: 0, color: ui.muted, fontSize: 15, lineHeight: 1.7, maxWidth: 620 }}>
-              Drop files into the column for their category. They are saved as drafts in that column; publish them to
-              show them on the website gallery.
+              Queue uploads, deletes, moves, and import in the Changes box. Press Publish once to apply everything to the
+              website together.
             </p>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: 10 }}>
@@ -796,21 +977,24 @@ export function UploadTool() {
                 }}
               />
             </div>
+            <button type="button" style={buttonStyle(false, publishing)} disabled={publishing} onClick={forcePushToWebsite}>
+              Push to website now
+            </button>
             <button
               type="button"
-              style={buttonStyle(false, !savedCount)}
-              disabled={!savedCount}
+              style={buttonStyle(false, !savedCount || publishing)}
+              disabled={!savedCount || publishing}
               onClick={clearFinished}
             >
               Clear finished
             </button>
             <button
               type="button"
-              style={buttonStyle(true, !drafts.length || busyIds.size > 0)}
-              disabled={!drafts.length || busyIds.size > 0}
-              onClick={() => publish(drafts.map((d) => d._id))}
+              style={buttonStyle(true, !changeCount || publishing)}
+              disabled={!changeCount || publishing}
+              onClick={publishAllChanges}
             >
-              Publish all ({drafts.length})
+              {publishing ? "Publishing…" : `Publish (${changeCount})`}
             </button>
           </div>
         </header>
@@ -820,6 +1004,178 @@ export function UploadTool() {
             {notice}
           </div>
         ) : null}
+
+        {/* Changes box: every staged website update before Publish */}
+        <section
+          aria-label="Changes waiting to publish"
+          style={{
+            border: `1px solid ${changeCount ? ui.goldSoft : ui.line}`,
+            background: changeCount ? "rgba(201, 169, 97, 0.05)" : ui.panel,
+            padding: "20px 24px",
+            display: "grid",
+            gap: 16,
+          }}
+        >
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+            <div>
+              <div style={eyebrow}>Changes</div>
+              <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.6, color: ui.text, maxWidth: 720 }}>
+                {changeCount
+                  ? `${changeCount} change${changeCount === 1 ? "" : "s"} waiting. Publish applies adds, deletes, moves, and import at the same time.`
+                  : "No changes yet. Upload photos, queue deletes or moves, or queue the original-photo import — then Publish."}
+              </p>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              <button type="button" style={buttonStyle(false, !pending.length || publishing, true)} disabled={!pending.length || publishing} onClick={clearPending}>
+                Clear queued
+              </button>
+              <button type="button" style={buttonStyle(true, !changeCount || publishing)} disabled={!changeCount || publishing} onClick={publishAllChanges}>
+                {publishing ? "Publishing…" : `Publish all (${changeCount})`}
+              </button>
+            </div>
+          </div>
+
+          {changeCount ? (
+            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
+              {drafts.map((d) => {
+                const isVideo = d.mimeType?.startsWith("video/") ?? false;
+                return (
+                  <li
+                    key={`add-${d._id}`}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "10px 12px",
+                      border: `1px solid ${ui.line}`,
+                      background: "rgba(7,7,8,0.35)",
+                      minWidth: 0,
+                    }}
+                  >
+                    <Thumb url={d.url} isVideo={isVideo} size={40} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ ...eyebrow, letterSpacing: "0.18em", color: ui.gold, marginBottom: 4 }}>Add</div>
+                      <div style={{ fontFamily: font.body, fontSize: 14, color: ui.ivory, ...ellipsis }}>{d.alt || "No description"}</div>
+                      <div style={{ fontFamily: font.body, fontSize: 12, color: ui.muted }}>
+                        {categoryTitle(d.category || "")} · {isVideo ? "Video" : "Photo"}
+                      </div>
+                    </div>
+                    <button type="button" style={buttonStyle(false, publishing, true)} disabled={publishing} onClick={() => discardDraft(d._id)}>
+                      Remove
+                    </button>
+                  </li>
+                );
+              })}
+
+              {pendingMoves.map((move) => {
+                const isVideo = move.mimeType?.startsWith("video/") ?? false;
+                return (
+                  <li
+                    key={`move-${move.id}`}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "10px 12px",
+                      border: `1px solid ${ui.line}`,
+                      background: "rgba(7,7,8,0.35)",
+                      minWidth: 0,
+                    }}
+                  >
+                    <Thumb url={move.url} isVideo={isVideo} size={40} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ ...eyebrow, letterSpacing: "0.18em", color: ui.gold, marginBottom: 4 }}>Move</div>
+                      <div style={{ fontFamily: font.body, fontSize: 14, color: ui.ivory, ...ellipsis }}>{move.label}</div>
+                      <div style={{ fontFamily: font.body, fontSize: 12, color: ui.muted }}>
+                        {categoryTitle(move.from)} → {categoryTitle(move.to)}
+                      </div>
+                    </div>
+                    <button type="button" style={buttonStyle(false, publishing, true)} disabled={publishing} onClick={() => removePending(move)}>
+                      Undo
+                    </button>
+                  </li>
+                );
+              })}
+
+              {pendingDeletes.map((del) => {
+                const isVideo = del.mimeType?.startsWith("video/") ?? false;
+                return (
+                  <li
+                    key={`del-${del.id}`}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "10px 12px",
+                      border: `1px solid rgba(242, 167, 167, 0.35)`,
+                      background: "rgba(7,7,8,0.35)",
+                      minWidth: 0,
+                    }}
+                  >
+                    <Thumb url={del.url} isVideo={isVideo} size={40} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ ...eyebrow, letterSpacing: "0.18em", color: ui.danger, marginBottom: 4 }}>Delete</div>
+                      <div style={{ fontFamily: font.body, fontSize: 14, color: ui.ivory, ...ellipsis }}>{del.label}</div>
+                      <div style={{ fontFamily: font.body, fontSize: 12, color: ui.muted }}>
+                        {categoryTitle(del.category || "")} · removed from site on Publish
+                      </div>
+                    </div>
+                    <button type="button" style={buttonStyle(false, publishing, true)} disabled={publishing} onClick={() => removePending(del)}>
+                      Undo
+                    </button>
+                  </li>
+                );
+              })}
+
+              {pendingImport ? (
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "10px 12px",
+                    border: `1px solid ${ui.line}`,
+                    background: "rgba(7,7,8,0.35)",
+                    minWidth: 0,
+                  }}
+                >
+                  <div style={{ width: 40, height: 40, border: `1px solid ${ui.line}`, display: "grid", placeItems: "center", color: ui.gold, fontSize: 18 }}>
+                    ↓
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ ...eyebrow, letterSpacing: "0.18em", color: ui.gold, marginBottom: 4 }}>Import</div>
+                    <div style={{ fontFamily: font.body, fontSize: 14, color: ui.ivory }}>
+                      Copy {BUILT_IN_PHOTOS.length} original website photos into Sanity
+                    </div>
+                    <div style={{ fontFamily: font.body, fontSize: 12, color: ui.muted }}>Runs when you press Publish</div>
+                  </div>
+                  <button
+                    type="button"
+                    style={buttonStyle(false, publishing, true)}
+                    disabled={publishing}
+                    onClick={() => removePending(pendingImport)}
+                  >
+                    Undo
+                  </button>
+                </li>
+              ) : null}
+            </ul>
+          ) : null}
+
+          {publishing && importProgress ? (
+            <div>
+              <div style={{ fontSize: 12, color: ui.goldLight }}>
+                Importing {importProgress.done} of {importProgress.total}
+                {importProgress.failed ? ` · ${importProgress.failed} failed` : ""}
+              </div>
+              <div style={{ height: 2, background: ui.line, marginTop: 6 }}>
+                <div
+                  style={{ height: 2, width: `${(importProgress.done / importProgress.total) * 100}%`, background: ui.gold }}
+                />
+              </div>
+            </div>
+          ) : null}
+        </section>
 
         {importDone === false ? (
           <section
@@ -837,35 +1193,16 @@ export function UploadTool() {
             <div style={{ maxWidth: 760 }}>
               <div style={eyebrow}>One-time setup</div>
               <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.6, color: ui.text }}>
-                The website&apos;s original {BUILT_IN_PHOTOS.length} gallery photos aren&apos;t in Sanity yet, so they can&apos;t be moved or
-                deleted here. Import copies them in once, keeping their categories, descriptions and order; the gallery looks the same.
+                The website&apos;s original {BUILT_IN_PHOTOS.length} gallery photos aren&apos;t in Sanity yet. Queue the import
+                into Changes, then Publish with any other edits.
               </p>
-              {importProgress ? (
-                <div style={{ marginTop: 12 }}>
-                  <div style={{ fontSize: 12, color: ui.goldLight }}>
-                    Copied {importProgress.done} of {importProgress.total}
-                    {importProgress.failed ? ` · ${importProgress.failed} failed` : ""}
-                  </div>
-                  <div style={{ height: 2, background: ui.line, marginTop: 6 }}>
-                    <div
-                      style={{ height: 2, width: `${(importProgress.done / importProgress.total) * 100}%`, background: ui.gold }}
-                    />
-                  </div>
-                </div>
-              ) : null}
             </div>
-            <button
-              type="button"
-              style={buttonStyle(true, Boolean(importProgress && importProgress.done < importProgress.total))}
-              disabled={Boolean(importProgress && importProgress.done < importProgress.total)}
-              onClick={runImport}
-            >
-              {importProgress && importProgress.done < importProgress.total ? "Importing…" : "Import existing photos"}
+            <button type="button" style={buttonStyle(true, publishing)} disabled={publishing} onClick={stageImport}>
+              {pendingImport ? "Remove import from Changes" : "Queue import in Changes"}
             </button>
           </section>
         ) : null}
 
-        {/* One column per category */}
         <div style={{ display: "grid", gap: 1, background: ui.line, border: `1px solid ${ui.line}`, gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", alignItems: "stretch" }}>
           {GALLERY_CATEGORIES.map((c) => (
             <CategoryColumn
@@ -874,19 +1211,21 @@ export function UploadTool() {
               value={c.value}
               queue={queue.filter((q) => q.category === c.value)}
               drafts={drafts.filter((d) => d.category === c.value)}
-              busyIds={busyIds}
+              publishing={publishing}
               onFiles={addFiles}
               onRetry={retry}
-              onPublish={publish}
-              onDelete={removeDraft}
-              live={live.filter((item) => item.category === c.value || (c.value === "Birthdays" && item.category === "Kids Parties"))}
-              onMove={moveItem}
-              onDeleteLive={deleteLive}
+              onDiscardDraft={discardDraft}
+              live={previewLive.filter(
+                (item) => item.category === c.value || (c.value === "Birthdays" && item.category === "Kids Parties"),
+              )}
+              pendingDeleteIds={pendingDeleteIds}
+              pendingMoves={pendingMoveMap}
+              onMove={stageMove}
+              onStageDelete={stageDelete}
             />
           ))}
         </div>
 
-        {/* Drafts with a category the columns don't cover (e.g. edited elsewhere) */}
         {drafts.some((d) => !GALLERY_CATEGORIES.some((c) => c.value === d.category)) ? (
           <p style={{ margin: 0, fontSize: 12, color: ui.muted }}>
             Some drafts have no category; open them from the Gallery list to set one before publishing.

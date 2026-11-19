@@ -29,7 +29,7 @@ type UploadRow = {
 };
 
 const QUERY = `{
-  "items": *[_type == "galleryItem" && defined(media.asset)] | order(_createdAt desc){
+  "items": *[_type == "galleryItem" && !(_id in path("drafts.**")) && defined(media.asset)] | order(_createdAt desc){
     _id,
     alt,
     category,
@@ -55,7 +55,13 @@ export async function getSanityGallery(): Promise<SanityGallery | null> {
   if (!/^[a-z0-9-]+$/.test(projectId)) return null;
 
   try {
-    const client = createClient({ projectId, dataset, apiVersion, useCdn: false });
+    const client = createClient({
+      projectId,
+      dataset,
+      apiVersion,
+      useCdn: false,
+      perspective: "published",
+    });
     const result = await client.fetch<{ items: UploadRow[]; importDone: boolean }>(
       QUERY,
       { importId: GALLERY_IMPORT_DOC_ID },
