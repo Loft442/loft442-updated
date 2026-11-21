@@ -65,8 +65,8 @@ export const galleryItems: GalleryItem[] = [
   },
   {
     id: 18,
-    src: `${G}/image-6.webp`,
-    alt: "Evening event at Loft 442",
+    src: `${G}/image-8.webp`,
+    alt: "Decorated tables at Loft 442",
     category: "Private Events",
   },
   {
@@ -77,8 +77,8 @@ export const galleryItems: GalleryItem[] = [
   },
   {
     id: 20,
-    src: `${G}/image-8.webp`,
-    alt: "Decorated tables at Loft 442",
+    src: `${G}/image-6.webp`,
+    alt: "Evening event at Loft 442",
     category: "Private Events",
   },
   {

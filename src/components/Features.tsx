@@ -139,12 +139,12 @@ export function StandardSection() {
         </>
       }
       image={{
-        src: "/images/baby-brown-teddy-cake.webp",
-        alt: "Baby brown teddy-bear cake with blue balloons at Loft 442",
-      }}
-      secondImage={{
         src: "/images/image-6-enhanced2.webp",
         alt: "Baby shower photo lounge with blue balloon arches and teddy bear at Loft 442",
+      }}
+      secondImage={{
+        src: "/images/baby-brown-teddy-cake.webp",
+        alt: "Baby brown teddy-bear cake with blue balloons at Loft 442",
       }}
       wineGlow
     >
