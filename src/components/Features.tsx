@@ -52,11 +52,11 @@ function FeatureBlock({
               images={[image, secondImage]}
               sizes={IMAGE_SIZES}
               priority={priorityImages}
-              className={`aspect-[4/5] sm:aspect-[543/420] ${imageFirst ? "md:order-1" : ""}`}
+              className={`aspect-[543/420] ${imageFirst ? "md:order-1" : ""}`}
             />
           ) : (
             <div
-              className={`relative w-full aspect-[4/5] overflow-hidden sm:aspect-[543/420] ${imageFirst ? "md:order-1" : ""}`}
+              className={`relative w-full aspect-[543/420] overflow-hidden ${imageFirst ? "md:order-1" : ""}`}
             >
               <Image
                 src={image.src}
