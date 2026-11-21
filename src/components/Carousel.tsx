@@ -10,6 +10,7 @@ const slides = [
   "image-8-enhanced.webp",
   "image-9-enhanced.webp",
   "lavender-tea-party-tablescape.webp",
+  "luxury-loft-442-entrance.webp",
   "wedding6-sweetheart-table.webp",
   "image-12-enhanced.webp",
   "bearly-wait-baby-shower.webp",
@@ -90,7 +91,8 @@ export default function Carousel() {
                     width={160}
                     height={220}
                     className="h-full w-full object-cover"
-                    loading="lazy"
+                    loading="eager"
+                    fetchPriority="low"
                     decoding="async"
                     draggable={false}
                   />

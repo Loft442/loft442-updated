@@ -38,13 +38,13 @@ const features = [
 ];
 
 const packages = [
-  { name: "Essential", price: "699", hours: "4 hours", featured: true, items: ["Digital photos", "One digital backdrop", "One standard photo layout"] },
-  { name: "Signature", price: "899", hours: "6 hours", items: ["Digital photos, GIFs, and boomerangs", "Up to two digital backdrops", "One standard photo layout"] },
-  { name: "Premier", price: "1,099", hours: "8 hours", items: ["Digital photos, GIFs, and boomerangs", "Up to three digital backdrops", "One standard photo layout", "Black-and-white portrait option"] },
+  { name: "Essential", price: "699", hours: "4 hours", featured: false, items: ["Digital photos", "One digital backdrop", "One standard photo layout"] },
+  { name: "Signature", price: "899", hours: "6 hours", featured: false, items: ["Digital photos, GIFs, and boomerangs", "Up to two digital backdrops", "One standard photo layout"] },
+  { name: "Premier", price: "1,099", hours: "8 hours", featured: true, items: ["Digital photos, GIFs, and boomerangs", "Up to three digital backdrops", "One standard photo layout", "Black-and-white portrait option"] },
 ];
 
 const faqs = [
-  { q: "Can I book the booth at another venue?", a: "Yes. Choose a 4-, 6-, or 8-hour off-site package and share your venue address when you inquire. Setup, breakdown, and an attendant are included. We’ll confirm any travel or parking charges in your quote." },
+  { q: "Can I book the booth at another venue?", a: "Yes. Choose a 4-, 6-, or 8-hour off-site package and share your venue address when you inquire. Setup, breakdown, and an attendant are included." },
   { q: "How do digital backdrops work?", a: "Digital backdrops appear in the finished photos. Choose from our existing collection. Essential includes one, Signature includes up to two, and Premier includes up to three." },
   { q: "Can you personalize the photo layout?", a: "Yes. Each off-site package includes a standard layout. Custom designs with names, event colors, or a company logo start at $75. You can see examples in the photo template gallery above." },
   { q: "How do guests get their photos?", a: "Guests can share their photos digitally. You’ll also receive an event gallery after the celebration." },
@@ -263,14 +263,13 @@ export default function PhotoBoothPage() {
 
           <p className="mt-8 max-w-3xl text-[0.95rem] leading-relaxed text-white/60">
             Every off-site package includes an attendant, digital sharing, an event gallery, setup, and
-            breakdown. Choose your digital backdrops and standard layout from our existing collection. Any
-            travel or parking charges are confirmed in your quote.
+            breakdown. Choose your digital backdrops and standard layout from our existing collection.
           </p>
 
           <div className="mt-12 grid gap-px bg-[var(--line)] md:grid-cols-2">
             <div className="flex flex-col gap-3 bg-[var(--background)] p-8 sm:p-10">
               <h3 className="display-md">Hosting at LOFT 442?</h3>
-              <p className="text-gold-light"><span className="font-serif text-2xl font-normal">$400</span> · 2 hours</p>
+              <p className="text-gold-light"><span className="font-serif text-2xl font-normal">$400</span></p>
               <p className="text-[0.95rem] text-white/65">Add the Salsa 2 booth to your LOFT 442 venue booking.</p>
               <a
                 href="#inquire"
@@ -289,6 +288,30 @@ export default function PhotoBoothPage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="inquire" aria-labelledby="booth-inquiry-title" className="scroll-mt-28 border-t border-[var(--line)] section-pad">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 md:grid-cols-[1fr_1.4fr] md:gap-20">
+          <Reveal mode="text" className="flex flex-col gap-6">
+            <p className="eyebrow">Event Inquiries</p>
+            <h2 id="booth-inquiry-title" className="display-lg">
+              What’s <em className="display-italic">your date?</em>
+            </h2>
+            <p className="lede">
+              Share your event date and venue. We’ll follow up about availability, pricing, and photo booth
+              options for your event.
+            </p>
+            <div className="flex flex-col gap-2 text-[0.95rem]">
+              <a href={`mailto:${TEAM_EMAIL}?subject=Salsa%202%20Photo%20Booth`} className="tap self-start text-gold-light hover:text-gold">
+                {TEAM_EMAIL}
+              </a>
+              <a href="tel:+13475796578" className="tap self-start text-white/75 hover:text-gold-light">
+                (347) 579-6578
+              </a>
+            </div>
+          </Reveal>
+          <PhotoBoothInquiry />
         </div>
       </section>
 
@@ -315,30 +338,6 @@ export default function PhotoBoothPage() {
               </details>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section id="inquire" aria-labelledby="booth-inquiry-title" className="scroll-mt-28 border-t border-[var(--line)] section-pad">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 md:grid-cols-[1fr_1.4fr] md:gap-20">
-          <Reveal mode="text" className="flex flex-col gap-6">
-            <p className="eyebrow">Event Inquiries</p>
-            <h2 id="booth-inquiry-title" className="display-lg">
-              What’s <em className="display-italic">your date?</em>
-            </h2>
-            <p className="lede">
-              Share your event date and venue. We’ll follow up about availability, pricing, and photo booth
-              options for your event.
-            </p>
-            <div className="flex flex-col gap-2 text-[0.95rem]">
-              <a href={`mailto:${TEAM_EMAIL}?subject=Salsa%202%20Photo%20Booth`} className="tap self-start text-gold-light hover:text-gold">
-                {TEAM_EMAIL}
-              </a>
-              <a href="tel:+13475796578" className="tap self-start text-white/75 hover:text-gold-light">
-                (347) 579-6578
-              </a>
-            </div>
-          </Reveal>
-          <PhotoBoothInquiry />
         </div>
       </section>
     </>

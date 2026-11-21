@@ -10,8 +10,30 @@ const inputClass =
   "w-full border-0 border-b border-[var(--line-strong)] bg-transparent px-0 py-3 text-[0.95rem] normal-case tracking-normal text-[var(--ivory)] outline-none transition duration-300 placeholder:text-white/35 focus:border-gold";
 const labelClass = "flex flex-col gap-1 text-[0.7rem] uppercase tracking-[0.3em] text-white/60";
 const optional = <span className="normal-case tracking-normal text-white/35">(optional)</span>;
+const PACKAGE_STORAGE_KEY = "loft442-photo-booth-package";
 
 const emptyForm = { name: "", email: "", phone: "", eventType: "", date: "", venue: "", packageName: "", details: "" };
+
+const isBoothPackage = (value: string): value is (typeof BOOTH_PACKAGES)[number] =>
+  (BOOTH_PACKAGES as readonly string[]).includes(value);
+
+const readStoredPackage = () => {
+  try {
+    const stored = sessionStorage.getItem(PACKAGE_STORAGE_KEY) ?? "";
+    return isBoothPackage(stored) ? stored : "";
+  } catch {
+    return "";
+  }
+};
+
+const storePackage = (packageName: string) => {
+  try {
+    if (isBoothPackage(packageName)) sessionStorage.setItem(PACKAGE_STORAGE_KEY, packageName);
+    else sessionStorage.removeItem(PACKAGE_STORAGE_KEY);
+  } catch {
+    /* ignore private-mode / storage failures */
+  }
+};
 
 export default function PhotoBoothInquiry() {
   const [form, setForm] = useState(emptyForm);
@@ -20,23 +42,40 @@ export default function PhotoBoothInquiry() {
   const [successMessage, setSuccessMessage] = useState("");
   const [submitError, setSubmitError] = useState("");
 
+  // Restore a package chosen earlier on this page (Choose buttons / prior visit in-tab).
+  useEffect(() => {
+    const stored = readStoredPackage();
+    if (stored) setForm((prev) => (prev.packageName ? prev : { ...prev, packageName: stored }));
+  }, []);
+
   // Package buttons elsewhere on the page carry data-package; picking one pre-fills the form.
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
       const trigger = (event.target as Element | null)?.closest<HTMLElement>("[data-package]");
-      const packageName = trigger?.dataset.package;
-      if (packageName) setForm((prev) => ({ ...prev, packageName }));
+      const packageName = trigger?.dataset.package?.trim() ?? "";
+      if (!isBoothPackage(packageName)) return;
+      storePackage(packageName);
+      setForm((prev) => ({ ...prev, packageName }));
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
   }, []);
 
-  const update = (field: keyof typeof form, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
+  const update = (field: keyof typeof form, value: string) => {
+    if (field === "packageName") storePackage(value);
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitError("");
     setSuccessMessage("");
+
+    if (!isBoothPackage(form.packageName)) {
+      setSubmitError("Please select a photo booth package before sending.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -49,9 +88,10 @@ export default function PhotoBoothInquiry() {
       if (!response.ok || !data?.ok) throw new Error("Request failed");
 
       posthog.capture("photo_booth_inquiry_submitted", {
-        package: form.packageName || "unspecified",
+        package: form.packageName,
         event_type: form.eventType || "unspecified",
       });
+      storePackage("");
       setForm(emptyForm);
       setSuccessMessage("Thank you. Your photo booth inquiry has been received and our team will be in touch.");
     } catch {
@@ -106,6 +146,7 @@ export default function PhotoBoothInquiry() {
           onChange={(value) => update("packageName", value)}
           options={BOOTH_PACKAGES}
           placeholder="Select a package"
+          error={!form.packageName && submitError ? "Required" : undefined}
         />
       </div>
 

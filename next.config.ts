@@ -95,6 +95,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/booking", destination: "/schedule", permanent: true },
       { source: "/payment", destination: "/schedule", permanent: true },
+      { source: "/photo-booth", destination: "/photobooth", permanent: true },
     ];
   },
   async headers() {

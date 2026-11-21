@@ -6,7 +6,7 @@ const exploreLinks = [
   { label: "Experiences & Pricing", href: "/pricing" },
   { label: "Gallery", href: "/gallery" },
   { label: "Catering", href: "/catering" },
-  { label: "Photo Booth", href: "/photo-booth" },
+  { label: "Photo Booth", href: "/photobooth" },
   { label: "Repass", href: "/repass" },
   { label: "Plan Your Event", href: "/schedule" },
   { label: "Government Capability Statement", href: "/capability-statement" },

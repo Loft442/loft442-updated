@@ -105,12 +105,12 @@ export async function POST(request: Request) {
     .map(([field]) => field);
   if (tooLong.length > 0) return fail("One or more fields exceed allowed length.", 400, tooLong);
 
-  const missing = [!name && "name", !email && "email"].filter(Boolean) as string[];
+  const missing = [!name && "name", !email && "email", !packageName && "packageName"].filter(Boolean) as string[];
   if (missing.length > 0) return fail("Missing required fields.", 400, missing);
   if (!emailPattern.test(email)) return fail("Invalid email address.", 400, ["email"]);
   if (date && !datePattern.test(date)) return fail("Invalid date format.", 400, ["date"]);
   if (eventType && !BOOTH_EVENT_TYPES.includes(eventType)) return fail("Unknown event type.", 400, ["eventType"]);
-  if (packageName && !BOOTH_PACKAGES.includes(packageName)) return fail("Unknown package.", 400, ["packageName"]);
+  if (!BOOTH_PACKAGES.includes(packageName)) return fail("Unknown package.", 400, ["packageName"]);
 
   const { RESEND_API_KEY, LEADS_TO_EMAIL, SMTP_FROM } = process.env;
   if (!RESEND_API_KEY || !LEADS_TO_EMAIL) {
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
     name,
     email,
     phone: phone || "—",
-    packageName: packageName || TBD,
+    packageName,
     eventType: eventType || TBD,
     dateLabel: date ? formatDate(date) : TBD,
     venue: venue || TBD,

@@ -140,6 +140,12 @@ export const galleryItems: GalleryItem[] = [
     category: "Birthdays",
   },
   {
+    id: 33,
+    src: `${G}/luxury-loft-442-entrance.webp`,
+    alt: "Luxury Loft 442 entrance",
+    category: "Birthdays",
+  },
+  {
     id: 32,
     src: `${G}/birthday19-ice-sculpture.webp`,
     alt: "Birthday ice sculpture at Loft 442",

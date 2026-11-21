@@ -1862,8 +1862,9 @@ body:has(dialog.booth-dialog[open]) {
   padding-bottom: clamp(5rem, 10vw, 8.5rem);
 }
 
-/* Skip layout/paint for lower home sections; keep About eager for the first image stack. */
-.home-page > section.section-pad:not(#about) {
+/* Skip layout/paint for lower home sections; keep About eager for the first image stack.
+   The carousel section is excluded: iOS Safari can leave it blank under content-visibility. */
+.home-page > section.section-pad:not(#about):not(#video-section) {
   content-visibility: auto;
   contain-intrinsic-size: auto 720px;
 }

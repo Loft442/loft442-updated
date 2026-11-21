@@ -160,7 +160,7 @@ export const PUBLIC_ROUTES = [
   { path: "/schedule", priority: 0.8, changeFrequency: "monthly" as const },
   { path: "/repass", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/catering", priority: 0.7, changeFrequency: "monthly" as const },
-  { path: "/photo-booth", priority: 0.7, changeFrequency: "monthly" as const },
+  { path: "/photobooth", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/availability", priority: 0.7, changeFrequency: "weekly" as const },
   { path: "/capability-statement", priority: 0.5, changeFrequency: "yearly" as const },
 ];

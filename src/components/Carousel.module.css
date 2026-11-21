@@ -15,25 +15,16 @@
     /* Slightly slower on phones = fewer compositor updates per second. */
     --marquee-duration: 38s;
   }
-
-  .embla__container {
-    will-change: auto;
-  }
-
-  .embla__container:not(.isPaused) {
-    will-change: transform;
-  }
-
-  .embla__slide img {
-    content-visibility: auto;
-  }
 }
 
 /* The edge feather is a mask on the clipped viewport, so it always lines up with the
    slides and fades to whatever background is behind it. */
+/* Own compositing layer so WebKit doesn't drop the mask while the track animates. */
 .embla__viewport {
   overflow: hidden;
   height: var(--slide-height);
+  transform: translateZ(0);
+  isolation: isolate;
   -webkit-mask-image: linear-gradient(to right,
       transparent 0,
       #000 var(--feather),
@@ -59,7 +50,6 @@
 
 .embla__container.isPaused {
   animation-play-state: paused;
-  will-change: auto;
 }
 
 /* Gap lives inside each slide so both copies are exactly the same width and -50% is seamless. */
@@ -68,6 +58,8 @@
   width: calc(var(--slide-width) + var(--slide-gap));
   height: 100%;
   padding-right: var(--slide-gap);
+  background-clip: content-box;
+  background-color: #141414;
 }
 
 @keyframes emblaMarquee {

@@ -24,7 +24,7 @@ const navLinks = [
   { label: "About", href: "#about" },
 ];
 
-const photoBoothLink = { label: "Photo Booth", href: "/photo-booth" };
+const photoBoothLink = { label: "Photo Booth", href: "/photobooth" };
 
 /** Mobile drawer keeps Photo Booth with the other links (after Catering). */
 const mobileNavLinks = [
@@ -271,7 +271,7 @@ export default function Navbar() {
                     handleCloseMenu();
                   }}
                   className={`tap w-full border-b border-[var(--line)] py-3.5 text-center transition hover:text-gold-light last:border-b-0${
-                    link.href === "/photo-booth" ? " nav-photo-booth text-gold" : ""
+                    link.href === "/photobooth" ? " nav-photo-booth text-gold" : ""
                   }`}
                 >
                   {link.label}

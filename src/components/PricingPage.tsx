@@ -23,8 +23,8 @@ const packages = [
     price: "3,700",
     guests: "Up to 50 guests",
     summary: "An intimate setting for dinners, showers and close-knit celebrations.",
-    imageSrc: "/images/essential.webp",
-    imageAlt: "The Essential package: an intimate table setting at Loft 442",
+    imageSrc: "/images/essential-blue-moon.webp",
+    imageAlt: "The Essential package: elegant blue moon baby shower décor at Loft 442",
     items: ["50 clear Chiavari chairs", "5 round or cocktail tables", "3 rectangular tables"],
   },
   {
@@ -32,8 +32,8 @@ const packages = [
     price: "4,200",
     guests: "Up to 125 guests",
     summary: "The full loft, arranged for weddings, receptions and landmark evenings.",
-    imageSrc: "/images/grand.webp",
-    imageAlt: "The Grand package: the full Loft 442 salon set for a reception",
+    imageSrc: "/images/grand-image-8.webp",
+    imageAlt: "The Grand package: the Loft 442 salon styled for a celebration",
     items: ["100 clear Chiavari chairs", "10 round or cocktail tables", "6 rectangular tables"],
   },
 ];
@@ -173,13 +173,12 @@ export default function PricingPage() {
               <h3 className="display-md">Salsa 2 Photo Booth</h3>
               <p className="text-gold-light md:hidden">
                 <span className="font-serif text-4xl font-normal">$400</span>
-                <span className="ml-3 whitespace-nowrap text-[0.95rem] text-white/65">· 2 hours</span>
               </p>
               <p className="text-[0.95rem] leading-relaxed text-white/70">
                 Add the digital booth to either package — digital sharing, an attendant, and an event gallery
                 included for your guests.
               </p>
-              <Button href="/photo-booth" variant="ghost" className="mt-1 w-full sm:mt-2 sm:w-56">
+              <Button href="/photobooth" variant="ghost" className="mt-1 w-full sm:mt-2 sm:w-56">
                 Photo Booth Details
               </Button>
             </div>
@@ -187,7 +186,6 @@ export default function PricingPage() {
               <p className="eyebrow">Starting at</p>
               <p className="text-gold-light">
                 <span className="font-serif text-4xl font-normal sm:text-5xl">$400</span>
-                <span className="ml-3 whitespace-nowrap text-[0.95rem] text-white/65">· 2 hours</span>
               </p>
               <p className="mt-2 text-[0.95rem] text-white/60">Available with The Essential or The Grand.</p>
             </div>

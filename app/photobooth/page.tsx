@@ -7,7 +7,7 @@ export const metadata = buildMetadata({
   title: "Salsa 2 Photo Booth Rentals in Elmont, NY",
   description:
     "Rent the Salsa 2 photo booth from LOFT 442 in Elmont, New York, for weddings, corporate events, private parties, and milestone celebrations.",
-  path: "/photo-booth",
+  path: "/photobooth",
   image: "/images/photo-booth/event-hero-group.webp",
   keywords: [
     "photo booth rental Elmont NY",
@@ -24,7 +24,7 @@ const photoBoothServiceJsonLd = serviceJsonLd({
   description:
     "An attended Salsa 2 photo booth for weddings, corporate events and private celebrations, with digital sharing, an event gallery and custom photo layouts.",
   serviceType: "Photo booth rental",
-  url: absoluteUrl("/photo-booth"),
+  url: absoluteUrl("/photobooth"),
 });
 
 export default function PhotoBooth() {

@@ -86,10 +86,6 @@ export function AboutSection() {
         </>
       }
       image={{ src: "/images/ribbon3.webp", alt: "The Loft 442 salon dressed for a reception" }}
-      secondImage={{
-        src: "/images/image-4-enhanced.webp",
-        alt: "The Loft 442 event space styled for a celebration",
-      }}
       priorityImages
     >
       <p className="lede">
@@ -147,8 +143,8 @@ export function StandardSection() {
         alt: "Baby brown teddy-bear cake with blue balloons at Loft 442",
       }}
       secondImage={{
-        src: "/images/lavender-regency-tea-table.webp",
-        alt: "Lavender Regency tea table styled at Loft 442",
+        src: "/images/image-6-enhanced2.webp",
+        alt: "Baby shower photo lounge with blue balloon arches and teddy bear at Loft 442",
       }}
       wineGlow
     >

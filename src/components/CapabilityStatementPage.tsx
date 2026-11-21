@@ -92,7 +92,7 @@ export default function CapabilityStatementPage() {
 
         <header className="flex flex-col gap-8 border-b border-[var(--line)] pb-10 md:flex-row md:items-end md:justify-between print:pb-4">
           <div className="flex max-w-3xl flex-col gap-5 print:gap-2">
-            <p className="eyebrow">Government &amp; Public Sector</p>
+            <p className="eyebrow">Government, Public &amp; Private Sector</p>
             <h1 className="display-xl print:text-4xl">Capability Statement</h1>
             <p className="font-serif text-2xl text-[var(--ivory)] print:text-xl">
               {COMPANY_DATA.legalName || COMPANY_DATA.dba}
