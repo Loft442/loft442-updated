@@ -58,19 +58,19 @@ export const DIFFERENTIATORS = [
 
 export const CAPABILITY_IMAGES = [
   {
-    src: "/images/private-event2.webp",
-    alt: "The Loft 442 dining room set with round tables, gold chargers and a crystal chandelier",
-    caption: "Main event floor set for a seated dinner",
-    objectPosition: "50% 60%",
+    src: "/images/capability/image-11-enhanced.webp",
+    alt: "Loft 442 grand opening with honor guard, balloon columns and a Grand Opening banner at the entrance",
+    caption: "Grand opening at Loft 442",
+    objectPosition: "50% 45%",
   },
   {
-    src: "/images/ribbon3.webp",
+    src: "/images/capability/ribbon3.webp",
     alt: "Town of Hempstead officials cutting the ribbon with the Loft 442 team",
     caption: "Ribbon cutting with the Town of Hempstead",
     objectPosition: "50% 45%",
   },
   {
-    src: "/images/military-ex.webp",
+    src: "/images/capability/military-ex.webp",
     alt: "A military honor guard presenting the colors at the Loft 442 grand opening",
     caption: "Honor guard at our grand opening",
     objectPosition: "60% 40%",

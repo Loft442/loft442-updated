@@ -116,7 +116,8 @@ export default function CapabilityStatementPage() {
                   alt={image.alt}
                   fill
                   priority={index === 0}
-                  sizes="(min-width: 1152px) 368px, (min-width: 640px) 31vw, 100vw"
+                  quality={85}
+                  sizes="(min-width: 1152px) 400px, (min-width: 640px) 33vw, 100vw"
                   className="object-cover"
                   style={{ objectPosition: image.objectPosition }}
                 />
