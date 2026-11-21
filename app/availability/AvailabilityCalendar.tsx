@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { DayPicker } from "react-day-picker";
+import { useMemo, useState } from "react";
+import { DayPicker, type DayButtonProps } from "react-day-picker";
 
 // Class names use react-day-picker v9 keys (the installed version).
 const calendarClassNames = {
@@ -26,8 +26,53 @@ const calendarClassNames = {
   disabled: "[&>button]:cursor-not-allowed [&>button]:text-white/30 [&>button]:opacity-50",
 };
 
-export default function AvailabilityCalendar() {
+const bookedClassName = [
+  "[&>button]:relative [&>button]:overflow-hidden [&>button]:border-white/5 [&>button]:bg-white/[0.04] [&>button]:line-through",
+  "[&>button]:after:pointer-events-none [&>button]:after:absolute [&>button]:after:left-1/2 [&>button]:after:top-1/2 [&>button]:after:h-px [&>button]:after:w-[141%] [&>button]:after:-translate-x-1/2 [&>button]:after:-translate-y-1/2 [&>button]:after:-rotate-45 [&>button]:after:bg-white/30 [&>button]:after:content-['']",
+].join(" ");
+
+const fromYmd = (value: string) => {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+type AvailabilityCalendarProps = {
+  /** YYYY-MM-DD days already booked on the venue's Google Calendar. */
+  bookedDates: string[];
+};
+
+function BookedAwareDayButton(props: DayButtonProps) {
+  const { day: _day, modifiers, ...buttonProps } = props;
+  const isBooked = Boolean(modifiers.booked);
+
+  return (
+    <span
+      className={`group/day relative block w-full ${isBooked ? "z-0 hover:z-20" : ""}`}
+      title={isBooked ? "Sorry this day is booked" : undefined}
+    >
+      <button
+        {...buttonProps}
+        aria-label={
+          isBooked
+            ? `${buttonProps["aria-label"] ?? "Day"}. Sorry this day is booked`
+            : buttonProps["aria-label"]
+        }
+      />
+      {isBooked ? (
+        <span
+          role="tooltip"
+          className="pointer-events-none absolute bottom-[calc(100%+0.4rem)] left-1/2 z-30 hidden w-max max-w-[11rem] -translate-x-1/2 border border-[var(--line-strong)] bg-[var(--background)] px-2.5 py-1.5 text-center text-[0.65rem] leading-snug tracking-wide text-[var(--ivory)] opacity-0 shadow-[0_8px_24px_rgba(0,0,0,0.45)] transition-opacity duration-200 group-hover/day:opacity-100 md:block"
+        >
+          Sorry this day is booked
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
+export default function AvailabilityCalendar({ bookedDates }: AvailabilityCalendarProps) {
   const [selected, setSelected] = useState<Date | undefined>();
+  const booked = useMemo(() => bookedDates.map(fromYmd), [bookedDates]);
 
   return (
     <div className="availability-calendar w-full">
@@ -45,17 +90,25 @@ export default function AvailabilityCalendar() {
                 <span className="h-2 w-2 rounded-full bg-gold/80" />
                 Available
               </span>
+              <span className="flex items-center gap-2 rounded-sm border border-white/10 bg-black/40 px-3 py-1">
+                <span className="h-2 w-2 rounded-full bg-white/25" />
+                <span className="line-through decoration-white/40">Booked</span>
+              </span>
             </div>
           </div>
 
-          <div className="sm:border sm:border-[var(--line)] sm:p-6">
+          <div className="overflow-visible sm:border sm:border-[var(--line)] sm:p-6">
             <DayPicker
               mode="single"
               selected={selected}
               onSelect={setSelected}
               showOutsideDays
               fixedWeeks
+              disabled={booked}
+              modifiers={{ booked }}
+              modifiersClassNames={{ booked: bookedClassName }}
               classNames={calendarClassNames}
+              components={{ DayButton: BookedAwareDayButton }}
             />
           </div>
 

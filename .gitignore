@@ -50,3 +50,7 @@ next-env.d.ts
 # Claude Code session worktrees
 /.claude/worktrees/
 .env.local
+
+# Image optimization scratch output
+.tmp-image-opt/
+scripts/.image-opt-manifest.json

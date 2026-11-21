@@ -24,6 +24,15 @@ const navLinks = [
   { label: "About", href: "#about" },
 ];
 
+const photoBoothLink = { label: "Photo Booth", href: "/photo-booth" };
+
+/** Mobile drawer keeps Photo Booth with the other links (after Catering). */
+const mobileNavLinks = [
+  ...navLinks.slice(0, 4),
+  photoBoothLink,
+  ...navLinks.slice(4),
+];
+
 const navRevealClasses = [
   "nav-home-reveal",
   "nav-gallery-reveal",
@@ -33,9 +42,12 @@ const navRevealClasses = [
   "nav-about-reveal",
 ];
 
+// Must match the `lg:` breakpoint that shows the inline links and hides the menu button.
+const DESKTOP_NAV_QUERY = "(min-width: 1024px)";
+
 const getDesktopNavSnapshot = () =>
   typeof window !== "undefined"
-    ? window.matchMedia("(min-width: 768px)").matches
+    ? window.matchMedia(DESKTOP_NAV_QUERY).matches
     : false;
 const getServerDesktopNavSnapshot = () => false;
 
@@ -46,7 +58,7 @@ function useDesktopNav() {
         return () => {};
       }
 
-      const mediaQuery = window.matchMedia("(min-width: 768px)");
+      const mediaQuery = window.matchMedia(DESKTOP_NAV_QUERY);
       mediaQuery.addEventListener("change", onStoreChange);
       return () => mediaQuery.removeEventListener("change", onStoreChange);
     },
@@ -132,10 +144,18 @@ export default function Navbar() {
     setMenuOpen(false);
   }, []);
 
+  // Warm common destinations when the mobile menu opens so taps feel instant.
+  useEffect(() => {
+    if (!menuOpen) return;
+    router.prefetch("/schedule");
+    router.prefetch("/gallery");
+    router.prefetch("/pricing");
+  }, [menuOpen, router]);
+
   const showNavDivider = !suppressNavBorder && !menuOpen;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 w-full overflow-x-clip isolate pt-safe pl-safe pr-safe [transform:translateZ(0)]">
+    <header className="fixed inset-x-0 top-0 z-50 w-full print:hidden overflow-x-clip isolate pt-safe pl-safe pr-safe [transform:translateZ(0)]">
       {/* The blur layer always exists and only fades, so WebKit never rebuilds the
           header's compositing layer mid-scroll (which let content paint above it). */}
       <div
@@ -155,12 +175,12 @@ export default function Navbar() {
       ) : null}
       <div
         className={[
-          "relative mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6",
+          "relative mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-3 px-4 sm:px-6 lg:grid-cols-[1fr_auto_1fr]",
           "transition-[height] duration-300 ease-out motion-reduce:transition-none",
           isHome && isScrolled ? "h-(--nav-h-compact)" : "h-(--nav-h)",
         ].join(" ")}
       >
-        <Link href="/" className="flex shrink-0 items-center">
+        <Link href="/" className="flex shrink-0 items-center justify-self-start">
           <Image
             src="/images/loft-logo.webp"
             alt="Loft 442 logo"
@@ -176,20 +196,27 @@ export default function Navbar() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-4 text-[0.7rem] uppercase tracking-[0.16em] lg:gap-8 lg:text-[0.78rem] lg:tracking-[0.24em] text-white/65 md:flex md:min-w-0 md:flex-1 md:justify-center md:px-6 lg:absolute lg:left-1/2 lg:top-1/2 lg:w-auto lg:flex-none lg:-translate-x-1/2 lg:-translate-y-1/2 lg:px-0">
+        <nav className="hidden items-center justify-center gap-4 text-center text-[0.7rem] uppercase tracking-[0.16em] text-white/65 lg:flex lg:gap-6 lg:text-[0.78rem] lg:tracking-[0.24em] xl:gap-8">
           {navLinks.map((link, index) => (
             <Link
               key={link.label}
               href={link.href}
               onClick={(event) => handleNavClick(event, link.href)}
-              className={`nav-underline relative transition-colors duration-300 hover:text-[var(--ivory)] after:pointer-events-none after:absolute after:left-0 after:-bottom-2 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 ${navRevealClasses[index] ?? ""}`}
+              className={`nav-underline relative whitespace-nowrap text-center transition-colors duration-300 hover:text-[var(--ivory)] after:pointer-events-none after:absolute after:left-0 after:-bottom-2 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 ${navRevealClasses[index] ?? ""}`}
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center justify-self-end gap-3 sm:gap-4">
+          <Link
+            href={photoBoothLink.href}
+            className="nav-underline nav-photo-booth nav-last-reveal relative hidden flex-col items-center justify-center text-center text-[0.7rem] uppercase leading-tight tracking-[0.16em] text-gold transition-colors duration-300 after:pointer-events-none after:absolute after:left-0 after:-bottom-2 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold after:transition-transform after:duration-300 after:content-[''] hover:text-gold-light hover:after:scale-x-100 lg:inline-flex lg:text-[0.78rem] lg:tracking-[0.24em]"
+          >
+            <span>Photo</span>
+            <span>Booth</span>
+          </Link>
           <Link
             href="/schedule"
             className={buttonClasses(
@@ -213,7 +240,7 @@ export default function Navbar() {
                 return !prev;
               })
             }
-            className="inline-flex h-11 w-11 items-center justify-center border border-white/20 text-white/80 transition hover:border-white/40 hover:text-white md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center border border-white/20 text-white/80 transition hover:border-white/40 hover:text-white min-[380px]:h-11 min-[380px]:w-11 lg:hidden"
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -225,17 +252,17 @@ export default function Navbar() {
           id="mobile-nav"
           className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
             menuOpen
-              ? "max-h-[min(26rem,calc(100dvh-var(--nav-offset)-env(safe-area-inset-bottom)))] opacity-100"
+              ? "max-h-[min(34rem,calc(100dvh-var(--nav-offset)-env(safe-area-inset-bottom)))] opacity-100"
               : "max-h-0 opacity-0"
           }`}
         >
           <div
-            className={`max-h-[inherit] overflow-y-auto overscroll-contain bg-black/90 px-4 pb-4 pb-safe pt-3 backdrop-blur sm:px-6${
+            className={`max-h-[inherit] overflow-y-auto overscroll-contain bg-black px-4 pb-5 pb-safe pt-3 sm:px-6${
               menuOpen ? " border-t border-white/10" : ""
             }`}
           >
-            <div className="flex flex-col gap-3 text-xs uppercase tracking-[0.3em] text-white/70">
-              {navLinks.map((link) => (
+            <div className="flex flex-col items-center gap-3 text-center text-xs uppercase tracking-[0.3em] text-white/70">
+              {mobileNavLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
@@ -243,7 +270,9 @@ export default function Navbar() {
                     handleNavClick(event, link.href);
                     handleCloseMenu();
                   }}
-                  className="border-b border-[var(--line)] py-4 transition hover:text-gold-light last:border-b-0"
+                  className={`tap w-full border-b border-[var(--line)] py-3.5 text-center transition hover:text-gold-light last:border-b-0${
+                    link.href === "/photo-booth" ? " nav-photo-booth text-gold" : ""
+                  }`}
                 >
                   {link.label}
                 </Link>

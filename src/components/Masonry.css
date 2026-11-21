@@ -10,13 +10,31 @@
   cursor: pointer;
   top: 0;
   left: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition:
     translate var(--masonry-move, 0.6s ease-out),
     scale 0.3s var(--masonry-hover-ease, ease-out);
 }
 
-.list[data-scale-on-hover] .item-wrapper:hover {
-  scale: var(--masonry-hover-scale, 0.95);
+/* Hover only on real pointers: on touch screens a sticky :hover delays the first tap. */
+@media (hover: hover) and (pointer: fine) {
+  .list[data-scale-on-hover] .item-wrapper:hover {
+    scale: var(--masonry-hover-scale, 0.95);
+  }
+
+  .list[data-color-shift] .item-wrapper:hover .color-overlay {
+    opacity: 0.3 !important;
+  }
+}
+
+@media (hover: none) {
+  .item-wrapper:active {
+    scale: 0.97;
+    transition:
+      translate var(--masonry-move, 0.6s ease-out),
+      scale 0.1s ease-out;
+  }
 }
 
 .item-wrapper > .item-img {
@@ -30,8 +48,4 @@
 
 .item-wrapper .color-overlay {
   transition: opacity 0.3s;
-}
-
-.list[data-color-shift] .item-wrapper:hover .color-overlay {
-  opacity: 0.3 !important;
 }

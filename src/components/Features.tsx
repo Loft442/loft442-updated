@@ -1,18 +1,40 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import ImageStack from "@/components/ImageStack";
 import Reveal from "@/components/Reveal";
+
+type FeatureImage = { src: string; alt: string };
 
 type FeatureBlockProps = {
   id?: string;
   eyebrow: string;
   title: ReactNode;
   children: ReactNode;
-  image: { src: string; alt: string };
+  image: FeatureImage;
+  /** Shown behind `image`, slightly offset; tapping swaps the two. */
+  secondImage?: FeatureImage;
   imageFirst?: boolean;
   titleClassName?: string;
+  /** Prioritize stack images near the top of the page (mobile LCP helpers). */
+  priorityImages?: boolean;
+  /** Soft wine radial behind the body copy. */
+  wineGlow?: boolean;
 };
 
-function FeatureBlock({ id, eyebrow, title, children, image, imageFirst = false, titleClassName = "display-md" }: FeatureBlockProps) {
+const IMAGE_SIZES = "(max-width: 768px) 92vw, 45vw";
+
+function FeatureBlock({
+  id,
+  eyebrow,
+  title,
+  children,
+  image,
+  secondImage,
+  imageFirst = false,
+  titleClassName = "display-md",
+  priorityImages = false,
+  wineGlow = false,
+}: FeatureBlockProps) {
   return (
     <section id={id} className={`scroll-mt-28 md:scroll-mt-32 section-pad ${id === "about" ? "" : "border-t border-[var(--line)]"}`}>
       <div className="mx-auto max-w-6xl px-6">
@@ -21,20 +43,32 @@ function FeatureBlock({ id, eyebrow, title, children, image, imageFirst = false,
             <p className="eyebrow">{eyebrow}</p>
             <h2 className={titleClassName}>{title}</h2>
             <span className="hairline" aria-hidden="true" />
-            <div className="flex flex-col gap-5">{children}</div>
+            <div className={`relative flex flex-col gap-5${wineGlow || id === "about" ? " wine-copy-glow" : ""}`}>
+              {children}
+            </div>
           </div>
-          <div
-            className={`relative w-full aspect-[4/5] overflow-hidden sm:aspect-[543/420] ${imageFirst ? "md:order-1" : ""}`}
-          >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              sizes="(max-width: 768px) 100vw, 45vw"
-              className="reveal reveal-image object-cover"
+          {secondImage ? (
+            <ImageStack
+              images={[image, secondImage]}
+              sizes={IMAGE_SIZES}
+              priority={priorityImages}
+              className={`aspect-[4/5] sm:aspect-[543/420] ${imageFirst ? "md:order-1" : ""}`}
             />
-            <div className="pointer-events-none absolute inset-4 border border-white/15" aria-hidden="true" />
-          </div>
+          ) : (
+            <div
+              className={`relative w-full aspect-[4/5] overflow-hidden sm:aspect-[543/420] ${imageFirst ? "md:order-1" : ""}`}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                sizes={IMAGE_SIZES}
+                quality={70}
+                className="reveal reveal-image object-cover"
+              />
+              <div className="frame-line pointer-events-none absolute inset-4" aria-hidden="true" />
+            </div>
+          )}
         </Reveal>
       </div>
     </section>
@@ -52,6 +86,11 @@ export function AboutSection() {
         </>
       }
       image={{ src: "/images/ribbon3.webp", alt: "The Loft 442 salon dressed for a reception" }}
+      secondImage={{
+        src: "/images/image-4-enhanced.webp",
+        alt: "The Loft 442 event space styled for a celebration",
+      }}
+      priorityImages
     >
       <p className="lede">
         Loft 442 is an intimate, veteran-owned event venue in Elmont, on the border of Queens and
@@ -74,7 +113,12 @@ export function TributeSection() {
       eyebrow="A Tribute to Service & Sacrifice"
       title="Built on the values of service"
       image={{ src: "/images/military-ex.webp", alt: "A tribute to military service at Loft 442" }}
+      secondImage={{
+        src: "/images/loft442-grand-opening-ceremony.webp",
+        alt: "Loft 442 grand opening ceremony",
+      }}
       imageFirst
+      wineGlow
     >
       <p className="lede">
         Loft 442 is proudly veteran-owned. We honor the men and women who have served, not only in
@@ -98,7 +142,15 @@ export function StandardSection() {
           Attentive, discreet and <em className="display-italic">detail-led</em>
         </>
       }
-      image={{ src: "/images/quality-promise2.webp", alt: "Table and décor detail at Loft 442" }}
+      image={{
+        src: "/images/baby-brown-teddy-cake.webp",
+        alt: "Baby brown teddy-bear cake with blue balloons at Loft 442",
+      }}
+      secondImage={{
+        src: "/images/lavender-regency-tea-table.webp",
+        alt: "Lavender Regency tea table styled at Loft 442",
+      }}
+      wineGlow
     >
       <p className="lede">
         Every event at Loft 442 is prepared with precision. The space is immaculately kept, the

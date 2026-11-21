@@ -68,8 +68,14 @@ const formatSelectedDate = (date: Date) =>
     year: "numeric",
   });
 
-export default function SchedulePage() {
+type SchedulePageProps = {
+  /** YYYY-MM-DD days already booked on the venue's Google Calendar. */
+  bookedDates: string[];
+};
+
+export default function SchedulePage({ bookedDates }: SchedulePageProps) {
   const today = useMemo(() => new Date(), []);
+  const bookedDateSet = useMemo(() => new Set(bookedDates), [bookedDates]);
   const [monthAnchor, setMonthAnchor] = useState(
     new Date(today.getFullYear(), today.getMonth(), 1)
   );
@@ -337,7 +343,7 @@ export default function SchedulePage() {
                 <div
                   role="grid"
                   aria-label="Choose a date to plan your event"
-                  className="mt-4 grid w-full grid-cols-7 gap-0.5 sm:gap-3"
+                  className="mt-4 grid w-full grid-cols-7 gap-0.5 overflow-visible sm:gap-3"
                 >
                   {days.map((date, index) => {
                     if (!date) {
@@ -357,39 +363,83 @@ export default function SchedulePage() {
                         today.getMonth(),
                         today.getDate()
                       );
-                    const disabled = isPast;
+                    const isBooked = !isPast && bookedDateSet.has(dateKey);
+                    const disabled = isPast || isBooked;
                     const isSelected =
                       !disabled &&
                       !!selectedDate &&
                       isSameDay(selectedDate, date);
                     const isToday = isSameDay(today, date);
-                    const stateClass = disabled
+                    const stateClass = isBooked
+                      ? "border-white/5 bg-white/[0.04] text-white/30 cursor-not-allowed"
+                      : disabled
                       ? "border-transparent text-white/25 cursor-not-allowed"
                       : isSelected
                         ? "border-gold bg-gold text-[var(--ink)]"
                         : "border-[var(--line)] text-white/75 md:hover:border-gold/60 md:hover:text-gold-light";
 
                     return (
-                      <button
+                      <span
                         key={dateKey}
-                        type="button"
-                        role="gridcell"
-                        aria-disabled={disabled}
-                        aria-selected={isSelected}
-                        disabled={disabled}
-                        onClick={
-                          disabled ? undefined : () => setSelectedDate(date)
-                        }
-                        className={`flex aspect-square w-full min-w-0 flex-col items-center justify-center gap-0.5 border text-[0.7rem] leading-none transition duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/50 sm:text-base ${stateClass} ${
-                          !disabled && isToday
-                            ? "border-white/20 text-white"
-                            : ""
-                        }`}
+                        className={`group/day relative block min-w-0 ${isBooked ? "z-0 hover:z-20" : ""}`}
+                        title={isBooked ? "Sorry this day is booked" : undefined}
                       >
-                        <span className="leading-none">{date.getDate()}</span>
-                      </button>
+                        <button
+                          type="button"
+                          role="gridcell"
+                          aria-disabled={disabled}
+                          aria-selected={isSelected}
+                          aria-label={
+                            isBooked
+                              ? `${formatSelectedDate(date)}. Sorry this day is booked`
+                              : undefined
+                          }
+                          disabled={disabled}
+                          onClick={
+                            disabled ? undefined : () => setSelectedDate(date)
+                          }
+                          className={`relative flex aspect-square w-full min-w-0 flex-col items-center justify-center gap-0.5 overflow-hidden border text-[0.7rem] leading-none transition duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/50 sm:text-base ${stateClass} ${
+                            !disabled && isToday
+                              ? "border-white/20 text-white"
+                              : ""
+                          }`}
+                        >
+                          <span className={`leading-none ${isBooked ? "line-through decoration-white/40" : ""}`}>
+                            {date.getDate()}
+                          </span>
+                          {isBooked ? (
+                            <span
+                              aria-hidden="true"
+                              className="pointer-events-none absolute left-1/2 top-1/2 h-px w-[141%] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-white/20"
+                            />
+                          ) : null}
+                        </button>
+                        {isBooked ? (
+                          <span
+                            role="tooltip"
+                            className="pointer-events-none absolute bottom-[calc(100%+0.4rem)] left-1/2 z-30 hidden w-max max-w-[11rem] -translate-x-1/2 border border-[var(--line-strong)] bg-[var(--background)] px-2.5 py-1.5 text-center text-[0.65rem] leading-snug tracking-wide text-[var(--ivory)] opacity-0 shadow-[0_8px_24px_rgba(0,0,0,0.45)] transition-opacity duration-200 group-hover/day:opacity-100 md:block"
+                          >
+                            Sorry this day is booked
+                          </span>
+                        ) : null}
+                      </span>
                     );
                   })}
+                </div>
+                <div className="mt-5 flex flex-wrap items-center gap-5 px-2 text-[0.65rem] uppercase tracking-[0.25em] text-white/50 sm:px-0">
+                  <span className="flex items-center gap-2">
+                    <span aria-hidden="true" className="h-3 w-3 border border-[var(--line-strong)]" />
+                    Available
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span
+                      aria-hidden="true"
+                      className="relative h-3 w-3 overflow-hidden border border-white/5 bg-white/[0.08]"
+                    >
+                      <span className="absolute left-1/2 top-1/2 h-px w-[141%] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-white/40" />
+                    </span>
+                    Booked
+                  </span>
                 </div>
               </div>
             </Reveal>

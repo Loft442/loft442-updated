@@ -1,5 +1,8 @@
 import SchedulePage from "@/components/SchedulePage";
+import { getBookedDates } from "@/lib/bookedDates";
 import { buildMetadata } from "@/lib/seo";
+
+export const revalidate = 300;
 
 export const metadata = buildMetadata({
   title: "Plan Your Event",
@@ -16,6 +19,6 @@ export const metadata = buildMetadata({
   ],
 });
 
-export default function Schedule() {
-  return <SchedulePage />;
+export default async function Schedule() {
+  return <SchedulePage bookedDates={await getBookedDates()} />;
 }

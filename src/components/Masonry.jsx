@@ -238,8 +238,9 @@ const Masonry = ({
                       alt={item.alt ?? ""}
                       fill
                       sizes={IMAGE_SIZES}
-                      quality={75}
+                      quality={70}
                       loading="lazy"
+                      decoding="async"
                       className="object-cover object-center"
                     />
                   ) : (
@@ -265,8 +266,9 @@ const Masonry = ({
                   alt={item.alt ?? ""}
                   fill
                   sizes={IMAGE_SIZES}
-                  quality={75}
+                  quality={70}
                   loading="lazy"
+                  decoding="async"
                   className="object-cover object-center"
                 />
               )}

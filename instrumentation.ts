@@ -43,7 +43,7 @@ function getLoggerProvider() {
   return loggerProvider;
 }
 
-function emitEventRequestLog(body: string, severityNumber: SeverityNumber) {
+function emitEventRequestLog(body: string, severityNumber: SeverityNumber, route: string) {
   const logger = getLoggerProvider()?.getLogger("loft-442-posthog");
   if (!logger) return false;
 
@@ -51,7 +51,7 @@ function emitEventRequestLog(body: string, severityNumber: SeverityNumber) {
     body,
     severityNumber,
     attributes: {
-      route: "/api/send-request",
+      route,
       operation: "event_request_email_delivery",
     },
   });
@@ -59,16 +59,16 @@ function emitEventRequestLog(body: string, severityNumber: SeverityNumber) {
   return true;
 }
 
-export function logEventRequestEmailConfigured() {
-  return emitEventRequestLog("event_request_email_not_configured", SeverityNumber.ERROR);
+export function logEventRequestEmailConfigured(route = "/api/send-request") {
+  return emitEventRequestLog("event_request_email_not_configured", SeverityNumber.ERROR, route);
 }
 
-export function logEventRequestEmailFailed() {
-  return emitEventRequestLog("event_request_email_delivery_failed", SeverityNumber.ERROR);
+export function logEventRequestEmailFailed(route = "/api/send-request") {
+  return emitEventRequestLog("event_request_email_delivery_failed", SeverityNumber.ERROR, route);
 }
 
-export function logEventRequestEmailSent() {
-  return emitEventRequestLog("event_request_email_delivery_succeeded", SeverityNumber.INFO);
+export function logEventRequestEmailSent(route = "/api/send-request") {
+  return emitEventRequestLog("event_request_email_delivery_succeeded", SeverityNumber.INFO, route);
 }
 
 export async function flushPostHogLogs() {

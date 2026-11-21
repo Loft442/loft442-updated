@@ -11,8 +11,21 @@
   .embla {
     --slide-width: 160px;
     --slide-height: 220px;
-    --feather: 32px;
-    --marquee-duration: 30s;
+    --feather: 24px;
+    /* Slightly slower on phones = fewer compositor updates per second. */
+    --marquee-duration: 38s;
+  }
+
+  .embla__container {
+    will-change: auto;
+  }
+
+  .embla__container:not(.isPaused) {
+    will-change: transform;
+  }
+
+  .embla__slide img {
+    content-visibility: auto;
   }
 }
 
@@ -20,7 +33,6 @@
    slides and fades to whatever background is behind it. */
 .embla__viewport {
   overflow: hidden;
-  pointer-events: none;
   height: var(--slide-height);
   -webkit-mask-image: linear-gradient(to right,
       transparent 0,
@@ -42,10 +54,12 @@
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  contain: layout style;
 }
 
 .embla__container.isPaused {
   animation-play-state: paused;
+  will-change: auto;
 }
 
 /* Gap lives inside each slide so both copies are exactly the same width and -50% is seamless. */

@@ -2,7 +2,10 @@ import AvailabilityCalendar from "./AvailabilityCalendar";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import Button from "@/components/ui/Button";
+import { getBookedDates } from "@/lib/bookedDates";
 import { SITE_EMAIL, SITE_PHONE, buildMetadata } from "@/lib/seo";
+
+export const revalidate = 300;
 
 export const metadata = buildMetadata({
   title: "Venue Availability",
@@ -17,7 +20,9 @@ export const metadata = buildMetadata({
   ],
 });
 
-export default function AvailabilityPage() {
+export default async function AvailabilityPage() {
+  const bookedDates = await getBookedDates();
+
   return (
     <main className="bg-[var(--background)] pt-nav text-white">
       <section className="border-t border-[var(--line)] pb-4 pt-16 sm:pt-24">
@@ -37,7 +42,7 @@ export default function AvailabilityPage() {
       <section className="py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal mode="text">
-            <AvailabilityCalendar />
+            <AvailabilityCalendar bookedDates={bookedDates} />
           </Reveal>
         </div>
       </section>

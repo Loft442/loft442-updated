@@ -45,7 +45,6 @@ const enhancements = [
   "Professional bartender",
   "Banquet chafing service (nine dishes)",
   "Low-lying fog",
-  "Digital photo booth",
 ];
 
 function Price({ amount }: { amount: string }) {
@@ -62,7 +61,7 @@ export default function PricingPage() {
     <>
       <section className="pricing-page border-t border-[var(--line)] pb-20 pt-16 sm:pb-28 sm:pt-24">
         <div className="mx-auto max-w-6xl px-6">
-          <Reveal mode="text" className="flex flex-col items-center gap-6 text-center">
+          <Reveal mode="text" className="wine-copy-glow flex flex-col items-center gap-6 text-center">
             <p className="eyebrow">Loft 442</p>
             <h1 className="display-xl">Packages &amp; Experiences</h1>
             <span className="hairline" aria-hidden="true" />
@@ -86,6 +85,8 @@ export default function PricingPage() {
                     alt={pkg.imageAlt}
                     fill
                     sizes="(min-width: 1024px) 45vw, 100vw"
+                    quality={72}
+                    loading="lazy"
                     className="object-cover"
                   />
                   <div className="pointer-events-none absolute inset-4 border border-white/15" aria-hidden="true" />
@@ -149,6 +150,47 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
+          </Reveal>
+        </div>
+
+        <div className="mx-auto mt-16 max-w-6xl px-6">
+          <Reveal
+            mode="slide"
+            delayMs={80}
+            className="grid gap-8 border border-[var(--line)] p-6 sm:gap-10 sm:p-12 md:grid-cols-[0.9fr_1.2fr_0.9fr] md:items-center md:gap-12 lg:gap-16"
+          >
+            <div className="relative mx-auto aspect-square w-full max-w-[180px] overflow-hidden sm:max-w-[240px] md:max-w-none">
+              <Image
+                src="/images/photo-booth/salsa-2-product.webp"
+                alt="Salsa 2 digital photo booth by Photobooth Supply Co."
+                fill
+                sizes="(min-width: 768px) 18vw, 180px"
+                className="object-cover object-center"
+              />
+            </div>
+            <div className="flex flex-col gap-4 sm:gap-5">
+              <p className="eyebrow">Venue Add-On</p>
+              <h3 className="display-md">Salsa 2 Photo Booth</h3>
+              <p className="text-gold-light md:hidden">
+                <span className="font-serif text-4xl font-normal">$400</span>
+                <span className="ml-3 whitespace-nowrap text-[0.95rem] text-white/65">· 2 hours</span>
+              </p>
+              <p className="text-[0.95rem] leading-relaxed text-white/70">
+                Add the digital booth to either package — digital sharing, an attendant, and an event gallery
+                included for your guests.
+              </p>
+              <Button href="/photo-booth" variant="ghost" className="mt-1 w-full sm:mt-2 sm:w-56">
+                Photo Booth Details
+              </Button>
+            </div>
+            <div className="hidden flex-col gap-2 border-t border-[var(--line)] pt-8 md:flex md:border-l md:border-t-0 md:pl-10 md:pt-0 lg:pl-12">
+              <p className="eyebrow">Starting at</p>
+              <p className="text-gold-light">
+                <span className="font-serif text-4xl font-normal sm:text-5xl">$400</span>
+                <span className="ml-3 whitespace-nowrap text-[0.95rem] text-white/65">· 2 hours</span>
+              </p>
+              <p className="mt-2 text-[0.95rem] text-white/60">Available with The Essential or The Grand.</p>
+            </div>
           </Reveal>
         </div>
 

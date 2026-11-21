@@ -6,8 +6,10 @@ const exploreLinks = [
   { label: "Experiences & Pricing", href: "/pricing" },
   { label: "Gallery", href: "/gallery" },
   { label: "Catering", href: "/catering" },
+  { label: "Photo Booth", href: "/photo-booth" },
   { label: "Repass", href: "/repass" },
   { label: "Plan Your Event", href: "/schedule" },
+  { label: "Government Capability Statement", href: "/capability-statement" },
 ];
 
 const contacts = TEAM_CONTACTS;
@@ -17,8 +19,12 @@ const linkClass = "tap transition-colors duration-300 hover:text-gold-light";
 
 export default function Footer() {
   return (
-    <footer className="section-divider border-t border-[var(--line)] pb-10 pt-16 sm:pt-20">
-      <div className="mx-auto flex max-w-6xl flex-col gap-14 px-6">
+    <footer className="section-divider relative overflow-hidden border-t border-[var(--line)] pb-10 pt-16 sm:pt-20">
+      <div
+        aria-hidden="true"
+        className="footer-wine-glow pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[min(70%,22rem)]"
+      />
+      <div className="relative z-[1] mx-auto flex max-w-6xl flex-col gap-14 px-6">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="flex flex-col gap-4">
             <p className="font-serif text-3xl text-[var(--ivory)]">Loft 442</p>

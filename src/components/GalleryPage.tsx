@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import {
   useCallback,
+  useDeferredValue,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -52,11 +54,24 @@ type GalleryPageProps = {
 };
 
 export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
-  const [activeCategory, setActiveCategory] =
+  // The tab highlight follows selectedCategory right away; the grid rebuilds from the
+  // deferred value so a tap is never blocked behind re-laying out every photo.
+  const [selectedCategory, setSelectedCategory] =
     useState<GalleryCategory>("All");
+  const activeCategory = useDeferredValue(selectedCategory);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const scrollYRef = useRef(0);
+
+  // Fetch the lightbox code while idle so the first tap on a photo opens it at once.
+  useEffect(() => {
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => void loadLightbox(), { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(() => void loadLightbox(), 1000);
+    return () => window.clearTimeout(id);
+  }, []);
 
   const filteredItems = useMemo(() => {
     const items =
@@ -64,7 +79,16 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
         ? galleryItems
         : galleryItems.filter((item) => categoryFilters[activeCategory].includes(item.category));
 
-    return [...items].reverse();
+    const ordered = [...items].reverse();
+    // In All, keep Private Events pinned to the top.
+    if (activeCategory === "All") {
+      ordered.sort((a, b) => {
+        const aPrivate = a.category === "Private Events" ? 0 : 1;
+        const bPrivate = b.category === "Private Events" ? 0 : 1;
+        return aPrivate - bPrivate;
+      });
+    }
+    return ordered;
   }, [activeCategory, galleryItems]);
 
   const masonryItems = useMemo(
@@ -86,14 +110,14 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
 
   // Reset active index when category changes (in event handler, not effect)
   const handleCategoryChange = useCallback((category: GalleryCategory) => {
-    if (category === activeCategory) {
+    if (category === selectedCategory) {
       return;
     }
 
     posthog.capture("gallery_category_selected", { category });
-    setActiveCategory(category);
+    setSelectedCategory(category);
     setActiveIndex(null);
-  }, [activeCategory]);
+  }, [selectedCategory]);
 
   // Use iOS-safe body scroll locking
   useLockBodyScroll(activeIndex !== null, scrollYRef);
@@ -172,7 +196,7 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
     <div>
       <section className="border-t border-[var(--line)] pb-4 pt-16 sm:pt-24">
         <div className="mx-auto max-w-6xl px-6">
-          <Reveal mode="text" className="flex flex-col items-center gap-6 text-center">
+          <Reveal mode="text" className="wine-copy-glow flex flex-col items-center gap-6 text-center">
             <p className="eyebrow">Loft 442</p>
             <h1 className="display-xl">The Gallery</h1>
             <span className="hairline" aria-hidden="true" />
@@ -189,7 +213,7 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
             className="flex flex-wrap justify-center gap-x-8 gap-y-2"
           >
             {filterCategories.map((category, index) => {
-              const isActive = category === activeCategory;
+              const isActive = category === selectedCategory;
               const tabId = `gallery-tab-${slugify(category)}`;
 
               return (
@@ -226,8 +250,6 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
             id="gallery-panel"
             role="tabpanel"
             aria-labelledby={activeTabId}
-            onPointerOver={loadLightbox}
-            onFocus={loadLightbox}
           >
             {filteredItems.length === 0 ? (
               <Reveal immediate className="flex flex-col items-center justify-center py-24 text-center">

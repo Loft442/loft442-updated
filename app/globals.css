@@ -192,6 +192,59 @@ header .nav-underline {
   font-family: var(--font-heading);
 }
 
+/* Soft wine wash behind the Photo Booth label so it reads as a featured link. */
+.nav-photo-booth {
+  text-shadow:
+    0 0 8px rgba(150, 72, 96, 0.28),
+    0 0 18px rgba(120, 48, 72, 0.16);
+}
+
+.nav-photo-booth::before {
+  content: "";
+  position: absolute;
+  inset: -0.35em -0.55em;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(150, 72, 96, 0.14) 0%,
+    rgba(120, 48, 72, 0.06) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Soft wine wash behind selected copy blocks (About, Contact, etc.). */
+.wine-copy-glow {
+  position: relative;
+  isolation: isolate;
+}
+
+.wine-copy-glow::before {
+  content: "";
+  position: absolute;
+  inset: -12% -16%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 65% 60% at 50% 42%,
+    rgba(150, 72, 96, 0.1) 0%,
+    rgba(120, 48, 72, 0.04) 42%,
+    transparent 68%
+  );
+}
+
+/* Wine glow rising from the bottom edge of the footer (own layer — section-divider
+   already uses ::before/::after for the top gold edge). */
+.footer-wine-glow {
+  background: radial-gradient(
+    ellipse 95% 110% at 50% 100%,
+    rgba(150, 72, 96, 0.22) 0%,
+    rgba(120, 48, 72, 0.1) 36%,
+    transparent 70%
+  );
+}
+
 /* Buttons always use Inter, including the navbar CTA. */
 .cta-button {
   font-family: var(--font-body);
@@ -276,14 +329,14 @@ html::after {
 
 @media (max-width: 640px) {
 
+  /* Grain + soft glow are expensive continuous paints on phones. */
   html::before,
   html::after {
-    opacity: 0.12;
+    display: none;
   }
 
   .spotlight::before {
-    filter: blur(12px);
-    opacity: 0.26;
+    display: none;
   }
 
   .hero-stagger--1,
@@ -292,6 +345,18 @@ html::after {
     position: relative;
   }
 
+  .section-pad {
+    padding-top: clamp(3.5rem, 12vw, 5.5rem);
+    padding-bottom: clamp(3.5rem, 12vw, 5.5rem);
+  }
+
+  .home-page > section.section-pad:not(#about) {
+    contain-intrinsic-size: auto 560px;
+  }
+
+  .page-transition {
+    animation-duration: 180ms;
+  }
 }
 
 .page-transition {
@@ -691,7 +756,8 @@ html::after {
   .nav-pricing-reveal,
   .nav-repass-reveal,
   .nav-catering-reveal,
-  .nav-about-reveal {
+  .nav-about-reveal,
+  .nav-last-reveal {
     animation: none;
     opacity: 1;
     transform: none;
@@ -712,7 +778,8 @@ html.reduce-motion .nav-gallery-reveal,
 html.reduce-motion .nav-pricing-reveal,
 html.reduce-motion .nav-repass-reveal,
 html.reduce-motion .nav-catering-reveal,
-html.reduce-motion .nav-about-reveal {
+html.reduce-motion .nav-about-reveal,
+html.reduce-motion .nav-last-reveal {
   animation: none;
   opacity: 1;
   transform: none;
@@ -781,17 +848,17 @@ html.reduce-motion .nav-about-reveal {
   background-repeat: no-repeat;
 }
 
+/* Fill "backwards" (not "forwards") so the animation lets go of transform once it
+   finishes; otherwise it overrides the :active press state forever. */
 .cta-button.nav-cta-reveal {
-  opacity: 0;
-  transform: translateX(120%);
-  animation: navCtaReveal 900ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation: navCtaReveal 900ms cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
   animation-delay: calc(180ms + var(--motion-start-delay, 0ms));
 }
 
 @keyframes navCtaReveal {
-  to {
-    opacity: 1;
-    transform: translateX(0);
+  from {
+    opacity: 0;
+    transform: translateX(120%);
   }
 }
 
@@ -842,6 +909,13 @@ html.reduce-motion .nav-about-reveal {
   transform: translateY(-16px);
   animation: navHomeReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   animation-delay: calc(1300ms + var(--motion-start-delay, 0ms));
+}
+
+.nav-last-reveal {
+  opacity: 0;
+  transform: translateY(-16px);
+  animation: navHomeReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation-delay: calc(1420ms + var(--motion-start-delay, 0ms));
 }
 
 .cta-button {
@@ -957,7 +1031,12 @@ html.reduce-motion .nav-about-reveal {
   transition: border-color 260ms ease;
 }
 
-.about-card-outline:hover,
+@media (hover: hover) {
+  .about-card-outline:hover {
+    border-color: rgba(201, 169, 97, 0.7);
+  }
+}
+
 .about-card-outline:focus-visible,
 .about-card-outline[aria-expanded="true"] {
   border-color: rgba(201, 169, 97, 0.7);
@@ -1287,10 +1366,13 @@ html.reduce-motion .nav-about-reveal {
   transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.cta-book:hover {
-  background: var(--gold-light);
-  border-color: var(--gold-light);
-  color: var(--ink);
+/* Mouse only: on phones a :hover state sticks after the tap and looks stuck. */
+@media (hover: hover) {
+  .cta-book:hover {
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+    color: var(--ink);
+  }
 }
 
 .cta-book:active {
@@ -1592,6 +1674,29 @@ select {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Immediate visual confirmation that a tap landed, on touch screens. */
+@media (hover: none) {
+  .cta-button:active,
+  [role="tab"]:active {
+    opacity: 0.75;
+    transition-duration: 0ms;
+  }
+}
+
+/* Taps fire immediately and quick repeat taps aren't swallowed as double-tap zoom.
+   Pinch zoom still works. */
+a,
+button,
+input,
+textarea,
+select,
+summary,
+label,
+[role="button"],
+[role="tab"] {
+  touch-action: manipulation;
+}
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -1668,6 +1773,11 @@ select {
   line-height: 1.04;
 }
 
+/* Hero title: optically lighter than the default display weight. */
+.hero-no-glow .display-xl {
+  font-weight: 300 !important;
+}
+
 .display-lg {
   font-size: clamp(2.1rem, 4vw, 3.4rem);
   line-height: 1.08;
@@ -1681,6 +1791,10 @@ select {
 .display-italic {
   font-style: italic;
   color: var(--gold-light);
+}
+
+.display-italic.text-gold {
+  color: var(--gold);
 }
 
 .lede {
@@ -1698,9 +1812,130 @@ select {
   opacity: 0.7;
 }
 
+body:has(dialog.booth-dialog[open]) {
+  overflow: hidden;
+}
+
+/* The capability statement prints as a light, one-page document; browsers drop dark
+   backgrounds when printing, which would leave light text on white paper. */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.45in;
+  }
+
+  :root,
+  body {
+    background: #fff !important;
+    color-scheme: light;
+  }
+
+  .pt-nav {
+    padding-top: 0;
+  }
+
+  .capability-statement {
+    --background: #fff;
+    --color-white: #1a1a1a;
+    --ivory: #111;
+    --gold: #8a6d2e;
+    --gold-light: #8a6d2e;
+    --line: rgba(0, 0, 0, 0.14);
+    --line-strong: rgba(0, 0, 0, 0.24);
+    color: #1a1a1a;
+    border: 0;
+    font-size: 11px;
+  }
+
+  .capability-statement .lede {
+    color: #333;
+    line-height: 1.55;
+  }
+
+  .capability-statement .eyebrow {
+    color: var(--gold);
+  }
+}
+
 .section-pad {
   padding-top: clamp(5rem, 10vw, 8.5rem);
   padding-bottom: clamp(5rem, 10vw, 8.5rem);
+}
+
+/* Skip layout/paint for lower home sections; keep About eager for the first image stack. */
+.home-page > section.section-pad:not(#about) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}
+
+.frame-line {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Image stack: one composited `transform` (not separate translate/scale props). */
+.image-stack__frame {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+  transform: translate3d(0, 0, 0) scale(1);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.image-stack__frame--front {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.image-stack__frame--back {
+  transform: translate3d(6.4%, 6.4%, 0) scale(0.98);
+}
+
+/* Dim the back print with a static overlay so `filter` never runs on the moving layer. */
+.image-stack__frame--back::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.image-stack__frame--back .frame-line {
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .image-stack__frame {
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .image-stack:hover .image-stack__frame--front {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+
+  .image-stack:hover .image-stack__frame--back {
+    transform: translate3d(12%, 12%, 0) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image-stack__frame {
+    transition: none;
+  }
+
+  .image-stack:hover .image-stack__frame--front {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  .image-stack:hover .image-stack__frame--back {
+    transform: translate3d(6.4%, 6.4%, 0) scale(0.98);
+  }
+}
+
+html.reduce-motion .image-stack__frame {
+  transition: none;
 }
 
 /* Comfortable touch targets for small text links on phones (44px tall tap area). */

@@ -39,6 +39,13 @@ export default function GalleryLightbox({
   const touchStartY = useRef<number | null>(null);
   const lightboxShellRef = useRef<HTMLDivElement>(null);
   const activeItem = items[activeIndex];
+  // Neighbours are fetched in the background so Prev/Next and swipes show the new
+  // photo immediately instead of looking like the tap didn't register.
+  const neighbourItems =
+    items.length > 1
+      ? [items[(activeIndex + 1) % items.length], items[(activeIndex - 1 + items.length) % items.length]]
+          .filter((item, index, list) => item && item !== activeItem && list.indexOf(item) === index && item.type !== "video")
+      : [];
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -141,14 +148,14 @@ export default function GalleryLightbox({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 grid place-items-center touch-pan-y overscroll-contain bg-black/85 p-4 pt-safe pb-safe pl-safe pr-safe backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-50 grid place-items-center touch-pan-y overscroll-contain bg-black/90 p-4 pt-safe pb-safe pl-safe pr-safe sm:bg-black/85 sm:p-6 sm:backdrop-blur-sm"
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       <div
         ref={lightboxShellRef}
-        className="relative flex min-h-0 max-w-[900px] flex-col rounded-sm border border-white/10 bg-black/60 p-[clamp(8px,1.5svh,20px)] shadow-[0_30px_90px_rgba(0,0,0,0.7)] backdrop-blur"
+        className="relative flex min-h-0 max-w-[900px] flex-col rounded-sm border border-white/10 bg-black/60 p-[clamp(8px,1.5svh,20px)] shadow-[0_30px_90px_rgba(0,0,0,0.7)] sm:backdrop-blur"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-black/40">
@@ -175,9 +182,24 @@ export default function GalleryLightbox({
                   sizes="(max-width: 640px) 92vw, 900px"
                   className="object-contain object-center"
                   style={{ objectFit: 'contain' }}
-                  quality={80}
+                  quality={75}
+                  loading="eager"
                 />
               )}
+              {neighbourItems.map((item) => (
+                <Image
+                  key={item.src}
+                  src={item.src}
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  sizes="(max-width: 640px) 92vw, 900px"
+                  className="pointer-events-none invisible object-contain"
+                  quality={72}
+                  loading="lazy"
+                  fetchPriority="low"
+                />
+              ))}
             </div>
           </div>
           <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />

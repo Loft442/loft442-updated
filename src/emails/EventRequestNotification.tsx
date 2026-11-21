@@ -24,7 +24,7 @@ type Props = {
   messageText: string;
 };
 
-const styles: Record<string, React.CSSProperties> = {
+export const styles: Record<string, React.CSSProperties> = {
   body: {
     backgroundColor: "#0b0b0f", // deep charcoal
     margin: 0,
@@ -152,7 +152,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-const Icon = ({ children }: { children: React.ReactNode }) => (
+export const Icon = ({ children }: { children: React.ReactNode }) => (
   <span style={{ marginRight: 8 }}>{children}</span>
 );
 

@@ -31,8 +31,10 @@ export default function LocationSection() {
         }
       },
       {
-        rootMargin: "200px 0px", // Reduced from 600px for iOS Safari
-        threshold: 0.01 // Lower threshold for earlier detection
+        // Don't pull Google Maps in until the block is close — especially on phones.
+        rootMargin:
+          window.matchMedia("(max-width: 640px)").matches ? "80px 0px" : "200px 0px",
+        threshold: 0.01,
       }
     );
 

@@ -1,15 +1,23 @@
 import Image, { getImageProps } from "next/image";
 import Button from "@/components/ui/Button";
 
-const bannerProps = { alt: "", fill: true, sizes: "100vw", quality: 85 } as const;
-
 const {
   props: { srcSet: desktopBanner },
-} = getImageProps({ ...bannerProps, src: "/images/banner-opt.webp" });
+} = getImageProps({
+  alt: "",
+  fill: true,
+  sizes: "100vw",
+  quality: 80,
+  src: "/images/loft442-banner-enhanced2.webp",
+});
 
 const { props: mobileBanner } = getImageProps({
-  ...bannerProps,
-  src: "/images/banner-image-mobile-2.webp",
+  alt: "",
+  fill: true,
+  // Phones rarely exceed ~430 CSS px; keep the LCP image lean.
+  sizes: "(max-width: 639px) 100vw, 100vw",
+  quality: 68,
+  src: "/images/loft442-banner-enhanced2-mobile.webp",
   loading: "eager",
   fetchPriority: "high",
 });
@@ -27,16 +35,17 @@ export default function Hero() {
           <img
             {...mobileBanner}
             alt="The Loft 442 event salon set for an evening reception"
-            className="object-cover object-center"
+            decoding="async"
+            className="object-cover object-[58%_center] sm:object-center"
           />
         </picture>
         {/* Quiet tonal wash keeps the type legible without heavy text effects. */}
         <div
-          className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,7,8,0.88)_0%,rgba(7,7,8,0.62)_45%,rgba(7,7,8,0.25)_100%)]"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,8,0.55)_0%,rgba(7,7,8,0.72)_42%,rgba(7,7,8,0.92)_100%)] sm:bg-[linear-gradient(90deg,rgba(7,7,8,0.88)_0%,rgba(7,7,8,0.62)_45%,rgba(7,7,8,0.25)_100%)]"
           aria-hidden="true"
         />
         <div
-          className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--background)] to-transparent"
+          className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/70 to-transparent"
           aria-hidden="true"
         />
       </div>
@@ -47,7 +56,7 @@ export default function Hero() {
 
           <h1 className="display-xl hero-stagger hero-stagger--1 mt-7 sm:mt-[clamp(1rem,3svh,1.75rem)]">
             A private loft for celebrations worth{" "}
-            <em className="display-italic">remembering</em>
+            <em className="display-italic text-gold">remembering</em>
           </h1>
 
           <p className="lede hero-stagger hero-stagger--2 mt-7 max-w-xl sm:mt-[clamp(1rem,3svh,1.75rem)]">
@@ -62,7 +71,7 @@ export default function Hero() {
             </Button>
           </div>
 
-          <div className="hero-stagger hero-stagger--3 mt-12 flex flex-wrap sm:mt-[clamp(1.25rem,4.5svh,3rem)] sm:pt-[clamp(1rem,2.5svh,1.5rem)] items-center gap-x-8 gap-y-4 border-t border-[var(--line)] pt-6 text-[0.7rem] uppercase tracking-[0.3em] text-white/60">
+          <div className="hero-stagger hero-stagger--3 mt-12 flex flex-wrap sm:mt-[clamp(1.25rem,4.5svh,3rem)] sm:pt-[clamp(1rem,2.5svh,1.5rem)] items-center gap-x-8 gap-y-4 border-t border-[var(--line)] pt-6 text-[0.7rem] uppercase tracking-[0.3em] text-white/75">
             <span className="flex items-center gap-3">
               <Image
                 src="/images/veteran-icon.svg"
@@ -70,7 +79,7 @@ export default function Hero() {
                 width={18}
                 height={24}
                 sizes="18px"
-                className="h-6 w-[18px] opacity-80"
+                className="h-6 w-[18px] opacity-95"
               />
               Veteran owned &amp; operated
             </span>

@@ -1,75 +1,105 @@
 'use client'
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Link from "next/link";
 import styles from "./Carousel.module.css";
 
-// List of images in public/images
-const images = [
-  "/images/Carousel/babyshower10.webp",
-  "/images/Carousel/birthday10.webp",
-  "/images/Carousel/birthday11.webp",
-  "/images/Carousel/birthday12.webp",
-  "/images/Carousel/birthday2.webp",
-  "/images/Carousel/birthday4.webp",
-  "/images/Carousel/birthday5.webp",
-  "/images/Carousel/birthday7.webp",
-  "/images/Carousel/birthday9.webp",
-  "/images/Carousel/private-event2.webp",
-  "/images/Carousel/private-event3.webp",
-  "/images/Carousel/wedding4.webp",
-  "/images/Carousel/wedding5.webp",
-  "/images/Carousel/wedding6.webp",
-  "/images/Carousel/wedding9.webp",
-];
+const slides = [
+  "babyshower6-photoshoot.webp",
+  "image-7-enhanced.webp",
+  "image-8-enhanced.webp",
+  "image-9-enhanced.webp",
+  "lavender-tea-party-tablescape.webp",
+  "wedding6-sweetheart-table.webp",
+  "image-12-enhanced.webp",
+  "bearly-wait-baby-shower.webp",
+  "babyshower14-photoshoot.webp",
+] as const;
 
 // The track holds the list twice and a CSS animation slides it by exactly one copy,
 // so the loop is seamless and runs on the compositor instead of the main thread.
 export default function Carousel() {
   const viewportRef = useRef<HTMLDivElement | null>(null);
-  const [inView, setInView] = useState(false);
+  const [active, setActive] = useState(false);
 
-  // Only animate while the carousel is on screen, so it isn't burning frames below the fold.
+  // Animate only while on screen and the tab is visible — same look, less GPU work.
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
 
-    const observer = new IntersectionObserver(([entry]) => {
-      setInView(Boolean(entry?.isIntersecting));
-    });
+    let inView = false;
+    const sync = () => {
+      const saveData = Boolean(
+        (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+          ?.saveData
+      );
+      setActive(inView && document.visibilityState === "visible" && !saveData);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = Boolean(entry?.isIntersecting);
+        sync();
+      },
+      // Tighter margin on small screens so the marquee isn't running while still off-screen.
+      {
+        rootMargin:
+          typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches
+            ? "40px 0px"
+            : "120px 0px",
+        threshold: 0,
+      }
+    );
     observer.observe(viewport);
-    return () => observer.disconnect();
+
+    const onVisibility = () => sync();
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   return (
-    <div className={`${styles.embla} mx-auto mt-12 w-full max-w-7xl`}>
+    <Link
+      href="/gallery"
+      aria-label="View the gallery"
+      className={`${styles.embla} mx-auto mt-12 block w-full max-w-7xl cursor-pointer`}
+    >
       <div className={styles.embla__viewport} ref={viewportRef}>
         <div
-          className={`${styles.embla__container} ${inView ? "" : styles.isPaused}`.trim()}
+          className={`${styles.embla__container} ${active ? "" : styles.isPaused}`.trim()}
         >
           {[0, 1].map((copy) =>
-            images.map((src, idx) => (
+            slides.map((file) => (
               <div
-                key={`${copy}-${src}`}
+                key={`${copy}-${file}`}
                 className={styles.embla__slide}
                 aria-hidden={copy === 1 || undefined}
               >
-                <Image
-                  src={src}
-                  alt={copy === 0 ? `Slide ${idx + 1}` : ""}
-                  width={240}
-                  height={320}
-                  className="h-full w-full object-cover"
-                  sizes="(max-width: 640px) 160px, 240px"
-                  loading="eager"
-                  fetchPriority="low"
-                  draggable={false}
-                />
+                <picture>
+                  <source
+                    media="(min-width: 641px)"
+                    srcSet={`/images/Carousel/sm/${file}`}
+                    type="image/webp"
+                  />
+                  <img
+                    src={`/images/Carousel/xs/${file}`}
+                    alt=""
+                    width={160}
+                    height={220}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    draggable={false}
+                  />
+                </picture>
               </div>
             ))
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

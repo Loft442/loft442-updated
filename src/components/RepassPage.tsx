@@ -22,7 +22,7 @@ export default function RepassPage() {
   return (
     <section className="border-t border-[var(--line)] pb-24 pt-16 sm:pt-24">
       <div className="mx-auto max-w-6xl px-6">
-        <Reveal mode="text" className="flex max-w-3xl flex-col gap-6">
+        <Reveal mode="text" className="wine-copy-glow flex max-w-3xl flex-col gap-6">
           <p className="eyebrow">Loft 442</p>
           <h1 className="display-xl">Repass &amp; Celebration of Life Receptions</h1>
           <span className="hairline" aria-hidden="true" />

@@ -70,14 +70,17 @@ const nextConfig: NextConfig = {
       process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
   },
   experimental: {
-    optimizePackageImports: ["lucide-react"],
+    optimizePackageImports: ["lucide-react", "react-day-picker"],
   },
   images: {
-    qualities: [75, 80, 85],
+    // Allow lean qualities used across gallery / stacks / hero mobile.
+    qualities: [68, 70, 72, 75, 78, 80, 85],
     formats: ["image/avif", "image/webp"],
     // The largest source image is 1920px wide, so wider variants only waste bytes.
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Include common phone widths so the hero/LCP request stays close to viewport size.
+    deviceSizes: [390, 430, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 160, 240, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     // Instagram feed images, resized so grid tiles don't download full originals.
     remotePatterns: [
       { protocol: "https", hostname: "**.cdninstagram.com" },
@@ -101,6 +104,24 @@ const nextConfig: NextConfig = {
       { source: "/((?!studio(?:/|$)).*)", headers: siteHeaders },
       { source: "/studio", headers: studioHeaders },
       { source: "/studio/:path*", headers: studioHeaders },
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/google-embed.webp",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
 };
