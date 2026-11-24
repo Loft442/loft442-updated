@@ -39,6 +39,7 @@ type RequestPayload = {
   hearAboutUs?: string;
   message?: string;
   reviewedPricing?: boolean;
+  source?: string;
   website?: string;
 };
 
@@ -120,6 +121,8 @@ export async function POST(request: Request) {
   const message = clean(payload.message);
   const partyType = clean(payload.partyType);
   const hearAboutUs = clean(payload.hearAboutUs);
+  const dateValue = clean(payload.date);
+  const isQuick = payload.source === "quick";
 
   const lengthViolations = [
     ["firstName", firstName.length, MAX_FIELD_LENGTH.firstName],
@@ -143,13 +146,17 @@ export async function POST(request: Request) {
   }
 
   const missing = [
-    ["date", payload.date],
     ["firstName", firstName],
     ["lastName", lastName],
     ["partyType", partyType],
     ["phone", phone],
     ["email", email],
-    ["hearAboutUs", hearAboutUs],
+    ...(isQuick
+      ? []
+      : ([
+          ["date", dateValue],
+          ["hearAboutUs", hearAboutUs],
+        ] as Array<[string, string]>)),
   ].filter(([, value]) => !value || !String(value).trim());
 
   if (missing.length > 0) {
@@ -163,15 +170,16 @@ export async function POST(request: Request) {
     );
   }
 
-  // Qualifying step: the form requires the visitor to confirm they reviewed pricing.
-  if (payload.reviewedPricing !== true) {
+  // The full date request still requires a pricing review. A homepage quick
+  // inquiry does not, and must not relax this check for any other source.
+  if (!isQuick && payload.reviewedPricing !== true) {
     return Response.json(
       { ok: false, error: "Please confirm you have reviewed the package pricing.", fields: ["reviewedPricing"] },
       { status: 400 }
     );
   }
 
-  if (!datePattern.test(String(payload.date))) {
+  if (dateValue && !datePattern.test(dateValue)) {
     return Response.json({ ok: false, error: "Invalid date format." }, { status: 400 });
   }
 
@@ -191,18 +199,24 @@ export async function POST(request: Request) {
 
   const resend = new Resend(RESEND_API_KEY);
 
-  const dateLabel = formatDate(String(payload.date));
+  const dateLabel =
+    dateValue && datePattern.test(dateValue) ? formatDate(dateValue) : "Not specified";
+  const hearAboutLabel = hearAboutUs || "Not specified";
+  const pricingLabel = isQuick ? "Not requested" : "Yes";
   const messageText = message.length > 0 ? message : "None";
+  const subject = isQuick
+    ? `Quick inquiry – ${partyType || "Unknown"}`
+    : `New Event Request – ${partyType || "Unknown"}`;
 
-  const emailText = `New Event Request – Loft 442
+  const emailText = `${isQuick ? "Quick inquiry" : "New Event Request"} – Loft 442
 
 Name: ${firstName} ${lastName}
 Email: ${email}
 Phone: ${phone}
 Type of Event: ${partyType || "Unknown"}
 Date: ${dateLabel}
-How Did You Hear About Us: ${hearAboutUs}
-Reviewed Package Pricing: Yes
+How Did You Hear About Us: ${hearAboutLabel}
+Reviewed Package Pricing: ${pricingLabel}
 
 Message:
 ${messageText}
@@ -215,7 +229,7 @@ ${messageText}
       from: fromAddress,
       to: LEADS_TO_EMAIL,
       replyTo: email,
-      subject: `New Event Request – ${partyType || "Unknown"}`,
+      subject,
       react: EventRequestNotification({
         firstName,
         lastName,
@@ -223,8 +237,9 @@ ${messageText}
         phone,
         partyType: partyType || "Unknown",
         dateLabel,
-        hearAboutUs,
-        reviewedPricing: true,
+        hearAboutUs: hearAboutLabel,
+        reviewedPricing: !isQuick,
+        isQuick,
         messageText,
       }),
       text: emailText, // fallback for clients that can't render HTML

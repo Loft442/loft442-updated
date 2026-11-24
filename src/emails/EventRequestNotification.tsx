@@ -21,6 +21,7 @@ type Props = {
   dateLabel: string;
   hearAboutUs: string;
   reviewedPricing: boolean;
+  isQuick?: boolean;
   messageText: string;
 };
 
@@ -165,6 +166,7 @@ export default function EventRequestNotification({
   dateLabel,
   hearAboutUs,
   reviewedPricing,
+  isQuick = false,
   messageText,
 }: Props) {
   const safeMessage = messageText?.trim() ? messageText.trim() : "None";
@@ -177,7 +179,7 @@ export default function EventRequestNotification({
           {/* Header */}
           <Section style={styles.header}>
             <Text style={styles.brand}>LOFT 442</Text>
-            <Heading style={styles.title}>New Event Request</Heading>
+            <Heading style={styles.title}>{isQuick ? "Quick Inquiry" : "New Event Request"}</Heading>
             <Text style={styles.subtitle}>
               A new inquiry was submitted through the website. Details are below.
             </Text>
@@ -265,7 +267,9 @@ export default function EventRequestNotification({
                 <Column style={{ width: "100%" }}>
                   <Section style={styles.fieldCard}>
                     <Text style={styles.label}>REVIEWED PACKAGE PRICING</Text>
-                    <Text style={styles.value}>{reviewedPricing ? "Yes" : "No"}</Text>
+                    <Text style={styles.value}>
+                      {isQuick ? "Not requested" : reviewedPricing ? "Yes" : "No"}
+                    </Text>
                   </Section>
                 </Column>
               </Row>

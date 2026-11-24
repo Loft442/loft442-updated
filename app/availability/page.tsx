@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import Button from "@/components/ui/Button";
 import { getBookedDates } from "@/lib/bookedDates";
+import { dateRequestNote } from "@/lib/packages";
 import { SITE_EMAIL, SITE_PHONE, buildMetadata } from "@/lib/seo";
 
 export const revalidate = 300;
@@ -58,14 +59,17 @@ export default async function AvailabilityPage() {
                 follow up.
               </p>
             </div>
-            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-              <Button href="/schedule">Plan Your Event</Button>
-              <Button href={`tel:${SITE_PHONE}`} variant="ghost">
-                Call
-              </Button>
-              <Button href={`mailto:${SITE_EMAIL}`} variant="ghost">
-                Email
-              </Button>
+            <div className="flex flex-col items-start gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+                <Button href="/schedule">Request a Date</Button>
+                <Button href={`tel:${SITE_PHONE}`} variant="ghost">
+                  Call
+                </Button>
+                <Button href={`mailto:${SITE_EMAIL}`} variant="ghost">
+                  Email
+                </Button>
+              </div>
+              <p className="max-w-sm text-sm leading-relaxed text-white/60">{dateRequestNote}</p>
             </div>
           </Reveal>
         </div>

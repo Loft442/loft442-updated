@@ -19,6 +19,7 @@
   --gold: #c9a961;
   --gold-light: #e8d9b0;
   --gold-deep: #a88a45;
+  --gold-button: #d4a43c;
   --ivory: #f4efe6;
   --ink: #0a0a0a;
   --line: rgba(244, 239, 230, 0.12);
@@ -880,28 +881,28 @@ html.reduce-motion .nav-last-reveal {
   opacity: 0;
   transform: translateY(-16px);
   animation: navHomeReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-  animation-delay: calc(820ms + var(--motion-start-delay, 0ms));
+  animation-delay: calc(940ms + var(--motion-start-delay, 0ms));
 }
 
 .nav-pricing-reveal {
   opacity: 0;
   transform: translateY(-16px);
   animation: navHomeReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-  animation-delay: calc(940ms + var(--motion-start-delay, 0ms));
+  animation-delay: calc(820ms + var(--motion-start-delay, 0ms));
 }
 
 .nav-repass-reveal {
   opacity: 0;
   transform: translateY(-16px);
   animation: navHomeReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-  animation-delay: calc(1060ms + var(--motion-start-delay, 0ms));
+  animation-delay: calc(1180ms + var(--motion-start-delay, 0ms));
 }
 
 .nav-catering-reveal {
   opacity: 0;
   transform: translateY(-16px);
   animation: navHomeReveal 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-  animation-delay: calc(1180ms + var(--motion-start-delay, 0ms));
+  animation-delay: calc(1060ms + var(--motion-start-delay, 0ms));
 }
 
 .nav-about-reveal {
@@ -1358,8 +1359,8 @@ html.reduce-motion .nav-last-reveal {
 .cta-book {
   position: relative;
   z-index: 2;
-  border: 1px solid var(--gold);
-  background: var(--gold);
+  border: 1px solid var(--gold-button);
+  background: var(--gold-button);
   color: var(--ink);
   transition-property: background-color, color, border-color;
   transition-duration: 260ms;
@@ -1860,6 +1861,14 @@ body:has(dialog.booth-dialog[open]) {
 .section-pad {
   padding-top: clamp(5rem, 10vw, 8.5rem);
   padding-bottom: clamp(5rem, 10vw, 8.5rem);
+}
+
+#about.section-pad {
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+#overview.section-pad {
+  padding-top: clamp(2.5rem, 5vw, 4rem);
 }
 
 /* Skip layout/paint for lower home sections; keep About eager for the first image stack.

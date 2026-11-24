@@ -10,18 +10,9 @@ import { TEAM_CONTACTS, TEAM_EMAIL } from "@/lib/contacts";
 import Footer from "@/components/Footer";
 import PartyTypeSelect from "@/components/ui/PartyTypeSelect";
 import { trackSendRequestConversion } from "@/lib/googleAds";
+import { PARTY_TYPES } from "@/lib/partyTypes";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-// Baby Shower stays its own option here even though the home page groups it under
-// Milestone Celebrations: it is a common inquiry and helps the team prepare.
-const partyTypes = [
-  "Wedding & Anniversary",
-  "Corporate & Private Event",
-  "Milestone Celebration",
-  "Baby Shower",
-  "Repass & Celebration of Life",
-];
 
 type FieldName =
   | "firstName"
@@ -266,11 +257,10 @@ export default function SchedulePage({ bookedDates }: SchedulePageProps) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal mode="text" className="flex max-w-3xl flex-col gap-6">
             <p className="eyebrow">Loft 442</p>
-            <h1 className="display-xl">Plan Your Event</h1>
+            <h1 className="display-xl">Request a Date</h1>
             <span className="hairline" aria-hidden="true" />
             <p className="lede">
-              Select your preferred date and tell us about your event. Our team will follow up to
-              confirm availability.
+              Select your preferred celebration date and tell us about your event.
             </p>
           </Reveal>
 
@@ -280,13 +270,23 @@ export default function SchedulePage({ bookedDates }: SchedulePageProps) {
               className="bg-[var(--background)] px-2 py-6 sm:p-10"
             >
               <div className="flex flex-wrap items-end justify-between gap-3 border-b px-2 sm:px-0 border-[var(--line)] pb-6">
-                <div>
+                <div className="min-w-0 flex-1">
                   <p className={sectionAccentLabelClass}>Preferred Date</p>
                   <p className="mt-3 font-serif text-xl text-[var(--ivory)]">
-                    Choose a date; we will confirm availability
+                    Choose a date
+                  </p>
+                  <p className="mt-2 max-w-md text-sm leading-relaxed text-white/65">
+                    Your Preferred Date Unavailable?{" "}
+                    <Link
+                      href="/#phones"
+                      className="text-gold underline decoration-gold/50 underline-offset-[4px] transition-colors hover:text-gold-light hover:decoration-gold"
+                    >
+                      Call Us
+                    </Link>{" "}
+                    to Explore Options.
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="ml-auto flex shrink-0 items-center gap-2">
                   <button
                     type="button"
                     aria-label="Previous month"
@@ -342,7 +342,7 @@ export default function SchedulePage({ bookedDates }: SchedulePageProps) {
                 </div>
                 <div
                   role="grid"
-                  aria-label="Choose a date to plan your event"
+                  aria-label="Choose a date to request"
                   className="mt-4 grid w-full grid-cols-7 gap-0.5 overflow-visible sm:gap-3"
                 >
                   {days.map((date, index) => {
@@ -528,7 +528,7 @@ export default function SchedulePage({ bookedDates }: SchedulePageProps) {
                   value={form.partyType}
                   onChange={(nextValue) => updateField("partyType", nextValue)}
                   onBlur={() => markTouched("partyType")}
-                  options={partyTypes}
+                  options={[...PARTY_TYPES]}
                   placeholder="Select type"
                   error={fieldError("partyType")}
                   errorId="partyType-error"
@@ -706,7 +706,7 @@ export default function SchedulePage({ bookedDates }: SchedulePageProps) {
                   <span className="w-20 text-right font-serif text-xl text-[var(--ivory)]">{contact.name}</span>
                   <a
                     href={`tel:${contact.tel}`}
-                    className="tap w-32 whitespace-nowrap text-left text-sm text-white/65 transition-colors hover:text-gold-light"
+                    className="tap w-32 whitespace-nowrap text-left text-sm text-gold underline decoration-gold/50 underline-offset-[5px] transition-colors hover:text-gold-light hover:decoration-gold"
                   >
                     {contact.display}
                   </a>

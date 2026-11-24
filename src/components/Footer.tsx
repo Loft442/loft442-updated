@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Instagram } from "lucide-react";
-import { TEAM_CONTACTS } from "@/lib/contacts";
+import { TEAM_CONTACTS, VENUE_ADDRESS } from "@/lib/contacts";
 
 const exploreLinks = [
   { label: "Experiences & Pricing", href: "/pricing" },
@@ -8,7 +8,7 @@ const exploreLinks = [
   { label: "Catering", href: "/catering" },
   { label: "Photo Booth", href: "/photobooth" },
   { label: "Repass", href: "/repass" },
-  { label: "Plan Your Event", href: "/schedule" },
+  { label: "Request a Date", href: "/schedule" },
   { label: "Government Capability Statement", href: "/capability-statement" },
 ];
 
@@ -29,7 +29,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <p className="font-serif text-3xl text-[var(--ivory)]">Loft 442</p>
             <p className="max-w-xs text-sm leading-relaxed text-white/55">
-              A private event venue in Elmont, New York. 784 Elmont Road, Elmont, NY 11003.
+              A private event venue in Elmont, New York. {VENUE_ADDRESS}.
             </p>
             <a
               href="https://www.instagram.com/LOFT.442"

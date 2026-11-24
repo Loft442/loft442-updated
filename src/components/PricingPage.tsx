@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import Button from "@/components/ui/Button";
+import { dateRequestNote, venuePackages } from "@/lib/packages";
 
 const included = [
   "(2) 75 Inch Multi Media TVs",
@@ -15,27 +16,6 @@ const included = [
   "14 Ft. Black Granite Bar",
   "6 Hour Rental",
   "Courtesy 4 Hour Access For Decor / Set Up",
-];
-
-const packages = [
-  {
-    name: "The Essential",
-    price: "3,700",
-    guests: "Up to 50 guests",
-    summary: "An intimate setting for dinners, showers and close-knit celebrations.",
-    imageSrc: "/images/essential-blue-moon.webp",
-    imageAlt: "The Essential package: elegant blue moon baby shower décor at Loft 442",
-    items: ["50 clear Chiavari chairs", "5 round or cocktail tables", "3 rectangular tables"],
-  },
-  {
-    name: "The Grand",
-    price: "4,200",
-    guests: "Up to 125 guests",
-    summary: "The full loft, arranged for weddings, receptions and landmark evenings.",
-    imageSrc: "/images/grand-image-8.webp",
-    imageAlt: "The Grand package: the Loft 442 salon styled for a celebration",
-    items: ["100 clear Chiavari chairs", "10 round or cocktail tables", "6 rectangular tables"],
-  },
 ];
 
 const enhancements = [
@@ -72,7 +52,7 @@ export default function PricingPage() {
           </Reveal>
 
           <div className="mt-20 grid gap-px bg-[var(--line)] lg:grid-cols-2">
-            {packages.map((pkg, index) => (
+            {venuePackages.map((pkg, index) => (
               <Reveal
                 key={pkg.name}
                 mode="slide"
@@ -198,11 +178,12 @@ export default function PricingPage() {
             the space.
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <Button href="/schedule" className="w-full sm:w-64">Plan Your Event</Button>
+            <Button href="/schedule" className="w-full sm:w-64">Request a Date</Button>
             <Button href="/gallery" variant="ghost" className="w-full sm:w-64">
               View the Gallery
             </Button>
           </div>
+          <p className="max-w-sm text-sm leading-relaxed text-white/60">{dateRequestNote}</p>
         </div>
       </section>
     </>

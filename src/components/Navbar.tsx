@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
 import { buttonClasses } from "@/components/ui/Button";
 import { getScrollY, useLockBodyScroll } from "@/lib/useIOSSafari";
 
@@ -21,7 +21,6 @@ const navLinks = [
   { label: "Gallery", href: "/gallery" },
   { label: "Catering", href: "/catering" },
   { label: "Repass", href: "/repass" },
-  { label: "About", href: "#about" },
 ];
 
 const photoBoothLink = { label: "Photo Booth", href: "/photobooth" };
@@ -35,11 +34,10 @@ const mobileNavLinks = [
 
 const navRevealClasses = [
   "nav-home-reveal",
-  "nav-gallery-reveal",
   "nav-pricing-reveal",
-  "nav-repass-reveal",
+  "nav-gallery-reveal",
   "nav-catering-reveal",
-  "nav-about-reveal",
+  "nav-repass-reveal",
 ];
 
 // Must match the `lg:` breakpoint that shows the inline links and hides the menu button.
@@ -83,18 +81,16 @@ export default function Navbar() {
     event: MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
-    if (href !== "#about") {
+    if (!href.startsWith("/#")) {
       return;
     }
 
-    const target = document.getElementById("about");
     if (pathname !== "/") {
-      event.preventDefault();
-      router.push("/#about");
       setMenuOpen(false);
       return;
     }
 
+    const target = document.getElementById(href.slice(2));
     if (!target) {
       return;
     }
@@ -103,6 +99,9 @@ export default function Navbar() {
     target.scrollIntoView({ behavior: "smooth", block: "start" });
     setMenuOpen(false);
   };
+
+  const iconButtonClass =
+    "inline-flex h-10 w-10 items-center justify-center border border-white/20 text-white/80 transition hover:border-white/40 hover:text-white min-[380px]:h-11 min-[380px]:w-11";
 
   useEffect(() => {
     let ticking = false;
@@ -222,10 +221,18 @@ export default function Navbar() {
             className={buttonClasses(
               "primary",
               "sm",
-              "nav-cta-reveal h-11 px-3.5 tracking-[0.16em] sm:px-5 sm:tracking-[0.24em]"
+              "nav-cta-reveal h-10! min-h-10! px-3.5 tracking-[0.16em] min-[380px]:h-11! min-[380px]:min-h-11! sm:px-5 sm:tracking-[0.24em]"
             )}
           >
-            Start Planning
+            Book a Date
+          </Link>
+          <Link
+            href="/#phones"
+            aria-label="Call for tours and inquiries"
+            onClick={(event) => handleNavClick(event, "/#phones")}
+            className={iconButtonClass}
+          >
+            <Phone className="h-5 w-5" />
           </Link>
           <button
             type="button"
@@ -240,7 +247,7 @@ export default function Navbar() {
                 return !prev;
               })
             }
-            className="inline-flex h-10 w-10 items-center justify-center border border-white/20 text-white/80 transition hover:border-white/40 hover:text-white min-[380px]:h-11 min-[380px]:w-11 lg:hidden"
+            className={`${iconButtonClass} lg:hidden`}
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

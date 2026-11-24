@@ -5,9 +5,9 @@ import { buildMetadata } from "@/lib/seo";
 export const revalidate = 300;
 
 export const metadata = buildMetadata({
-  title: "Plan Your Event",
+  title: "Request a Date",
   description:
-    "Select your preferred date and tell us about your event. Our team will follow up to confirm availability for weddings, milestone celebrations and private events.",
+    "Select your preferred celebration date and tell us about your event for weddings, milestone celebrations and private events.",
   path: "/schedule",
   keywords: [
     "schedule event LOFT 442",

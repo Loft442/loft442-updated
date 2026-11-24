@@ -2,6 +2,7 @@ import ContactUsLink from "@/components/ContactUsLink";
 import FlyerViewer from "@/components/FlyerViewer";
 import Reveal from "@/components/Reveal";
 import Button, { buttonClasses } from "@/components/ui/Button";
+import { dateRequestNote } from "@/lib/packages";
 
 const highlights = [
   {
@@ -74,9 +75,10 @@ export default function CateringPage() {
             through each step.
           </p>
           <div className="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row">
-            <Button href="/schedule">Plan Your Event</Button>
+            <Button href="/schedule">Request a Date</Button>
             <ContactUsLink className={buttonClasses("ghost")} />
           </div>
+          <p className="max-w-sm text-sm leading-relaxed text-white/60">{dateRequestNote}</p>
         </Reveal>
       </div>
     </section>

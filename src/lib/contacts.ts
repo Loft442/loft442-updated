@@ -6,3 +6,5 @@ export const TEAM_CONTACTS = [
 ] as const;
 
 export const TEAM_EMAIL = "events@loft442.com";
+
+export const VENUE_ADDRESS = "784 Elmont Road, Elmont, NY 11003";

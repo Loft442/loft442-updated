@@ -140,26 +140,6 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
     setActiveIndex(null);
   }, []);
 
-  const handlePrev = useCallback(() => {
-    if (!filteredItems.length) {
-      return;
-    }
-
-    setActiveIndex((prev) =>
-      prev === null ? prev : (prev - 1 + filteredItems.length) % filteredItems.length
-    );
-  }, [filteredItems.length]);
-
-  const handleNext = useCallback(() => {
-    if (!filteredItems.length) {
-      return;
-    }
-
-    setActiveIndex((prev) =>
-      prev === null ? prev : (prev + 1) % filteredItems.length
-    );
-  }, [filteredItems.length]);
-
   const handleTabKeyDown = (
     event: ReactKeyboardEvent<HTMLButtonElement>,
     index: number
@@ -278,8 +258,7 @@ export default function GalleryPage({ items: galleryItems }: GalleryPageProps) {
           items={filteredItems}
           activeIndex={activeIndex}
           onClose={handleClose}
-          onPrev={handlePrev}
-          onNext={handleNext}
+          onSelectIndex={setActiveIndex}
         />
       ) : null}
     </div>

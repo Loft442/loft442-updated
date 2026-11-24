@@ -1,12 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import type { GalleryItem } from "@/lib/galleryItems";
+import { cn } from "@/lib/utils";
 
 const LIGHTBOX_MAX_WIDTH = 900;
+const THUMB_STRIP_H = 72;
 
 function getSafeAreaInsets() {
   const style = getComputedStyle(document.documentElement);
@@ -22,9 +26,12 @@ type GalleryLightboxProps = {
   items: GalleryItem[];
   activeIndex: number;
   onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
+  onSelectIndex: (index: number) => void;
 };
+
+function thumbSrc(item: GalleryItem) {
+  return item.type === "video" && item.poster ? item.poster : item.src;
+}
 
 // Loaded on demand from GalleryPage (next/dynamic), so none of this ships with
 // the gallery's first load.
@@ -32,34 +39,93 @@ export default function GalleryLightbox({
   items,
   activeIndex,
   onClose,
-  onPrev,
-  onNext,
+  onSelectIndex,
 }: GalleryLightboxProps) {
-  const touchStartX = useRef<number | null>(null);
-  const touchStartY = useRef<number | null>(null);
   const lightboxShellRef = useRef<HTMLDivElement>(null);
+  const skipSelectSync = useRef(false);
+  const reduceMotion = useReducedMotion();
+  // Stay mounted through the exit animation; parent unmounts via onClose after.
+  const [open, setOpen] = useState(true);
+
+  const [mainRef, mainApi] = useEmblaCarousel({
+    loop: items.length > 1,
+    align: "center",
+    duration: 22,
+  });
+  const [thumbRef, thumbApi] = useEmblaCarousel({
+    containScroll: "keepSnaps",
+    dragFree: true,
+    align: "start",
+  });
+
+  const canSlide = items.length > 1;
   const activeItem = items[activeIndex];
-  // Neighbours are fetched in the background so Prev/Next and swipes show the new
-  // photo immediately instead of looking like the tap didn't register.
-  const neighbourItems =
-    items.length > 1
-      ? [items[(activeIndex + 1) % items.length], items[(activeIndex - 1 + items.length) % items.length]]
-          .filter((item, index, list) => item && item !== activeItem && list.indexOf(item) === index && item.type !== "video")
-      : [];
+
+  const requestClose = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const scrollTo = useCallback(
+    (index: number) => {
+      if (!mainApi) return;
+      skipSelectSync.current = true;
+      mainApi.scrollTo(index);
+      thumbApi?.scrollTo(index);
+      onSelectIndex(index);
+    },
+    [mainApi, thumbApi, onSelectIndex]
+  );
+
+  // Main carousel drives parent index + thumbnail strip.
+  // Jump to the opened slide on init so reInit/select never resets the parent to 0.
+  useEffect(() => {
+    if (!mainApi) return;
+
+    const onSelect = () => {
+      const index = mainApi.selectedScrollSnap();
+      thumbApi?.scrollTo(index);
+      if (skipSelectSync.current) {
+        skipSelectSync.current = false;
+        return;
+      }
+      onSelectIndex(index);
+    };
+
+    skipSelectSync.current = true;
+    mainApi.scrollTo(activeIndex, true);
+    thumbApi?.scrollTo(activeIndex);
+
+    mainApi.on("select", onSelect);
+
+    return () => {
+      mainApi.off("select", onSelect);
+    };
+    // Only re-bind when the Embla instance (or callback) changes — not on every index tick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- activeIndex applied once per api init
+  }, [mainApi, thumbApi, onSelectIndex]);
+
+  // Keep Embla aligned if the parent index changes from outside (e.g. category reset).
+  useEffect(() => {
+    if (!mainApi) return;
+    if (mainApi.selectedScrollSnap() === activeIndex) return;
+    skipSelectSync.current = true;
+    mainApi.scrollTo(activeIndex, true);
+    thumbApi?.scrollTo(activeIndex);
+  }, [mainApi, thumbApi, activeIndex]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        requestClose();
         return;
       }
 
       if (event.key === "ArrowRight") {
-        onNext();
+        mainApi?.scrollNext();
       }
 
       if (event.key === "ArrowLeft") {
-        onPrev();
+        mainApi?.scrollPrev();
       }
     };
 
@@ -68,7 +134,7 @@ export default function GalleryLightbox({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose, onNext, onPrev]);
+  }, [requestClose, mainApi]);
 
   useEffect(() => {
     const startedPortrait = window.innerHeight >= window.innerWidth;
@@ -88,7 +154,7 @@ export default function GalleryLightbox({
       const overlayPadX = isSm ? 48 : 32;
       const maxWidth = Math.min(viewport.width * 0.92, LIGHTBOX_MAX_WIDTH);
       const height = Math.max(
-        200,
+        240,
         viewport.height - overlayPadY - safeArea.top - safeArea.bottom
       );
 
@@ -115,107 +181,96 @@ export default function GalleryLightbox({
     };
   }, []);
 
-  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-    const touch = event.touches[0];
-    touchStartX.current = touch?.clientX ?? null;
-    touchStartY.current = touch?.clientY ?? null;
-  };
-
-  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (touchStartX.current === null) {
-      return;
-    }
-
-    const touch = event.changedTouches[0];
-    const deltaX = touchStartX.current - (touch?.clientX ?? touchStartX.current);
-    const deltaY = (touchStartY.current ?? 0) - (touch?.clientY ?? touchStartY.current ?? 0);
-
-    // Only treat clearly horizontal gestures as swipes, so vertical scrolls
-    // and taps never change the image.
-    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-      if (deltaX > 0) {
-        onNext();
-      } else {
-        onPrev();
-      }
-    }
-
-    touchStartX.current = null;
-    touchStartY.current = null;
-  };
+  // Re-measure Embla after shell size settles.
+  useEffect(() => {
+    mainApi?.reInit();
+    thumbApi?.reInit();
+  }, [mainApi, thumbApi, items.length]);
 
   if (!activeItem) return null;
 
+  const mediaSizes = "(max-width: 640px) 92vw, 900px";
+  const overlayTransition = reduceMotion
+    ? { duration: 0.01 }
+    : { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const };
+  const shellTransition = reduceMotion
+    ? { duration: 0.01 }
+    : { type: "spring" as const, stiffness: 380, damping: 32, mass: 0.85 };
+
   return createPortal(
-    <div
-      className="fixed inset-0 z-50 grid place-items-center touch-pan-y overscroll-contain bg-black/90 p-4 pt-safe pb-safe pl-safe pr-safe sm:bg-black/85 sm:p-6 sm:backdrop-blur-sm"
-      onClick={onClose}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
+    <AnimatePresence onExitComplete={onClose}>
+      {open ? (
+    <motion.div
+      key="gallery-lightbox-overlay"
+      className="fixed inset-0 z-50 grid place-items-center overscroll-contain bg-black/90 p-4 pt-safe pb-safe pl-safe pr-safe sm:bg-black/85 sm:p-6 sm:backdrop-blur-sm"
+      onClick={requestClose}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={overlayTransition}
     >
-      <div
+      <motion.div
         ref={lightboxShellRef}
         className="relative flex min-h-0 max-w-[900px] flex-col rounded-sm border border-white/10 bg-black/60 p-[clamp(8px,1.5svh,20px)] shadow-[0_30px_90px_rgba(0,0,0,0.7)] sm:backdrop-blur"
         onClick={(event) => event.stopPropagation()}
+        initial={reduceMotion ? false : { opacity: 0, scale: 0.92, y: 18 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 10 }}
+        transition={shellTransition}
       >
         <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-black/40">
           <div className="absolute inset-0 p-[clamp(0px,0.75svh,16px)]">
-            <div className="relative h-full w-full">
-              {activeItem.type === "video" ? (
-                <video
-                  key={activeItem.src}
-                  src={activeItem.src}
-                  poster={activeItem.poster}
-                  controls
-                  autoPlay
-                  muted
-                  playsInline
-                  preload="metadata"
-                  aria-label={activeItem.alt}
-                  className="absolute inset-0 h-full w-full object-contain object-center"
-                />
-              ) : (
-                <Image
-                  src={activeItem.src}
-                  alt={activeItem.alt ?? ""}
-                  fill
-                  sizes="(max-width: 640px) 92vw, 900px"
-                  className="object-contain object-center"
-                  style={{ objectFit: 'contain' }}
-                  quality={75}
-                  loading="eager"
-                />
-              )}
-              {neighbourItems.map((item) => (
-                <Image
-                  key={item.src}
-                  src={item.src}
-                  alt=""
-                  aria-hidden="true"
-                  fill
-                  sizes="(max-width: 640px) 92vw, 900px"
-                  className="pointer-events-none invisible object-contain"
-                  quality={72}
-                  loading="lazy"
-                  fetchPriority="low"
-                />
-              ))}
+            <div className="relative h-full w-full overflow-hidden" ref={mainRef}>
+              <div className="flex h-full touch-pan-y">
+                {items.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className="relative min-w-0 shrink-0 grow-0 basis-full"
+                  >
+                    {item.type === "video" ? (
+                      <video
+                        src={item.src}
+                        poster={item.poster}
+                        controls={index === activeIndex}
+                        autoPlay={index === activeIndex}
+                        muted
+                        playsInline
+                        preload={Math.abs(index - activeIndex) <= 1 ? "metadata" : "none"}
+                        aria-label={item.alt}
+                        className="absolute inset-0 h-full w-full object-contain object-center"
+                      />
+                    ) : (
+                      <Image
+                        src={item.src}
+                        alt={item.alt ?? ""}
+                        fill
+                        sizes={mediaSizes}
+                        className="object-contain object-center"
+                        style={{ objectFit: "contain" }}
+                        quality={index === activeIndex ? 75 : 70}
+                        loading={Math.abs(index - activeIndex) <= 1 ? "eager" : "lazy"}
+                        fetchPriority={index === activeIndex ? "high" : "low"}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           <button
             type="button"
-            onClick={onClose}
+            onClick={requestClose}
             aria-label="Close gallery"
             className="min-tap-target absolute right-3 top-3 z-20 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
           >
             <X className="h-5 w-5" />
           </button>
-          {items.length > 1 ? (
+          {canSlide ? (
             <>
               <button
                 type="button"
-                onClick={onPrev}
+                onClick={() => mainApi?.scrollPrev()}
                 aria-label="Previous image"
                 className="min-tap-target absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
               >
@@ -223,7 +278,7 @@ export default function GalleryLightbox({
               </button>
               <button
                 type="button"
-                onClick={onNext}
+                onClick={() => mainApi?.scrollNext()}
                 aria-label="Next image"
                 className="min-tap-target absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-sm border border-white/20 bg-black/60 p-3 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 sm:p-4"
               >
@@ -232,6 +287,51 @@ export default function GalleryLightbox({
             </>
           ) : null}
         </div>
+
+        {canSlide ? (
+          <div
+            className="mt-[clamp(8px,1svh,12px)] shrink-0 overflow-hidden"
+            style={{ height: THUMB_STRIP_H }}
+            ref={thumbRef}
+          >
+            <div className="flex h-full gap-2">
+              {items.map((item, index) => {
+                const selected = index === activeIndex;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => scrollTo(index)}
+                    aria-label={`View ${item.alt || `image ${index + 1}`}`}
+                    aria-current={selected ? "true" : undefined}
+                    className={cn(
+                      "relative h-full w-[4.5rem] shrink-0 overflow-hidden rounded-sm border transition duration-200 sm:w-20",
+                      selected
+                        ? "border-gold opacity-100"
+                        : "border-white/15 opacity-55 hover:border-white/40 hover:opacity-85"
+                    )}
+                  >
+                    <Image
+                      src={thumbSrc(item)}
+                      alt=""
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                      quality={60}
+                      loading="lazy"
+                    />
+                    {item.type === "video" ? (
+                      <span className="pointer-events-none absolute inset-0 grid place-items-center bg-black/35">
+                        <Play className="h-3.5 w-3.5 fill-white text-white" aria-hidden="true" />
+                      </span>
+                    ) : null}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
         <div className="mt-[clamp(8px,1svh,16px)] flex max-w-full shrink-0 flex-wrap items-center justify-between gap-2 text-[0.7rem] uppercase tracking-[0.3em] text-white/60">
           <span>{activeItem.category}</span>
           <span>
@@ -241,8 +341,10 @@ export default function GalleryLightbox({
         <p className="mt-[clamp(4px,0.5svh,8px)] max-w-full shrink-0 text-sm text-white/70">
           {activeItem.alt}
         </p>
-      </div>
-    </div>,
+      </motion.div>
+    </motion.div>
+      ) : null}
+    </AnimatePresence>,
     document.body
   );
 }
