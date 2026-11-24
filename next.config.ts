@@ -73,12 +73,11 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["lucide-react", "react-day-picker"],
   },
   images: {
-    // Allow lean qualities used across gallery / stacks / hero mobile.
-    qualities: [68, 70, 72, 75, 78, 80, 85],
+    // Allow lean qualities used across gallery / stacks / hero.
+    qualities: [68, 70, 72, 75, 78, 80, 85, 90, 100],
     formats: ["image/avif", "image/webp"],
-    // The largest source image is 1920px wide, so wider variants only waste bytes.
-    // Include common phone widths so the hero/LCP request stays close to viewport size.
-    deviceSizes: [390, 430, 640, 750, 828, 1080, 1200, 1920],
+    // Cap near common laptop widths; include phone widths for LCP.
+    deviceSizes: [390, 430, 640, 750, 828, 1080, 1200, 1440, 1600, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 160, 240, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     // Instagram feed images, resized so grid tiles don't download full originals.

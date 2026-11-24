@@ -3,6 +3,7 @@ import "./globals.css";
 import PageTransition from "@/components/PageTransition";
 import NavbarVisibility from "@/components/NavbarVisibility";
 import RevealOnScroll from "@/components/RevealOnScroll";
+import DeferredBackToTop from "@/components/DeferredBackToTop";
 import JsonLd from "@/components/JsonLd";
 import GoogleAdsTag from "@/components/GoogleAdsTag";
 import { gilda, inter } from "@/lib/fonts";
@@ -90,6 +91,7 @@ export default function RootLayout({
         <JsonLd data={localBusinessJsonLd()} />
         <NavbarVisibility />
         <RevealOnScroll />
+        <DeferredBackToTop />
         <PageTransition>{children}</PageTransition>
       </body>
     </html>

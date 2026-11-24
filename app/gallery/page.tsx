@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import GalleryLcpPreloads from "@/components/GalleryLcpPreloads";
 import GalleryPage from "@/components/GalleryPage";
 import { galleryItems } from "@/lib/galleryItems";
 import { getSanityGallery } from "@/lib/galleryUploads";
@@ -31,6 +32,7 @@ export default async function Gallery() {
 
   return (
     <main className="bg-[var(--background)] pt-nav text-white">
+      <GalleryLcpPreloads items={items} />
       <GalleryPage items={items} />
       <Footer />
     </main>

@@ -58,6 +58,8 @@ export function trackSendRequestConversion() {
   const label = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL?.trim() ?? "";
   const useLabel = CONVERSION_LABEL_PATTERN.test(label);
 
+  // Queue into dataLayer even if the remote gtag.js hasn't loaded yet
+  // (GoogleAdsTag bootstraps this stub beforeInteractive).
   window.dataLayer = window.dataLayer || [];
   if (typeof window.gtag !== "function") {
     window.gtag = function gtag() {

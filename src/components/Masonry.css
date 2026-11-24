@@ -3,6 +3,38 @@
   width: 100%;
 }
 
+/* Pre-measure / SSR: CSS columns so images exist in the HTML for LCP discovery. */
+.list--ssr {
+  column-count: 2;
+  column-gap: 0;
+}
+
+@media (min-width: 600px) {
+  .list--ssr {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 1000px) {
+  .list--ssr {
+    column-count: 4;
+  }
+}
+
+@media (min-width: 1500px) {
+  .list--ssr {
+    column-count: 5;
+  }
+}
+
+.item-wrapper--ssr {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  break-inside: avoid;
+  margin: 0;
+}
+
 .item-wrapper {
   position: absolute;
   will-change: translate, scale, opacity;
@@ -15,6 +47,14 @@
   transition:
     translate var(--masonry-move, 0.6s ease-out),
     scale 0.3s var(--masonry-hover-ease, ease-out);
+}
+
+.item-wrapper--ssr {
+  position: relative;
+  top: auto;
+  left: auto;
+  will-change: auto;
+  transition: scale 0.3s var(--masonry-hover-ease, ease-out);
 }
 
 /* Hover only on real pointers: on touch screens a sticky :hover delays the first tap. */

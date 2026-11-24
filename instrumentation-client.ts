@@ -18,6 +18,10 @@ if (!projectToken || !host) {
     api_host: host,
     defaults: "2026-01-30",
     capture_exceptions: true,
+    // Session replay + surveys are unused on this site and were ~100KB+ of
+    // main-thread / network cost on every marketing page (Lighthouse mobile).
+    disable_session_recording: true,
+    disable_surveys: true,
     // Android in-app browsers (Instagram/Facebook) throw this from their own native
     // bridge after the WebView is torn down; it never comes from site code.
     before_send: (event) => {

@@ -9,6 +9,9 @@ import "./Masonry.css";
 const IMAGE_SIZES =
   "(max-width: 400px) 50vw, (max-width: 600px) 33vw, (max-width: 1000px) 25vw, (max-width: 1500px) 20vw, 15vw";
 
+// First-viewport tiles: discoverable in SSR HTML and prioritized for LCP.
+const PRIORITY_COUNT = 6;
+
 // CSS equivalents of the GSAP eases this grid used to run with.
 const EASE_OUT_QUART = "cubic-bezier(0.25, 1, 0.5, 1)"; // power3.out
 const EASE_OUT_CUBIC = "cubic-bezier(0.33, 1, 0.68, 1)"; // power2.out
@@ -60,6 +63,58 @@ const MEDIA_QUERIES = [
 ];
 const MEDIA_COLUMNS = [5, 4, 3, 2];
 
+function MediaTile({ item, index, priority }) {
+  const eager = priority || index < PRIORITY_COUNT;
+
+  if (item.type === "video") {
+    return (
+      <>
+        {item.poster ? (
+          <Image
+            src={item.poster}
+            alt={item.alt ?? ""}
+            fill
+            sizes={IMAGE_SIZES}
+            quality={70}
+            priority={eager}
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            className="object-cover object-center"
+          />
+        ) : (
+          <video
+            src={`${item.img}#t=0.1`}
+            muted
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+        )}
+        <span className="pointer-events-none absolute inset-0 grid place-items-center">
+          <span className="rounded-full border border-white/40 bg-black/50 p-3 text-white backdrop-blur-sm">
+            <Play className="h-5 w-5 translate-x-px fill-white" aria-hidden="true" />
+          </span>
+        </span>
+      </>
+    );
+  }
+
+  return (
+    <Image
+      src={item.img}
+      alt={item.alt ?? ""}
+      fill
+      sizes={IMAGE_SIZES}
+      quality={70}
+      priority={eager}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      className="object-cover object-center"
+    />
+  );
+}
+
 // Positions animate with the `translate` property and the intro/hover with
 // `opacity`/`scale`, so the grid only ever composites: no width/height or filter
 // animation and no layout work per frame.
@@ -74,11 +129,12 @@ const Masonry = ({
   colorShiftOnHover = false,
   onItemClick,
 }) => {
-  const columns = useMedia(MEDIA_QUERIES, MEDIA_COLUMNS, 1);
+  const columns = useMedia(MEDIA_QUERIES, MEDIA_COLUMNS, 2);
 
   const [containerRef, { width }] = useMeasure();
   const itemRefs = useRef(new Map());
   const introItemsRef = useRef(null);
+  const measured = width > 0;
 
   const getInitialPosition = (item) => {
     const containerRect = containerRef.current?.getBoundingClientRect();
@@ -113,7 +169,7 @@ const Masonry = ({
   };
 
   const grid = useMemo(() => {
-    if (!width) return [];
+    if (!measured) return [];
 
     const colHeights = new Array(columns).fill(0);
     const columnWidth = width / columns;
@@ -128,7 +184,7 @@ const Masonry = ({
 
       return { ...child, x, y, w: columnWidth, h: height };
     });
-  }, [columns, items, width]);
+  }, [columns, items, measured, width]);
 
   const containerHeight = useMemo(() => {
     if (!grid.length) return 0;
@@ -137,11 +193,11 @@ const Masonry = ({
 
   // Staggered entrance the first time a set of items is laid out. Later layout
   // changes (resize, column count) glide via the CSS `translate` transition.
+  // Skip entirely when animateFrom is "none" so SSR → measured handoff never flashes.
   useLayoutEffect(() => {
     if (!grid.length || introItemsRef.current === items) return;
     introItemsRef.current = items;
-
-    const popInPlace = animateFrom === "none";
+    if (animateFrom === "none") return;
 
     grid.forEach((item, index) => {
       const element = itemRefs.current.get(item.id);
@@ -153,12 +209,10 @@ const Masonry = ({
           {
             opacity: 0,
             translate: `${from.x}px ${from.y}px`,
-            ...(popInPlace && { scale: "0.92" }),
           },
           {
             opacity: 1,
             translate: `${item.x}px ${item.y}px`,
-            ...(popInPlace && { scale: "1" }),
           },
         ],
         {
@@ -185,6 +239,65 @@ const Masonry = ({
     }
   };
 
+  // SSR / pre-measure: emit real <img> nodes in document order so LCP can
+  // discover above-the-fold gallery tiles without waiting on ResizeObserver.
+  if (!measured) {
+    return (
+      <div
+        ref={containerRef}
+        className="list list--ssr"
+        data-scale-on-hover={scaleOnHover || undefined}
+        data-color-shift={colorShiftOnHover || undefined}
+      >
+        {items.map((item, index) => (
+          <div
+            key={item.id}
+            className="item-wrapper item-wrapper--ssr"
+            role="button"
+            tabIndex={0}
+            aria-label={
+              item.alt
+                ? `${item.type === "video" ? "Play video" : "Open image"}: ${item.alt}`
+                : undefined
+            }
+            style={{
+              aspectRatio: `1 / ${Math.max(0.55, (item.height / 2) / 320)}`,
+            }}
+            onClick={(event) => handleClick(item, event)}
+            onMouseDown={(event) => event.preventDefault()}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                handleClick(item, event);
+              }
+            }}
+          >
+            <div className="item-img">
+              <MediaTile item={item} index={index} priority={index < PRIORITY_COUNT} />
+              {colorShiftOnHover && (
+                <div
+                  className="color-overlay"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    background:
+                      "linear-gradient(45deg, rgba(255,0,150,0.5), rgba(0,150,255,0.5))",
+                    opacity: 0,
+                    pointerEvents: "none",
+                    borderRadius: "8px",
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -198,7 +311,7 @@ const Masonry = ({
         "--masonry-hover-ease": EASE_OUT_CUBIC,
       }}
     >
-      {grid.map((item) => {
+      {grid.map((item, index) => {
         return (
           <div
             key={item.id}
@@ -230,48 +343,7 @@ const Masonry = ({
             }}
           >
             <div className="item-img">
-              {item.type === "video" ? (
-                <>
-                  {item.poster ? (
-                    <Image
-                      src={item.poster}
-                      alt={item.alt ?? ""}
-                      fill
-                      sizes={IMAGE_SIZES}
-                      quality={70}
-                      loading="lazy"
-                      decoding="async"
-                      className="object-cover object-center"
-                    />
-                  ) : (
-                    // No cover image: show the video's first frame.
-                    <video
-                      src={`${item.img}#t=0.1`}
-                      muted
-                      playsInline
-                      preload="metadata"
-                      aria-hidden="true"
-                      className="absolute inset-0 h-full w-full object-cover object-center"
-                    />
-                  )}
-                  <span className="pointer-events-none absolute inset-0 grid place-items-center">
-                    <span className="rounded-full border border-white/40 bg-black/50 p-3 text-white backdrop-blur-sm">
-                      <Play className="h-5 w-5 translate-x-px fill-white" aria-hidden="true" />
-                    </span>
-                  </span>
-                </>
-              ) : (
-                <Image
-                  src={item.img}
-                  alt={item.alt ?? ""}
-                  fill
-                  sizes={IMAGE_SIZES}
-                  quality={70}
-                  loading="lazy"
-                  decoding="async"
-                  className="object-cover object-center"
-                />
-              )}
+              <MediaTile item={item} index={index} priority={index < PRIORITY_COUNT} />
               {colorShiftOnHover && (
                 <div
                   className="color-overlay"
