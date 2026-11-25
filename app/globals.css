@@ -1987,14 +1987,23 @@ html.reduce-motion .image-stack__frame {
   /* vh first (legacy), lvh overrides where supported — both ignored once JS locks px. */
   min-height: calc(var(--hero-lock-height, 100vh) - var(--nav-offset) - 1rem);
   min-height: calc(var(--hero-lock-height, 100lvh) - var(--nav-offset) - 1rem);
+  /* Kill subpixel gap / blur fringe between hero and the next section. */
+  background-color: var(--background);
+  box-shadow: 0 1px 0 0 var(--background);
+}
+
+#site-hero .hero-banner-frame {
+  /* Extend past the bottom clip so scaled+blurred pixels don’t fringe the seam. */
+  bottom: -2px;
 }
 
 #site-hero .hero-banner-img {
   height: var(--hero-lock-height, 100vh);
   height: var(--hero-lock-height, 100lvh);
-  /* Promote a stable layer — Safari can otherwise resample object-cover mid-scroll. */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  /* Soften mobile crop; scale covers blur edge bleed. translateZ keeps Safari stable. */
+  filter: blur(4px);
+  transform: translateZ(0) scale(1.05);
+  -webkit-transform: translateZ(0) scale(1.05);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -2006,6 +2015,7 @@ html.reduce-motion .image-stack__frame {
 
   #site-hero .hero-banner-img {
     height: 100%;
+    filter: none;
     transform: none;
     -webkit-transform: none;
   }

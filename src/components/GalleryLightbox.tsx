@@ -48,11 +48,17 @@ export default function GalleryLightbox({
   const reduceMotion = useReducedMotion();
   // Stay mounted through the exit animation; parent unmounts via onClose after.
   const [open, setOpen] = useState(true);
+  // Local slide index for chrome during drag — parent only updates on settle
+  // so GalleryPage/Masonry don't re-render mid-swipe (that caused flicker).
+  const [viewIndex, setViewIndex] = useState(activeIndex);
+  const [settledIndex, setSettledIndex] = useState(activeIndex);
 
   const [mainRef, mainApi] = useEmblaCarousel({
     loop: items.length > 1,
     align: "center",
-    duration: 22,
+    duration: 18,
+    skipSnaps: false,
+    watchDrag: true,
   });
   const [thumbRef, thumbApi] = useEmblaCarousel({
     containScroll: "keepSnaps",
@@ -61,7 +67,7 @@ export default function GalleryLightbox({
   });
 
   const canSlide = items.length > 1;
-  const activeItem = items[activeIndex];
+  const activeItem = items[viewIndex] ?? items[activeIndex];
 
   const requestClose = useCallback(() => {
     setOpen(false);
@@ -71,6 +77,9 @@ export default function GalleryLightbox({
     (index: number) => {
       if (!mainApi) return;
       skipSelectSync.current = true;
+      setViewIndex(index);
+      setSettledIndex(index);
+      openedIndexRef.current = index;
       mainApi.scrollTo(index);
       thumbApi?.scrollTo(index);
       onSelectIndex(index);
@@ -78,7 +87,7 @@ export default function GalleryLightbox({
     [mainApi, thumbApi, onSelectIndex]
   );
 
-  // Main carousel drives parent index + thumbnail strip.
+  // Main carousel drives local chrome; parent index waits for settle.
   // Jump to the opened slide on init so reInit/select never resets the parent to 0.
   useEffect(() => {
     if (!mainApi) return;
@@ -90,7 +99,9 @@ export default function GalleryLightbox({
         skipSelectSync.current = false;
         return;
       }
-      onSelectIndex(index);
+      // select fires when the snap target changes, before the slide animation ends.
+      // Settled slides and the parent update in onSettle.
+      if (isInteracting.current) return;
     };
 
     const onPointerDown = () => {
@@ -98,11 +109,18 @@ export default function GalleryLightbox({
     };
     const onSettle = () => {
       isInteracting.current = false;
+      const index = mainApi.selectedScrollSnap();
+      setViewIndex(index);
+      setSettledIndex(index);
+      openedIndexRef.current = index;
+      onSelectIndex(index);
     };
 
     skipSelectSync.current = true;
     mainApi.scrollTo(activeIndex, true);
     thumbApi?.scrollTo(activeIndex);
+    setViewIndex(activeIndex);
+    setSettledIndex(activeIndex);
 
     mainApi.on("select", onSelect);
     mainApi.on("pointerDown", onPointerDown);
@@ -121,7 +139,11 @@ export default function GalleryLightbox({
   useEffect(() => {
     if (!mainApi) return;
     if (mainApi.selectedScrollSnap() === activeIndex) return;
+    if (isInteracting.current) return;
     skipSelectSync.current = true;
+    setViewIndex(activeIndex);
+    setSettledIndex(activeIndex);
+    openedIndexRef.current = activeIndex;
     mainApi.scrollTo(activeIndex, true);
     thumbApi?.scrollTo(activeIndex);
   }, [mainApi, thumbApi, activeIndex]);
@@ -246,25 +268,26 @@ export default function GalleryLightbox({
         <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-black/40">
           <div className="absolute inset-0 p-[clamp(0px,0.75svh,16px)]">
             <div className="relative h-full w-full overflow-hidden" ref={mainRef}>
-              <div className="flex h-full touch-pan-y will-change-transform">
+              <div className="flex h-full touch-pan-y [transform:translateZ(0)] will-change-transform">
                 {items.map((item, index) => {
-                  // Use distance from the opened slide (not live activeIndex) so
-                  // swipe-driven index updates don't change Image/video load props.
-                  const nearOpen = Math.abs(index - openedIndexRef.current) <= 2;
+                  // Eager window follows the settled snap so load props stay
+                  // stable through the drag (changing them mid-swipe flickers).
+                  const nearSettled = Math.abs(index - settledIndex) <= 2;
+                  const isSettledSlide = index === settledIndex;
                   return (
                   <div
                     key={item.id}
-                    className="relative min-w-0 shrink-0 grow-0 basis-full bg-black"
+                    className="relative min-w-0 shrink-0 grow-0 basis-full bg-black [backface-visibility:hidden] [transform:translateZ(0)]"
                   >
                     {item.type === "video" ? (
                       <video
                         src={item.src}
                         poster={item.poster}
-                        controls={index === activeIndex}
-                        autoPlay={index === activeIndex}
+                        controls={isSettledSlide}
+                        autoPlay={isSettledSlide}
                         muted
                         playsInline
-                        preload={nearOpen ? "metadata" : "none"}
+                        preload={nearSettled ? "metadata" : "none"}
                         aria-label={item.alt}
                         className="absolute inset-0 h-full w-full object-contain object-center"
                         draggable={false}
@@ -280,7 +303,7 @@ export default function GalleryLightbox({
                         // Stable quality — changing it swaps the image URL and flickers on swipe.
                         quality={75}
                         priority={index === openedIndexRef.current}
-                        loading={nearOpen ? "eager" : "lazy"}
+                        loading={nearSettled ? "eager" : "lazy"}
                         draggable={false}
                       />
                     )}
@@ -329,7 +352,7 @@ export default function GalleryLightbox({
           >
             <div className="flex h-full gap-2">
               {items.map((item, index) => {
-                const selected = index === activeIndex;
+                const selected = index === viewIndex;
                 return (
                   <button
                     key={item.id}
@@ -338,7 +361,7 @@ export default function GalleryLightbox({
                     aria-label={`View ${item.alt || `image ${index + 1}`}`}
                     aria-current={selected ? "true" : undefined}
                     className={cn(
-                      "relative h-full w-[4.5rem] shrink-0 overflow-hidden rounded-sm border transition duration-200 sm:w-20",
+                      "relative h-full w-[4.5rem] shrink-0 overflow-hidden rounded-sm border sm:w-20",
                       selected
                         ? "border-gold opacity-100"
                         : "border-white/15 opacity-55 hover:border-white/40 hover:opacity-85"
@@ -368,7 +391,7 @@ export default function GalleryLightbox({
         <div className="mt-[clamp(8px,1svh,16px)] flex max-w-full shrink-0 flex-wrap items-center justify-between gap-2 text-[0.7rem] uppercase tracking-[0.3em] text-white/60">
           <span>{activeItem.category}</span>
           <span>
-            {activeIndex + 1} / {items.length}
+            {viewIndex + 1} / {items.length}
           </span>
         </div>
         <p className="mt-[clamp(4px,0.5svh,8px)] max-w-full shrink-0 text-sm text-white/70">
