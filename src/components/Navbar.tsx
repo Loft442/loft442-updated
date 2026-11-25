@@ -221,10 +221,10 @@ export default function Navbar() {
             className={buttonClasses(
               "primary",
               "sm",
-              "nav-cta-reveal h-10! min-h-10! px-3.5 tracking-[0.16em] min-[380px]:h-11! min-[380px]:min-h-11! sm:px-5 sm:tracking-[0.24em]"
+              "nav-cta-reveal h-10! min-h-10! px-2 text-[0.56rem] tracking-[0.08em] min-[380px]:h-11! min-[380px]:min-h-11! min-[380px]:px-3.5 min-[380px]:text-[0.7rem] min-[380px]:tracking-[0.16em] sm:px-5 sm:tracking-[0.24em]"
             )}
           >
-            Book a Date
+            Reserve Your Date
           </Link>
           <Link
             href="/#phones"

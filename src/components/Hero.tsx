@@ -81,17 +81,12 @@ export default function Hero() {
         {/* Mobile: stronger full wash so type clears the bright table/arches.
             Desktop: darken left only for type. */}
         <div
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,8,0.22)_0%,rgba(7,7,8,0.48)_28%,rgba(7,7,8,0.7)_58%,rgba(7,7,8,0.92)_88%,var(--background)_100%)] sm:bg-[linear-gradient(90deg,rgba(7,7,8,0.94)_0%,rgba(7,7,8,0.78)_42%,rgba(7,7,8,0.48)_58%,rgba(7,7,8,0.18)_74%,transparent_90%)]"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,8,0.22)_0%,rgba(7,7,8,0.48)_28%,rgba(7,7,8,0.7)_58%,rgba(7,7,8,0.92)_74%,var(--background)_90%,var(--background)_100%)] sm:bg-[linear-gradient(90deg,rgba(7,7,8,0.94)_0%,rgba(7,7,8,0.78)_42%,rgba(7,7,8,0.48)_58%,rgba(7,7,8,0.18)_74%,transparent_90%)]"
           aria-hidden="true"
         />
         {/* Feather the hero image into the page background. */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(to_top,var(--background)_0%,color-mix(in_srgb,var(--background)_78%,transparent)_34%,color-mix(in_srgb,var(--background)_32%,transparent)_68%,transparent_100%)] sm:h-56 sm:bg-[linear-gradient(to_top,var(--background)_0%,color-mix(in_srgb,var(--background)_72%,transparent)_36%,color-mix(in_srgb,var(--background)_28%,transparent)_70%,transparent_100%)]"
-          aria-hidden="true"
-        />
-        {/* Solid seal — blur/scale can leave a 1px bright fringe on the clip edge. */}
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-[var(--background)]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-52 bg-[linear-gradient(to_top,var(--background)_0%,var(--background)_22%,color-mix(in_srgb,var(--background)_78%,transparent)_48%,color-mix(in_srgb,var(--background)_32%,transparent)_74%,transparent_100%)] sm:h-56 sm:bg-[linear-gradient(to_top,var(--background)_0%,var(--background)_18%,color-mix(in_srgb,var(--background)_72%,transparent)_46%,color-mix(in_srgb,var(--background)_28%,transparent)_74%,transparent_100%)]"
           aria-hidden="true"
         />
       </div>

@@ -5,9 +5,9 @@ import { TEAM_CONTACTS, TEAM_EMAIL } from "@/lib/contacts";
 import { venuePackages } from "@/lib/packages";
 
 const viewingHours = [
-  { day: "Monday", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
-  { day: "Wednesday", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
-  { day: "Friday", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
+  { day: "Mondays", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
+  { day: "Wednesdays", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
+  { day: "Fridays", times: ["7:00 – 9:00 AM", "6:30 – 8:30 PM"] },
 ];
 
 const detailLinkClass =
@@ -35,7 +35,10 @@ export default function AvailabilityForm() {
                     className="flex flex-col gap-1 border-b border-[var(--line)] py-4 last:border-b-0"
                   >
                     <span className="flex flex-wrap items-baseline justify-between gap-2">
-                      <span className="font-serif text-2xl text-[var(--ivory)]">{pkg.name}</span>
+                      <span className="flex flex-wrap items-baseline gap-x-2 font-serif text-2xl text-[var(--ivory)]">
+                        <span className="text-gold-accent">{pkg.name.replace(/ Package$/, "")}</span>
+                        <span className="text-[0.72em] font-normal tracking-normal">Package</span>
+                      </span>
                       <span className="font-serif text-2xl text-gold-accent">${pkg.price}</span>
                     </span>
                     <span className="text-sm text-white/65">{pkg.guests}</span>
@@ -56,7 +59,8 @@ export default function AvailabilityForm() {
                 , or your own caterer
               </p>
               <p className="text-sm leading-relaxed text-white/65">
-                Guests can dine through our preferred partner, <DoorRestaurantLink />, or you may
+                Guests can dine through our preferred partner,{" "}
+                <DoorRestaurantLink>The Door Restaurant</DoorRestaurantLink>, or you may
                 bring the caterer of your choice.
               </p>
               <Link href="/catering" className={detailLinkClass}>
@@ -123,7 +127,7 @@ export default function AvailabilityForm() {
           <p className="font-serif text-2xl leading-snug text-[var(--ivory)]">
             Have a vision and a date in mind? Request your preferred date.
           </p>
-          <Button href="/schedule">Book a Date</Button>
+          <Button href="/schedule">Check Availability</Button>
         </div>
       </div>
     </section>

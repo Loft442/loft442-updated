@@ -74,8 +74,13 @@ export default function PricingPage() {
 
                 <div className="mt-10 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--line)] pb-8">
                   <div className="flex flex-col gap-3">
-                    <p className="eyebrow">{pkg.guests}</p>
-                    <h2 className="display-md">{pkg.name}</h2>
+                    <p className="eyebrow !text-white">{pkg.guests}</p>
+                    <h2 className="display-md flex flex-wrap items-baseline gap-x-2">
+                      <span className="text-gold-accent">{pkg.name.replace(/ Package$/, "")}</span>
+                      <span className="text-[0.72em] font-normal tracking-normal text-[var(--ivory)]">
+                        Package
+                      </span>
+                    </h2>
                   </div>
                   <Price amount={pkg.price} />
                 </div>
@@ -167,18 +172,14 @@ export default function PricingPage() {
               <p className="text-gold-light">
                 <span className="font-serif text-4xl font-normal sm:text-5xl">$400</span>
               </p>
-              <p className="mt-2 text-[0.95rem] text-white/60">Available with The Essential or The Grand.</p>
+              <p className="mt-2 text-[0.95rem] text-white/60">Available with Signature Package or Grand Package.</p>
             </div>
           </Reveal>
         </div>
 
         <div className="mx-auto mt-20 flex max-w-6xl flex-col items-center gap-6 px-6 text-center">
-          <p className="lede max-w-xl">
-            The best way to experience Loft 442 is in person. We would be delighted to show you
-            the space.
-          </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <Button href="/schedule" className="w-full sm:w-64">Request a Date</Button>
+            <Button href="/schedule" className="w-full sm:w-64">Check Availability</Button>
             <Button href="/gallery" variant="ghost" className="w-full sm:w-64">
               View the Gallery
             </Button>

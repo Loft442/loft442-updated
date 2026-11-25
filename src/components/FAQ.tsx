@@ -8,7 +8,7 @@ const faqs: { question: string; answer: ReactNode }[] = [
   {
     question: "How many guests can Loft 442 accommodate?",
     answer:
-      "Loft 442 accommodates up to 125 guests. The Essential package is designed for intimate gatherings of up to 50, and the Grand package for events of up to 125.",
+      "Loft 442 accommodates up to 125 guests. The Signature Package is designed for intimate gatherings of up to 50, and the Grand Package for events of up to 125.",
   },
   {
     question: "How many hours are included?",
