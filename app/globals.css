@@ -1978,10 +1978,51 @@ html.reduce-motion .image-stack__frame {
   }
 }
 
-/* Older Safari (< 15.4) has no svh unit; keep the hero roughly full height there. */
+/*
+ * Mobile hero height: use large viewport units as the pre-JS fallback so the
+ * banner does not reflow when the URL chrome animates. HeroMobileLock then
+ * freezes --hero-lock-height to a pixel value (Safari + Chrome).
+ */
+#site-hero {
+  /* vh first (legacy), lvh overrides where supported — both ignored once JS locks px. */
+  min-height: calc(var(--hero-lock-height, 100vh) - var(--nav-offset) - 1rem);
+  min-height: calc(var(--hero-lock-height, 100lvh) - var(--nav-offset) - 1rem);
+}
+
+#site-hero .hero-banner-img {
+  height: var(--hero-lock-height, 100vh);
+  height: var(--hero-lock-height, 100lvh);
+  /* Promote a stable layer — Safari can otherwise resample object-cover mid-scroll. */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@media (min-width: 640px) {
+  #site-hero {
+    min-height: calc(100svh - var(--nav-offset) - 2.25rem);
+  }
+
+  #site-hero .hero-banner-img {
+    height: 100%;
+    transform: none;
+    -webkit-transform: none;
+  }
+}
+
+/* Older Safari (< 15.4) has no svh/lvh. */
 @supports not (height: 1svh) {
   .hero-no-glow {
     min-height: calc(100vh - var(--nav-offset) - 3rem);
+  }
+
+  #site-hero {
+    min-height: calc(var(--hero-lock-height, 100vh) - var(--nav-offset) - 1rem);
+  }
+
+  #site-hero .hero-banner-img {
+    height: var(--hero-lock-height, 100vh);
   }
 }
 

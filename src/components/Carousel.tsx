@@ -17,10 +17,6 @@ const slides = [
   "babyshower14-photoshoot.webp",
 ] as const;
 
-// How many slides are typically visible near the viewport edge when the
-// marquee first enters view — eager-load only these on the primary track.
-const EAGER_PRIMARY = 4;
-
 // The track holds the list twice and a CSS animation slides it by exactly one copy,
 // so the loop is seamless and runs on the compositor instead of the main thread.
 export default function Carousel() {
@@ -46,7 +42,6 @@ export default function Carousel() {
         inView = Boolean(entry?.isIntersecting);
         sync();
       },
-      // Tighter margin on small screens so the marquee isn't running while still off-screen.
       {
         rootMargin:
           typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches
@@ -77,39 +72,37 @@ export default function Carousel() {
           className={`${styles.embla__container} ${active ? "" : styles.isPaused}`.trim()}
         >
           {[0, 1].map((copy) =>
-            slides.map((file, slideIndex) => {
-              // Duplicate track reuses the same URLs → browser cache. Keep it
-              // fully lazy so it never competes with LCP / above-fold assets.
-              const eager =
-                copy === 0 && slideIndex < EAGER_PRIMARY;
-
-              return (
-                <div
-                  key={`${copy}-${file}`}
-                  className={styles.embla__slide}
-                  aria-hidden={copy === 1 || undefined}
-                >
-                  <picture>
-                    <source
-                      media="(min-width: 641px)"
-                      srcSet={`/images/Carousel/sm/${file}`}
-                      type="image/webp"
-                    />
-                    <img
-                      src={`/images/Carousel/xs/${file}`}
-                      alt=""
-                      width={160}
-                      height={220}
-                      className="h-full w-full object-cover"
-                      loading={eager ? "eager" : "lazy"}
-                      fetchPriority="low"
-                      decoding="async"
-                      draggable={false}
-                    />
-                  </picture>
-                </div>
-              );
-            })
+            slides.map((file) => (
+              <div
+                key={`${copy}-${file}`}
+                className={styles.embla__slide}
+                aria-hidden={copy === 1 || undefined}
+              >
+                <picture>
+                  <source
+                    media="(min-width: 641px)"
+                    srcSet={`/images/Carousel/sm/${file}`}
+                    type="image/webp"
+                  />
+                  {/*
+                    Eager for the full loop: native lazy-load does not track
+                    CSS-translated slides, so later frames stayed blank.
+                    Duplicate track reuses the same URLs (browser cache).
+                  */}
+                  <img
+                    src={`/images/Carousel/xs/${file}`}
+                    alt=""
+                    width={160}
+                    height={220}
+                    className="h-full w-full object-cover"
+                    loading="eager"
+                    fetchPriority="low"
+                    decoding="async"
+                    draggable={false}
+                  />
+                </picture>
+              </div>
+            ))
           )}
         </div>
       </div>

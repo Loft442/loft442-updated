@@ -1,6 +1,7 @@
 import { getImageProps } from "next/image";
 import Image from "next/image";
 import Button, { buttonClasses } from "@/components/ui/Button";
+import HeroMobileLock from "@/components/HeroMobileLock";
 
 const {
   props: { srcSet: desktopBanner, sizes: desktopSizes },
@@ -31,7 +32,11 @@ const STAR_PATH =
 
 export default function Hero() {
   return (
-    <section className="hero-no-glow relative w-full min-h-[calc(100svh-var(--nav-offset)-1rem)] overflow-hidden bg-black sm:min-h-[calc(100svh-var(--nav-offset)-2.25rem)]">
+    <section
+      id="site-hero"
+      className="hero-no-glow relative w-full overflow-hidden bg-black"
+    >
+      <HeroMobileLock />
       {/* Art-directed preloads so each viewport discovers only its LCP candidate. */}
       <link
         rel="preload"
@@ -49,7 +54,7 @@ export default function Hero() {
         media="(min-width: 640px)"
         fetchPriority="high"
       />
-      <div className="absolute inset-0 z-0">
+      <div className="hero-banner-frame absolute inset-0 z-0 overflow-hidden">
         {/* Two mutually exclusive <source>s so only one asset is requested. */}
         <picture>
           <source
@@ -70,7 +75,7 @@ export default function Hero() {
             decoding="async"
             loading="eager"
             fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-cover object-[58%_center] sm:object-center"
+            className="hero-banner-img absolute left-0 top-0 w-full object-cover object-[58%_center] sm:inset-0 sm:h-full sm:object-center"
           />
         </picture>
         {/* Mobile: stronger full wash so type clears the bright table/arches.
@@ -118,7 +123,7 @@ export default function Hero() {
               Veteran owned &amp; operated
             </span>
             <span className="inline-flex items-center gap-2 leading-none sm:gap-3">
-              <span className="inline-flex items-center gap-1 text-gold-deep drop-shadow-[0_0_6px_rgba(230,180,34,0.35)]" role="img" aria-label="4.8 star rating">
+              <span className="inline-flex -translate-y-px items-center gap-1 text-gold-deep drop-shadow-[0_0_6px_rgba(230,180,34,0.35)]" role="img" aria-label="4.8 star rating">
                 {[0, 1, 2, 3].map((index) => (
                   <svg key={index} viewBox="0 0 24 24" fill="currentColor" className="block h-2.5 w-2.5 shrink-0 sm:h-3 sm:w-3" aria-hidden="true">
                     <path d={STAR_PATH} />
