@@ -1,4 +1,5 @@
 import ContactUsLink from "@/components/ContactUsLink";
+import DoorRestaurantLink from "@/components/DoorRestaurantLink";
 import FlyerViewer from "@/components/FlyerViewer";
 import Reveal from "@/components/Reveal";
 import Button, { buttonClasses } from "@/components/ui/Button";
@@ -7,11 +8,22 @@ import { dateRequestNote } from "@/lib/packages";
 const highlights = [
   {
     title: "Our Preferred Partner",
-    body: "Loft 442 hosts enjoy access to exclusive discounted catering packages through The Door Restaurant on Baisley Boulevard in Queens, New York.",
+    body: (
+      <>
+        Loft 442 hosts enjoy access to exclusive discounted catering packages through{" "}
+        <DoorRestaurantLink>The Door Restaurant</DoorRestaurantLink> on Baisley Boulevard in
+        Queens, New York.
+      </>
+    ),
   },
   {
     title: "Prepared & Delivered",
-    body: "Order directly with The Door, and your menu is prepared and delivered to Loft 442 on the day of your event.",
+    body: (
+      <>
+        Order directly with <DoorRestaurantLink />, and your menu is prepared and delivered to
+        Loft 442 on the day of your event.
+      </>
+    ),
   },
   {
     title: "Effortless Planning",
@@ -26,13 +38,17 @@ export default function CateringPage() {
         <Reveal mode="text" className="wine-copy-glow flex max-w-3xl flex-col gap-6">
           <p className="eyebrow">Loft 442</p>
           <h1 className="display-xl">
-            Catering by our preferred partner, <em className="display-italic">The Door</em>
+            Catering by our preferred partner,{" "}
+            <DoorRestaurantLink className="no-underline hover:underline">
+              <em className="display-italic">The Door</em>
+            </DoorRestaurantLink>
           </h1>
           <span className="hairline" aria-hidden="true" />
           <p className="lede">
             To make planning effortless, Loft 442 offers access to exclusive discounted catering
-            packages through The Door Restaurant on Baisley Boulevard in Queens. You are, of course,
-            always welcome to bring the caterer of your choice.
+            packages through <DoorRestaurantLink>The Door Restaurant</DoorRestaurantLink> on
+            Baisley Boulevard in Queens. You are, of course, always welcome to bring the caterer of
+            your choice.
           </p>
         </Reveal>
 
@@ -42,9 +58,9 @@ export default function CateringPage() {
             <FlyerViewer
               src="/images/Flyer/the-door-catering-menu.webp"
               alt="The Door Restaurant catering menu for LOFT 442 events"
-              pdfHref="/images/Flyer/The Door Catering Menu.pdf"
               aspectClassName="aspect-[2/3]"
               thumbnailClassName="mx-auto max-w-[260px] md:max-w-xs"
+              imageFileName="the-door-catering-menu.png"
             />
           </Reveal>
 

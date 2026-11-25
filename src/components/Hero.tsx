@@ -11,7 +11,7 @@ const {
   // Full-bleed hero; cap the selected candidate near common laptop widths so
   // Lighthouse/desktop doesn't pull a 1920px q=100 asset for a ~1400px paint.
   sizes: "(min-width: 1600px) 1600px, 100vw",
-  quality: 85,
+  quality: 100,
   src: "/images/loft442-banner-enhanced2.webp",
 });
 
@@ -21,9 +21,8 @@ const {
   alt: "",
   width: 750,
   height: 1334,
-  // Phones rarely exceed ~430 CSS px; keep the LCP image lean.
   sizes: "100vw",
-  quality: 68,
+  quality: 85,
   src: "/images/loft442-banner-mobile-v4.webp",
 });
 
@@ -71,30 +70,34 @@ export default function Hero() {
             decoding="async"
             loading="eager"
             fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-cover object-[58%_center] blur-[2.5px] scale-105 sm:object-center sm:blur-none sm:scale-100"
+            className="absolute inset-0 h-full w-full object-cover object-[58%_center] sm:object-center"
           />
         </picture>
         {/* Mobile: stronger full wash so type clears the bright table/arches.
             Desktop: darken left only for type. */}
         <div
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,8,0.58)_0%,rgba(7,7,8,0.64)_42%,rgba(7,7,8,0.82)_100%)] sm:bg-[linear-gradient(90deg,rgba(7,7,8,0.9)_0%,rgba(7,7,8,0.62)_38%,rgba(7,7,8,0.22)_60%,transparent_80%)]"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,8,0.58)_0%,rgba(7,7,8,0.64)_42%,rgba(7,7,8,0.82)_100%)] sm:bg-[linear-gradient(90deg,rgba(7,7,8,0.94)_0%,rgba(7,7,8,0.78)_42%,rgba(7,7,8,0.48)_58%,rgba(7,7,8,0.18)_74%,transparent_90%)]"
           aria-hidden="true"
         />
+        {/* Feather the hero image into the page background. */}
         <div
-          className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/55 to-transparent sm:hidden"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(to_top,var(--background)_0%,color-mix(in_srgb,var(--background)_78%,transparent)_34%,color-mix(in_srgb,var(--background)_32%,transparent)_68%,transparent_100%)] sm:h-56 sm:bg-[linear-gradient(to_top,var(--background)_0%,color-mix(in_srgb,var(--background)_72%,transparent)_36%,color-mix(in_srgb,var(--background)_28%,transparent)_70%,transparent_100%)]"
           aria-hidden="true"
         />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[inherit] max-w-7xl items-center px-5 py-12 sm:px-10 sm:py-[clamp(2rem,7svh,8rem)] lg:px-12">
-        <div className="max-w-2xl [text-shadow:0_1px_2px_rgba(0,0,0,0.7),0_2px_28px_rgba(0,0,0,0.45)] [&_a]:[text-shadow:none] [&_button]:[text-shadow:none]">
+      <div className="relative z-10 mx-auto flex min-h-[inherit] w-full max-w-7xl items-center px-5 py-12 sm:px-10 sm:py-[clamp(2rem,7svh,8rem)] lg:px-12">
+        <div className="w-full min-w-0 max-w-2xl [text-shadow:0_1px_2px_rgba(0,0,0,0.7),0_2px_28px_rgba(0,0,0,0.45)] [&_a]:[text-shadow:none] [&_button]:[text-shadow:none]">
           <p className="eyebrow hero-stagger hero-stagger--1 tracking-[0.28em] text-gold-light sm:tracking-[0.38em]">
             Loft 442 &nbsp;·&nbsp; Elmont, New York
           </p>
 
-          <h1 className="display-xl hero-stagger hero-stagger--1 mt-4 text-[clamp(1.85rem,8.5vw,2.5rem)] leading-[1.08] text-white! sm:mt-[clamp(1rem,3svh,1.75rem)] sm:text-[clamp(2.4rem,min(5.6vw,8.5svh),4.75rem)] sm:leading-[1.04]">
-            A private loft for celebrations worth{" "}
-            <em className="display-italic !text-gold">remembering</em>
+          <h1 className="display-xl hero-stagger hero-stagger--1 mt-4 text-[clamp(1.55rem,7.4vw,2.05rem)] leading-[1.1] text-white! sm:mt-[clamp(1rem,3svh,1.75rem)] sm:text-[clamp(2.4rem,min(5.6vw,8.5svh),4.75rem)] sm:leading-[1.04]">
+            <span className="inline-block max-w-full whitespace-nowrap">
+              Creating{" "}
+              <em className="display-italic hero-unforgettable !text-[#e6cc90]">Unforgettable</em>
+            </span>{" "}
+            Memories One Event At A Time
           </h1>
 
           <p className="hero-stagger hero-stagger--2 mt-4 max-w-xl text-[0.9rem] font-normal leading-snug text-white sm:mt-[clamp(1rem,3svh,1.75rem)] sm:text-[1.0625rem] sm:leading-[1.85]">
@@ -114,30 +117,30 @@ export default function Hero() {
               />
               Veteran owned &amp; operated
             </span>
-            <span className="flex items-center gap-2 sm:gap-3">
-              <span className="flex items-center gap-1 text-gold-light" role="img" aria-label="4.8 star rating">
+            <span className="inline-flex items-center gap-2 leading-none sm:gap-3">
+              <span className="inline-flex items-center gap-1 text-gold-deep drop-shadow-[0_0_6px_rgba(230,180,34,0.35)]" role="img" aria-label="4.8 star rating">
                 {[0, 1, 2, 3].map((index) => (
-                  <svg key={index} viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 sm:h-3 sm:w-3" aria-hidden="true">
+                  <svg key={index} viewBox="0 0 24 24" fill="currentColor" className="block h-2.5 w-2.5 shrink-0 sm:h-3 sm:w-3" aria-hidden="true">
                     <path d={STAR_PATH} />
                   </svg>
                 ))}
-                <span className="relative inline-block h-2.5 w-2.5 sm:h-3 sm:w-3">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-full w-full text-white/20" aria-hidden="true">
+                <span className="relative block h-2.5 w-2.5 shrink-0 sm:h-3 sm:w-3">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="absolute inset-0 h-full w-full text-white/20" aria-hidden="true">
                     <path d={STAR_PATH} />
                   </svg>
                   <span className="absolute inset-0 overflow-hidden" style={{ width: "80%" }}>
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 sm:h-3 sm:w-3" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="block h-2.5 w-2.5 sm:h-3 sm:w-3" aria-hidden="true">
                       <path d={STAR_PATH} />
                     </svg>
                   </span>
                 </span>
               </span>
-              4.8 on Google
+              <span className="leading-[1.2]">4.8 on Google</span>
             </span>
           </div>
 
-          <div className="hero-stagger hero-stagger--3 mt-7 flex flex-col items-start gap-3.5 sm:mt-[clamp(1.25rem,4svh,2.5rem)] sm:gap-4">
-            <div className="flex w-full flex-col items-start gap-3.5 sm:flex-row sm:gap-4">
+          <div className="hero-stagger hero-stagger--3 mt-7 flex w-full flex-col items-stretch gap-3.5 sm:mt-[clamp(1.25rem,4svh,2.5rem)] sm:items-start sm:gap-4">
+            <div className="flex w-full flex-col items-stretch gap-3.5 sm:flex-row sm:items-start sm:gap-4">
               <a href="#phones" className={buttonClasses("primary", "sm", "w-full sm:w-64 sm:h-12!")}>
                 Schedule a Tour
               </a>
@@ -150,19 +153,12 @@ export default function Hero() {
                 View the Gallery
               </Button>
             </div>
-            <div className="mt-1.5 flex w-full flex-col items-start gap-3.5 sm:mt-2 sm:gap-4">
-              <p className="max-w-sm font-serif text-base leading-snug text-white sm:text-lg">
-                Discover Everything LOFT 442 Has to Offer
-              </p>
-              <Button
-                href="/pricing"
-                variant="ghost"
-                size="sm"
-                className="w-full border-white/75 text-white hover:border-gold hover:text-gold-light sm:w-64 sm:h-12!"
-              >
-                View Pricing
-              </Button>
-            </div>
+            <a
+              href="/pricing"
+              className="mt-0.5 self-start text-[0.85rem] font-normal tracking-[0.04em] text-gold-light underline decoration-gold-light/55 underline-offset-[0.28em] transition-colors duration-300 hover:text-gold hover:decoration-gold sm:mt-2 sm:text-[0.9rem]"
+            >
+              Discover all LOFT 442 offers →
+            </a>
           </div>
 
         </div>

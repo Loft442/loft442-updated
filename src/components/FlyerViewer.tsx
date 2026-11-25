@@ -43,26 +43,24 @@ function getSafeAreaInsets() {
 type FlyerViewerProps = {
   src: string;
   alt: string;
-  pdfHref: string;
   aspectClassName: string;
   thumbnailClassName?: string;
   fillHeight?: boolean;
   compactFillHeight?: boolean;
   thumbnailLayout?: "height" | "width";
-  centerDownload?: boolean;
+  centerSave?: boolean;
   imageFileName?: string;
 };
 
 export default function FlyerViewer({
   src,
   alt,
-  pdfHref,
   aspectClassName,
   thumbnailClassName,
   fillHeight = false,
   compactFillHeight = false,
   thumbnailLayout = "height",
-  centerDownload = false,
+  centerSave = false,
   imageFileName,
 }: FlyerViewerProps) {
   const [open, setOpen] = useState(false);
@@ -101,6 +99,13 @@ export default function FlyerViewer({
     try {
       await saveImageFile(src, resolvedImageFileName);
     } catch (error) {
+      // User canceling the share sheet throws; ignore that quietly.
+      if (
+        error instanceof DOMException &&
+        (error.name === "AbortError" || error.name === "NotAllowedError")
+      ) {
+        return;
+      }
       console.error("Failed to save image:", error);
       window.open(src, "_blank", "noopener,noreferrer");
     } finally {
@@ -269,37 +274,22 @@ export default function FlyerViewer({
     </button>
   );
 
-  const actionButtonClass =
-    "inline-flex h-11 w-full items-center justify-center rounded-sm border border-gold px-6 text-[0.7rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-gold-light hover:bg-gold/15 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto";
-
-  const downloadLink = (
-    <a
-      href={pdfHref}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`${actionButtonClass} hidden md:inline-flex`}
-    >
-      Download
-    </a>
-  );
-
-  const saveImageButton = (
+  const renderSaveButton = (className = "") => (
     <button
       type="button"
       onClick={handleSaveImage}
       disabled={isSaving}
-      className={`${actionButtonClass} md:hidden`}
+      className={`inline-flex h-11 w-full items-center justify-center rounded-sm border border-gold px-6 text-[0.7rem] uppercase tracking-[0.35em] text-white transition duration-300 hover:border-gold-light hover:bg-gold/15 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto${className ? ` ${className}` : ""}`}
     >
-      {isSaving ? "Saving..." : "Save image"}
+      {isSaving ? "Saving..." : "Save"}
     </button>
   );
 
   const actionButtons = (
     <div
-      className={`mt-6 flex flex-wrap gap-3${fillHeight ? " shrink-0" : ""}${centerDownload ? " justify-center" : ""}`}
+      className={`mt-6 flex flex-wrap gap-3${fillHeight ? " shrink-0" : ""}${centerSave ? " justify-center" : ""}`}
     >
-      {saveImageButton}
-      {downloadLink}
+      {renderSaveButton()}
     </div>
   );
 
@@ -335,11 +325,15 @@ export default function FlyerViewer({
                     <MagnifierImage
                       src={src}
                       alt={alt}
-                      paneAside={downloadLink}
+                      paneAside={
+                        <span className="hidden md:inline-flex">
+                          {renderSaveButton()}
+                        </span>
+                      }
                     />
                   </div>
                   <div className="mt-4 flex shrink-0 justify-center md:hidden">
-                    {saveImageButton}
+                    {renderSaveButton()}
                   </div>
                   <button
                     type="button"

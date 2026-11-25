@@ -42,10 +42,10 @@ export default function RepassPage() {
             <FlyerViewer
               src="/images/Flyer/loft442-repass-flyer.webp"
               alt="LOFT 442 repass services flyer"
-              pdfHref="/images/Flyer/Loft442 Repass Flyer.pdf"
               aspectClassName="aspect-[736/951]"
               thumbnailClassName="mx-0 max-w-full"
-              centerDownload
+              centerSave
+              imageFileName="loft442-repass-flyer.png"
             />
           </Reveal>
 

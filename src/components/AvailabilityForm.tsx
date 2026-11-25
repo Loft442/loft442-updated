@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+import DoorRestaurantLink from "@/components/DoorRestaurantLink";
 import { TEAM_CONTACTS, TEAM_EMAIL } from "@/lib/contacts";
 import { venuePackages } from "@/lib/packages";
 
@@ -49,11 +50,14 @@ export default function AvailabilityForm() {
             <div className="flex flex-col gap-6 bg-[var(--background)] p-8 sm:p-10">
               <p className="eyebrow">Catering</p>
               <p className="font-serif text-2xl leading-snug text-[var(--ivory)]">
-                The Door, or your own caterer
+                <DoorRestaurantLink className="text-[inherit] decoration-gold/40">
+                  The Door
+                </DoorRestaurantLink>
+                , or your own caterer
               </p>
               <p className="text-sm leading-relaxed text-white/65">
-                Guests can dine through our preferred partner, The Door, or you may bring the
-                caterer of your choice.
+                Guests can dine through our preferred partner, <DoorRestaurantLink />, or you may
+                bring the caterer of your choice.
               </p>
               <Link href="/catering" className={detailLinkClass}>
                 Catering details

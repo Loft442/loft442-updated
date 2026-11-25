@@ -18,7 +18,8 @@
   /* Brand palette */
   --gold: #c9a961;
   --gold-light: #e8d9b0;
-  --gold-deep: #a88a45;
+  /* Rich metallic gold for stars / accents — bright and saturated, not muddy or chalky. */
+  --gold-deep: #e6b422;
   --gold-button: #d4a43c;
   --ivory: #f4efe6;
   --ink: #0a0a0a;
@@ -79,6 +80,8 @@
   --font-serif: var(--font-display), Georgia, serif;
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
+  --color-gold-deep: var(--gold-deep);
+  --color-gold-button: var(--gold-button);
   --color-ivory: var(--ivory);
   --color-ink: var(--ink);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -1774,10 +1777,21 @@ label,
   line-height: 1.04;
 }
 
-/* Hero title: optically lighter than the default display weight. */
+/* Hero title: optically lighter than the default display weight.
+   Mobile-first size so "Creating Unforgettable" stays on one line. */
 .hero-no-glow .display-xl {
   font-weight: 300 !important;
+  font-size: clamp(1.5rem, 7vw, 1.95rem) !important;
+  line-height: 1.12;
 }
+
+@media (min-width: 640px) {
+  .hero-no-glow .display-xl {
+    font-size: clamp(2.4rem, min(5.6vw, 8.5svh), 4.75rem) !important;
+    line-height: 1.04;
+  }
+}
+
 
 .display-lg {
   font-size: clamp(2.1rem, 4vw, 3.4rem);
@@ -1796,6 +1810,13 @@ label,
 
 .display-italic.text-gold {
   color: var(--gold);
+}
+
+/* Hero accent: keep Gilda at its real 400 weight (parent .display-xl is forced to 300). */
+.hero-unforgettable {
+  font-weight: 400 !important;
+  /* Light gold with a bit more chroma than --gold-light (#e8d9b0). */
+  color: #e6cc90 !important;
 }
 
 .lede {

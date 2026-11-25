@@ -43,6 +43,8 @@ export default function GalleryLightbox({
 }: GalleryLightboxProps) {
   const lightboxShellRef = useRef<HTMLDivElement>(null);
   const skipSelectSync = useRef(false);
+  const isInteracting = useRef(false);
+  const openedIndexRef = useRef(activeIndex);
   const reduceMotion = useReducedMotion();
   // Stay mounted through the exit animation; parent unmounts via onClose after.
   const [open, setOpen] = useState(true);
@@ -91,14 +93,25 @@ export default function GalleryLightbox({
       onSelectIndex(index);
     };
 
+    const onPointerDown = () => {
+      isInteracting.current = true;
+    };
+    const onSettle = () => {
+      isInteracting.current = false;
+    };
+
     skipSelectSync.current = true;
     mainApi.scrollTo(activeIndex, true);
     thumbApi?.scrollTo(activeIndex);
 
     mainApi.on("select", onSelect);
+    mainApi.on("pointerDown", onPointerDown);
+    mainApi.on("settle", onSettle);
 
     return () => {
       mainApi.off("select", onSelect);
+      mainApi.off("pointerDown", onPointerDown);
+      mainApi.off("settle", onSettle);
     };
     // Only re-bind when the Embla instance (or callback) changes — not on every index tick.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- activeIndex applied once per api init
@@ -138,11 +151,16 @@ export default function GalleryLightbox({
 
   useEffect(() => {
     const startedPortrait = window.innerHeight >= window.innerWidth;
+    let lastWidth = 0;
+    let lastHeight = 0;
 
     const syncLightboxSize = () => {
       const shell = lightboxShellRef.current;
       const viewport = window.visualViewport;
       if (!shell || !viewport) return;
+
+      // Resizing mid-swipe reflows Embla and flashes the active slide on mobile.
+      if (isInteracting.current) return;
 
       // Keep the frame as it was when opened if the phone is rotated.
       const isPortrait = window.innerHeight >= window.innerWidth;
@@ -153,16 +171,24 @@ export default function GalleryLightbox({
       const overlayPadY = isSm ? 48 : 32;
       const overlayPadX = isSm ? 48 : 32;
       const maxWidth = Math.min(viewport.width * 0.92, LIGHTBOX_MAX_WIDTH);
+      const width = Math.min(
+        viewport.width - overlayPadX - safeArea.left - safeArea.right,
+        maxWidth
+      );
       const height = Math.max(
         240,
         viewport.height - overlayPadY - safeArea.top - safeArea.bottom
       );
 
+      // Ignore tiny visualViewport jitter (iOS chrome show/hide while dragging).
+      if (Math.abs(width - lastWidth) < 8 && Math.abs(height - lastHeight) < 8) {
+        return;
+      }
+      lastWidth = width;
+      lastHeight = height;
+
       shell.style.maxWidth = `${maxWidth}px`;
-      shell.style.width = `${Math.min(
-        viewport.width - overlayPadX - safeArea.left - safeArea.right,
-        maxWidth
-      )}px`;
+      shell.style.width = `${width}px`;
       shell.style.height = `${height}px`;
       shell.style.maxHeight = `${height}px`;
     };
@@ -170,13 +196,12 @@ export default function GalleryLightbox({
     syncLightboxSize();
 
     const viewport = window.visualViewport;
+    // Resize only — visualViewport "scroll" fires constantly on iOS during swipe.
     viewport?.addEventListener("resize", syncLightboxSize);
-    viewport?.addEventListener("scroll", syncLightboxSize);
     window.addEventListener("resize", syncLightboxSize);
 
     return () => {
       viewport?.removeEventListener("resize", syncLightboxSize);
-      viewport?.removeEventListener("scroll", syncLightboxSize);
       window.removeEventListener("resize", syncLightboxSize);
     };
   }, []);
@@ -221,11 +246,15 @@ export default function GalleryLightbox({
         <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-black/40">
           <div className="absolute inset-0 p-[clamp(0px,0.75svh,16px)]">
             <div className="relative h-full w-full overflow-hidden" ref={mainRef}>
-              <div className="flex h-full touch-pan-y">
-                {items.map((item, index) => (
+              <div className="flex h-full touch-pan-y will-change-transform">
+                {items.map((item, index) => {
+                  // Use distance from the opened slide (not live activeIndex) so
+                  // swipe-driven index updates don't change Image/video load props.
+                  const nearOpen = Math.abs(index - openedIndexRef.current) <= 2;
+                  return (
                   <div
                     key={item.id}
-                    className="relative min-w-0 shrink-0 grow-0 basis-full"
+                    className="relative min-w-0 shrink-0 grow-0 basis-full bg-black"
                   >
                     {item.type === "video" ? (
                       <video
@@ -235,9 +264,10 @@ export default function GalleryLightbox({
                         autoPlay={index === activeIndex}
                         muted
                         playsInline
-                        preload={Math.abs(index - activeIndex) <= 1 ? "metadata" : "none"}
+                        preload={nearOpen ? "metadata" : "none"}
                         aria-label={item.alt}
                         className="absolute inset-0 h-full w-full object-contain object-center"
+                        draggable={false}
                       />
                     ) : (
                       <Image
@@ -247,13 +277,16 @@ export default function GalleryLightbox({
                         sizes={mediaSizes}
                         className="object-contain object-center"
                         style={{ objectFit: "contain" }}
-                        quality={index === activeIndex ? 75 : 70}
-                        loading={Math.abs(index - activeIndex) <= 1 ? "eager" : "lazy"}
-                        fetchPriority={index === activeIndex ? "high" : "low"}
+                        // Stable quality — changing it swaps the image URL and flickers on swipe.
+                        quality={75}
+                        priority={index === openedIndexRef.current}
+                        loading={nearOpen ? "eager" : "lazy"}
+                        draggable={false}
                       />
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

@@ -1,8 +1,10 @@
+import type { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
+import DoorRestaurantLink from "@/components/DoorRestaurantLink";
 import FaqShowMore from "@/components/FaqShowMore";
 import styles from "@/components/FAQ.module.css";
 
-const faqs = [
+const faqs: { question: string; answer: ReactNode }[] = [
   {
     question: "How many guests can Loft 442 accommodate?",
     answer:
@@ -25,8 +27,12 @@ const faqs = [
   },
   {
     question: "May we bring our own caterer?",
-    answer:
-      "Yes. You are welcome to work with the caterer of your choice, or with our preferred catering partner, The Door.",
+    answer: (
+      <>
+        Yes. You are welcome to work with the caterer of your choice, or with our preferred catering
+        partner, <DoorRestaurantLink />.
+      </>
+    ),
   },
   {
     question: "Is alcohol permitted?",
