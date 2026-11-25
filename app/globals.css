@@ -1781,8 +1781,8 @@ label,
    Mobile-first size so "Creating Unforgettable" stays on one line. */
 .hero-no-glow .display-xl {
   font-weight: 300 !important;
-  font-size: clamp(1.5rem, 7vw, 1.95rem) !important;
-  line-height: 1.12;
+  font-size: clamp(1.85rem, 8.6vw, 2.45rem) !important;
+  line-height: 1.14;
 }
 
 @media (min-width: 640px) {

@@ -91,13 +91,13 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[inherit] w-full max-w-7xl items-center px-5 py-12 sm:px-10 sm:py-[clamp(2rem,7svh,8rem)] lg:px-12">
+      <div className="relative z-10 mx-auto flex min-h-[inherit] w-full max-w-7xl items-start px-5 pt-20 pb-12 sm:items-center sm:px-10 sm:py-[clamp(2rem,7svh,8rem)] lg:px-12">
         <div className="w-full min-w-0 max-w-2xl [text-shadow:0_1px_2px_rgba(0,0,0,0.7),0_2px_28px_rgba(0,0,0,0.45)] [&_a]:[text-shadow:none] [&_button]:[text-shadow:none]">
           <p className="eyebrow hero-stagger hero-stagger--1 tracking-[0.28em] text-gold-light sm:tracking-[0.38em]">
             Loft 442 &nbsp;·&nbsp; Elmont, New York
           </p>
 
-          <h1 className="display-xl hero-stagger hero-stagger--1 mt-4 text-[clamp(1.55rem,7.4vw,2.05rem)] leading-[1.1] text-white! sm:mt-[clamp(1rem,3svh,1.75rem)] sm:text-[clamp(2.4rem,min(5.6vw,8.5svh),4.75rem)] sm:leading-[1.04]">
+          <h1 className="display-xl hero-stagger hero-stagger--1 mt-5 text-[clamp(1.85rem,8.6vw,2.45rem)] leading-[1.14] text-white! sm:mt-[clamp(1rem,3svh,1.75rem)] sm:text-[clamp(2.4rem,min(5.6vw,8.5svh),4.75rem)] sm:leading-[1.04]">
             <span className="inline-block max-w-full whitespace-nowrap">
               Creating{" "}
               <em className="display-italic hero-unforgettable !text-[#e6cc90]">Unforgettable</em>
@@ -105,12 +105,12 @@ export default function Hero() {
             Memories One Event At A Time
           </h1>
 
-          <p className="hero-stagger hero-stagger--2 mt-4 max-w-xl text-[0.9rem] font-normal leading-snug text-white sm:mt-[clamp(1rem,3svh,1.75rem)] sm:text-[1.0625rem] sm:leading-[1.85]">
+          <p className="hero-stagger hero-stagger--2 mt-6 max-w-xl text-[0.9rem] font-normal leading-relaxed text-white sm:mt-[clamp(1rem,3svh,1.75rem)] sm:text-[1.0625rem] sm:leading-[1.85]">
             Weddings and birthdays, milestone celebrations and private events for up to 125 guests,
             with a dedicated team attending to every detail.
           </p>
 
-          <div className="hero-stagger hero-stagger--2 mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-[0.65rem] uppercase tracking-[0.22em] text-white sm:mt-6 sm:gap-x-8 sm:gap-y-4 sm:text-[0.7rem] sm:tracking-[0.3em]">
+          <div className="hero-stagger hero-stagger--2 mt-7 flex flex-wrap items-center gap-x-5 gap-y-4 text-[0.65rem] uppercase tracking-[0.22em] text-white sm:mt-6 sm:gap-x-8 sm:gap-y-4 sm:text-[0.7rem] sm:tracking-[0.3em]">
             <span className="flex items-center gap-2 sm:gap-3">
               <Image
                 src="/images/veteran-icon.svg"
@@ -144,8 +144,8 @@ export default function Hero() {
             </span>
           </div>
 
-          <div className="hero-stagger hero-stagger--3 mt-7 flex w-full flex-col items-stretch gap-3.5 sm:mt-[clamp(1.25rem,4svh,2.5rem)] sm:items-start sm:gap-4">
-            <div className="flex w-full flex-col items-stretch gap-3.5 sm:flex-row sm:items-start sm:gap-4">
+          <div className="hero-stagger hero-stagger--3 mt-9 flex w-full flex-col items-stretch gap-4 sm:mt-[clamp(1.25rem,4svh,2.5rem)] sm:items-start sm:gap-4">
+            <div className="flex w-full flex-col items-stretch gap-4 sm:flex-row sm:items-start sm:gap-4">
               <a href="#phones" className={buttonClasses("primary", "sm", "w-full sm:w-64 sm:h-12!")}>
                 Schedule a Tour
               </a>
@@ -160,7 +160,7 @@ export default function Hero() {
             </div>
             <a
               href="/pricing"
-              className="mt-0.5 self-start text-[0.85rem] font-normal tracking-[0.04em] text-gold-light underline decoration-gold-light/55 underline-offset-[0.28em] transition-colors duration-300 hover:text-gold hover:decoration-gold sm:mt-2 sm:text-[0.9rem]"
+              className="mt-1.5 self-start text-[0.85rem] font-normal tracking-[0.04em] text-gold-light underline decoration-gold-light/55 underline-offset-[0.28em] transition-colors duration-300 hover:text-gold hover:decoration-gold sm:mt-2 sm:text-[0.9rem]"
             >
               Discover all LOFT 442 offers →
             </a>
